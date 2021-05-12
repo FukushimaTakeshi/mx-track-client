@@ -2,9 +2,10 @@ module.exports = {
   env: {
     es6: true,
     node: true,
+    browser: true,
   },
   parser: 'babel-eslint',
-  plugins: ['react'],
+  plugins: ['react-hooks', 'react'],
   parserOptions: {
     version: 2020,
     sourceType: 'module',
@@ -15,10 +16,11 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
-    'plugin:prettier/recommended',
-    'prettier/react',
+    'plugin:react-hooks/recommended',
+    'prettier',
   ],
   rules: {
-    'prettier/prettier': 'error',
+    'react/prop-types': 'off',
+    // 'prettier/prettier': 'error',
   },
 }
