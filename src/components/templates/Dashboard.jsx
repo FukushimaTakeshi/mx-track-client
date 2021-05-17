@@ -1,5 +1,4 @@
 import AppBar from '@material-ui/core/AppBar'
-import Badge from '@material-ui/core/Badge'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -8,13 +7,13 @@ import Drawer from '@material-ui/core/Drawer'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import Link from '@material-ui/core/Link'
+import List from '@material-ui/core/List'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import MenuIcon from '@material-ui/icons/Menu'
-import NotificationsIcon from '@material-ui/icons/Notifications'
 import clsx from 'clsx'
 import React from 'react'
 
@@ -87,6 +86,9 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     width: theme.spacing(7),
+    [theme.breakpoints.up('xs')]: {
+      width: theme.spacing(0),
+    },
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9),
     },
@@ -112,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const Dashboard = () => {
+export const Dashboard = ({ children }) => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(true)
   const handleDrawerOpen = () => {
@@ -152,11 +154,6 @@ export const Dashboard = () => {
           >
             Dashboard
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -172,6 +169,7 @@ export const Dashboard = () => {
           </IconButton>
         </div>
         <Divider />
+        <List></List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
@@ -188,6 +186,7 @@ export const Dashboard = () => {
               <Paper className={classes.paper}></Paper>
             </Grid>
           </Grid>
+          {children}
           <Box pt={4}>
             <Copyright />
           </Box>
