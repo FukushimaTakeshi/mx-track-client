@@ -116,13 +116,10 @@ const useStyles = makeStyles((theme) => ({
 
 export const Dashboard = ({ children }) => {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(true)
-  const handleDrawerOpen = () => {
-    setOpen(true)
-  }
-  const handleDrawerClose = () => {
-    setOpen(false)
-  }
+  const [open, setOpen] = React.useState(false)
+  const handleDrawerOpen = () => setOpen(true)
+  const handleDrawerClose = () => setOpen(false)
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
 
   return (

@@ -1,11 +1,13 @@
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
-import Checkbox from '@material-ui/core/Checkbox'
 import Container from '@material-ui/core/Container'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Grid from '@material-ui/core/Grid'
-import Link from '@material-ui/core/Link'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
@@ -48,68 +50,96 @@ const PracticeRecordForm = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          練習記録
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="fname"
-                name="firstName"
+                id="date"
+                name="date"
                 variant="outlined"
                 required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-                value={inputState.firstName}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-                value={inputState.lastName}
-                onChange={handleChange}
+                label="練習日付"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                value={inputState.email}
-                onChange={handleChange}
-              />
+              <FormControl variant="outlined" fullWidth>
+                <InputLabel required>コース</InputLabel>
+                <Select
+                  name="course"
+                  value={inputState.course}
+                  onChange={handleChange}
+                  label="コース"
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <InputLabel>走行時間</InputLabel>
+              <Grid container justify="flex-end" spacing={2}>
+                <Grid item>
+                  <FormControlLabel
+                    control={
+                      <Select
+                        name="hour"
+                        value={inputState.hour}
+                        onChange={handleChange}
+                        label="時"
+                      >
+                        {[...Array(24).keys()].map((value) => (
+                          <MenuItem key={value} value={value}>
+                            {value}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    }
+                    label="時間"
+                  />
+                </Grid>
+                <Grid item>
+                  <FormControlLabel
+                    control={
+                      <Select
+                        name="minute"
+                        value={inputState.minute}
+                        onChange={handleChange}
+                        label="分"
+                      >
+                        {[...Array(60).keys()].map((value) => (
+                          <MenuItem key={value} value={value}>
+                            {value}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    }
+                    label="分"
+                  />
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={12}>
               <TextField
+                name="memo"
                 variant="outlined"
-                required
                 fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={inputState.password}
+                label="メモ"
+                multiline
+                rows={4}
+                placeholder="タイムやセッティングなどのメモ"
+                value={inputState.memo}
                 onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
               />
             </Grid>
           </Grid>
@@ -120,15 +150,8 @@ const PracticeRecordForm = () => {
             color="primary"
             className={classes.submit}
           >
-            Sign Up
+            送信
           </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
     </Container>
