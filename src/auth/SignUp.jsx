@@ -3,11 +3,11 @@ import { withRouter } from 'react-router'
 import { AuthContext } from './AuthProvider'
 
 const SignUp = () => {
-  const { signup } = useContext(AuthContext)
+  const { signUp } = useContext(AuthContext)
   const handleSubmit = (event) => {
     event.preventDefault()
     const { email, password } = event.target.elements
-    signup(email.value, password.value)
+    signUp(email.value, password.value)
   }
 
   return (
