@@ -12,7 +12,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { AuthContext } from '../auth/AuthProvider'
+import { apiClient } from '../lib/api_client'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,6 +42,28 @@ const PracticeRecordForm = () => {
 
   const handleChange = (event) => {
     setInputState({ ...inputState, [event.target.name]: event.target.value })
+  }
+
+  useEffect(() => {
+    signUp()
+  }, [])
+
+  const { currentUser } = useContext(AuthContext)
+
+  const signUp = async () => {
+    const token = await currentUser.getIdToken(true)
+    const config = { token }
+
+    apiClient
+      .post('/users', config)
+      .then((res) => {
+        console.log(res)
+        this.$router.push('/')
+      })
+      .catch((error) => {
+        // TODO: ユーザー作成に失敗した場合の処理追加
+        console.log(error)
+      })
   }
 
   return (
