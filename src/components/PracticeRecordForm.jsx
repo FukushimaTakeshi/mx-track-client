@@ -12,8 +12,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import React, { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '../auth/AuthProvider'
+import React, { useEffect, useState } from 'react'
+import { auth } from '../auth/auth'
 import { apiClient } from '../lib/api_client'
 
 const useStyles = makeStyles((theme) => ({
@@ -45,23 +45,20 @@ const PracticeRecordForm = () => {
   }
 
   useEffect(() => {
-    signUp()
+    fetchSamples()
   }, [])
 
-  const { currentUser } = useContext(AuthContext)
-
-  const signUp = async () => {
-    const token = await currentUser.getIdToken(true)
-    const config = { token }
+  const fetchSamples = async () => {
+    const token = await auth.auth().currentUser.getIdToken(true)
 
     apiClient
-      .post('/users', config)
+      .get('/samples', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         console.log(res)
-        this.$router.push('/')
       })
       .catch((error) => {
-        // TODO: ユーザー作成に失敗した場合の処理追加
         console.log(error)
       })
   }

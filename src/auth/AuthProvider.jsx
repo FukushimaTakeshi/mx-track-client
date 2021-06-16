@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { apiClient } from '../lib/api_client'
 import { auth } from './auth'
 
 export const AuthContext = React.createContext()
@@ -15,8 +16,28 @@ export const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    auth.auth().onAuthStateChanged(setCurrentUser)
+    auth.auth().onAuthStateChanged((user) => {
+      if (user) {
+        verifyUser(user)
+      }
+    })
   }, [])
+
+  const verifyUser = async (user) => {
+    const token = await user.getIdToken(true)
+    const config = { token }
+
+    apiClient
+      .post('/users', config)
+      .then((res) => {
+        console.log(res)
+        setCurrentUser(res)
+        this.$router.push('/')
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
   return (
     <AuthContext.Provider
