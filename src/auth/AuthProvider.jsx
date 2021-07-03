@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
 
   const verifyUser = async (user) => {
     const token = await user.getIdToken(true)
+    localStorage.setItem('token', token)
     const config = { token }
 
     apiClient

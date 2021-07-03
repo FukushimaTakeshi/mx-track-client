@@ -13,7 +13,6 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import React, { useEffect, useState } from 'react'
-import { auth } from '../auth/auth'
 import { apiClient } from '../lib/api_client'
 
 const useStyles = makeStyles((theme) => ({
@@ -44,12 +43,31 @@ const PracticeRecordForm = () => {
     setInputState({ ...inputState, [event.target.name]: event.target.value })
   }
 
+  const handleSubmit = async () => {
+    const token = localStorage.getItem('token')
+    const res = await apiClient.post(
+      `/practice_records/`,
+      {
+        practice_date: inputState.practiceDate,
+        hours: inputState.hours,
+        minutes: inputState.minutes,
+        memo: inputState.memo,
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    if (res.status === 201) {
+      console.log('OK')
+    } else {
+      console.log('NG')
+    }
+  }
+
   useEffect(() => {
     fetchSamples()
   }, [])
 
   const fetchSamples = async () => {
-    const token = await auth.auth().currentUser.getIdToken(true)
+    const token = localStorage.getItem('token')
 
     apiClient
       .get('/samples', {
@@ -73,12 +91,12 @@ const PracticeRecordForm = () => {
         <Typography component="h1" variant="h5">
           練習記録
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 id="date"
-                name="date"
+                name="practiceDate"
                 variant="outlined"
                 required
                 label="練習日付"
@@ -86,6 +104,7 @@ const PracticeRecordForm = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -114,7 +133,7 @@ const PracticeRecordForm = () => {
                   <FormControlLabel
                     control={
                       <Select
-                        name="hour"
+                        name="hours"
                         value={inputState.hour}
                         onChange={handleChange}
                         label="時"
@@ -133,7 +152,7 @@ const PracticeRecordForm = () => {
                   <FormControlLabel
                     control={
                       <Select
-                        name="minute"
+                        name="minutes"
                         value={inputState.minute}
                         onChange={handleChange}
                         label="分"
