@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { apiClient } from '../lib/api_client'
 import { auth } from './auth'
 
@@ -15,29 +15,24 @@ export const AuthProvider = ({ children }) => {
     await auth.auth().createUserWithEmailAndPassword(email, password)
   }
 
-  useEffect(() => {
-    auth.auth().onAuthStateChanged((user) => {
-      if (user) {
-        verifyUser(user)
-      }
+  const logout = () => {
+    auth.auth().signOut()
+    setCurrentUser(null)
+    localStorage.removeItem('token')
+  }
+
+  const verifyUser = () => {
+    return new Promise((resolve) => {
+      auth.auth().onAuthStateChanged(async (user) => {
+        if (user) {
+          const token = await user.getIdToken(true)
+          localStorage.setItem('token', token)
+          const res = await apiClient.post('/users', { token })
+          setCurrentUser(res)
+        }
+        resolve()
+      })
     })
-  }, [])
-
-  const verifyUser = async (user) => {
-    const token = await user.getIdToken(true)
-    localStorage.setItem('token', token)
-    const config = { token }
-
-    apiClient
-      .post('/users', config)
-      .then((res) => {
-        console.log(res)
-        setCurrentUser(res)
-        this.$router.push('/')
-      })
-      .catch((error) => {
-        console.log(error)
-      })
   }
 
   return (
@@ -45,6 +40,8 @@ export const AuthProvider = ({ children }) => {
       value={{
         login,
         signUp,
+        logout,
+        verifyUser,
         currentUser,
       }}
     >

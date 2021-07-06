@@ -1,13 +1,29 @@
-import React, { useContext } from 'react'
-import { Route } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { Redirect, Route } from 'react-router-dom'
 import { AuthContext } from './AuthProvider'
-import Login from './Login'
 
-const PrivateRoute = ({ component: RouteComponent, ...options }) => {
-  const { currentUser } = useContext(AuthContext)
-  const Component = currentUser ? RouteComponent : Login
+const PrivateRoute = (props) => {
+  const { currentUser, verifyUser } = useContext(AuthContext)
 
-  return <Route {...options} component={Component} />
+  const [authChecked, setAuthChecked] = useState(false)
+
+  useEffect(() => {
+    const getUser = async () => {
+      await verifyUser()
+      setAuthChecked(true)
+    }
+    getUser()
+  }, [])
+
+  return authChecked ? (
+    currentUser ? (
+      <Route {...props} />
+    ) : (
+      <Redirect to="/login" />
+    )
+  ) : (
+    <>ログイン処理中!!!</>
+  )
 }
 
 export default PrivateRoute

@@ -1,14 +1,17 @@
 import React, { useContext } from 'react'
 import { withRouter } from 'react-router'
+import { useHistory } from 'react-router-dom'
 import { AuthContext } from './AuthProvider'
 
 const Login = () => {
   const { login } = useContext(AuthContext)
+  const history = useHistory()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     const { email, password } = event.target.elements
-    login(email.value, password.value)
+    await login(email.value, password.value)
+    history.push('/mypage')
   }
 
   return (

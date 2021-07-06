@@ -13,7 +13,8 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import React, { useEffect, useState } from 'react'
-import { apiClient } from '../lib/api_client'
+import { useParams } from 'react-router'
+import { apiClient } from '../../../lib/api_client'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,8 +36,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const PracticeRecordForm = () => {
+const Form = () => {
   const classes = useStyles()
+  const { id } = useParams()
   const [inputState, setInputState] = useState({})
 
   const handleChange = (event) => {
@@ -45,16 +47,24 @@ const PracticeRecordForm = () => {
 
   const handleSubmit = async () => {
     const token = localStorage.getItem('token')
-    const res = await apiClient.post(
-      `/practice_records/`,
-      {
-        practice_date: inputState.practiceDate,
-        hours: inputState.hours,
-        minutes: inputState.minutes,
-        memo: inputState.memo,
-      },
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
+    const params = {
+      practice_date: inputState.practiceDate,
+      hours: inputState.hours,
+      minutes: inputState.minutes,
+      memo: inputState.memo,
+    }
+
+    let res
+    if (id) {
+      res = await apiClient.put(`/practice_records/${id}`, params, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+    } else {
+      res = await apiClient.post(`/practice_records/`, params, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+    }
+
     if (res.status === 201) {
       console.log('OK')
     } else {
@@ -63,23 +73,24 @@ const PracticeRecordForm = () => {
   }
 
   useEffect(() => {
-    fetchSamples()
-  }, [])
-
-  const fetchSamples = async () => {
-    const token = localStorage.getItem('token')
-
-    apiClient
-      .get('/samples', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
+    const fetchPracticeRecord = () => {
+      if (!id) return
+      const token = localStorage.getItem('token')
+      apiClient
+        .get(`/practice_records/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setInputState({
+            practiceDate: res.data.practice_date,
+            hours: res.data.hours,
+            minutes: res.data.minutes,
+            memo: res.data.memo,
+          })
+        })
+    }
+    fetchPracticeRecord()
+  }, [id])
 
   return (
     <Container component="main" maxWidth="xs">
@@ -91,12 +102,13 @@ const PracticeRecordForm = () => {
         <Typography component="h1" variant="h5">
           練習記録
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
+        <div className={classes.form}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 id="date"
                 name="practiceDate"
+                value={inputState.practiceDate}
                 variant="outlined"
                 required
                 label="練習日付"
@@ -134,7 +146,7 @@ const PracticeRecordForm = () => {
                     control={
                       <Select
                         name="hours"
-                        value={inputState.hour}
+                        value={Number(inputState.hours)}
                         onChange={handleChange}
                         label="時"
                       >
@@ -153,7 +165,7 @@ const PracticeRecordForm = () => {
                     control={
                       <Select
                         name="minutes"
-                        value={inputState.minute}
+                        value={Number(inputState.minutes)}
                         onChange={handleChange}
                         label="分"
                       >
@@ -189,13 +201,14 @@ const PracticeRecordForm = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleSubmit}
           >
             送信
           </Button>
-        </form>
+        </div>
       </div>
     </Container>
   )
 }
 
-export default PracticeRecordForm
+export default Form
