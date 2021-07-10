@@ -14,6 +14,7 @@ const App = () => {
       <Router>
         <Switch>
           <PrivateRoute exact path="/mypage" component={Home} />
+          <PrivateRoute exact path="/practice_records/new" component={Form} />
           <PrivateRoute exact path="/practice_records/:id" component={Form} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={SignUp} />

@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Dialog,
   IconButton,
   List,
   ListItem,
@@ -11,8 +12,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import CloseIcon from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { apiClient } from '../../lib/api_client'
+import TrackList from './TrackList'
 
-const PrefectureList = ({ regionId, handleClose }) => {
+const PrefectureList = ({ regionId, onClose, handleSelectTrack }) => {
   const [region, setRegion] = useState(null)
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -24,6 +26,14 @@ const PrefectureList = ({ regionId, handleClose }) => {
         setRegion(res.data)
       })
   }, [regionId])
+
+  const [showModal, setShowModal] = useState(false)
+  const [clickedPrefecture, setClickedPrefecture] = useState({})
+  const handleClick = (prefecture) => {
+    setShowModal(true)
+    setClickedPrefecture(prefecture)
+  }
+  const handleCloseModal = () => setShowModal(false)
 
   const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -37,6 +47,12 @@ const PrefectureList = ({ regionId, handleClose }) => {
 
   const classes = useStyles()
 
+  const handleClickTrack = (track) => {
+    handleSelectTrack(track)
+    handleCloseModal()
+    onClose()
+  }
+
   return (
     <React.Fragment>
       <AppBar className={classes.appBar}>
@@ -47,7 +63,7 @@ const PrefectureList = ({ regionId, handleClose }) => {
           <IconButton
             edge="start"
             color="inherit"
-            onClick={handleClose}
+            onClick={onClose}
             aria-label="close"
           >
             <CloseIcon />
@@ -58,10 +74,22 @@ const PrefectureList = ({ regionId, handleClose }) => {
         {region &&
           region.prefectures.map((prefecture) => (
             <ListItem button key={prefecture.id}>
-              <ListItemText primary={prefecture.name} secondary="Titania" />
+              <ListItemText
+                primary={prefecture.name}
+                secondary="Titania"
+                onClick={() => handleClick(prefecture)}
+              />
             </ListItem>
           ))}
       </List>
+      <Dialog fullScreen open={showModal} onClose={handleCloseModal}>
+        <TrackList
+          prefectureId={clickedPrefecture.id}
+          prefectureName={clickedPrefecture.name}
+          onClose={handleCloseModal}
+          onClickTrack={(track) => handleClickTrack(track)}
+        />
+      </Dialog>
     </React.Fragment>
   )
 }

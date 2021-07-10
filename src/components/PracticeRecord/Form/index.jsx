@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import ClearIcon from '@material-ui/icons/Clear'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
@@ -54,6 +55,7 @@ const Form = () => {
     const token = localStorage.getItem('token')
     const params = {
       practice_date: inputState.practiceDate,
+      off_road_track_id: inputState.track.id,
       hours: inputState.hours,
       minutes: inputState.minutes,
       memo: inputState.memo,
@@ -88,6 +90,10 @@ const Form = () => {
         .then((res) => {
           setInputState({
             practiceDate: res.data.practice_date,
+            track: {
+              id: res.data.track.id,
+              name: res.data.track.name,
+            },
             hours: res.data.hours,
             minutes: res.data.minutes,
             memo: res.data.memo,
@@ -126,12 +132,23 @@ const Form = () => {
     setShowModal(false)
   }
 
+  const handleSelectTrack = (track) => {
+    setInputState({ ...inputState, track: { id: track.id, name: track.name } })
+  }
+
+  const handleClearTrack = () => {
+    const { track, ...rest } = inputState
+    if (!track) return
+    setInputState(rest)
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <Dialog fullScreen open={showModal} onClose={handleCloseModal}>
         <PrefectureList
           regionId={inputState.regionId}
-          handleClose={handleCloseModal}
+          onClose={handleCloseModal}
+          handleSelectTrack={handleSelectTrack}
         ></PrefectureList>
       </Dialog>
       <CssBaseline />
@@ -159,12 +176,12 @@ const Form = () => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={4}>
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
                 onOpen={fetchOptions}
-                onClose={handleCloseSelect}
+                onClose={!loading && handleCloseSelect}
                 options={tracksOptions}
                 getOptionLabel={(option) => option.name}
                 loading={loading}
@@ -172,7 +189,7 @@ const Form = () => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="コース"
+                    label="エリア"
                     InputProps={{
                       ...params.InputProps,
                       endAdornment: (
@@ -186,9 +203,27 @@ const Form = () => {
                     }}
                   />
                 )}
-                sx={{ width: 300 }}
               />
             </Grid>
+            {inputState.track && (
+              <React.Fragment>
+                <Grid item xs={7}>
+                  <Typography variant="caption" color="textSecondary">
+                    コース
+                  </Typography>
+                  <Typography variant="body1" gutterBottom>
+                    {inputState.track.name}
+                  </Typography>
+                </Grid>
+                <Grid item xs={1}>
+                  <ClearIcon
+                    color="disabled"
+                    fontSize="small"
+                    onClick={handleClearTrack}
+                  />
+                </Grid>
+              </React.Fragment>
+            )}
 
             <Grid item xs={12}>
               <InputLabel>走行時間</InputLabel>
