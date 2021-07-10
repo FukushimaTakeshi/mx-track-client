@@ -1,20 +1,25 @@
-import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
-import Container from '@material-ui/core/Container'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Grid from '@material-ui/core/Grid'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
+import {
+  Avatar,
+  Button,
+  CircularProgress,
+  Container,
+  CssBaseline,
+  Dialog,
+  FormControlLabel,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { apiClient } from '../../../lib/api_client'
+import PrefectureList from '../../Track/PrefectureList'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -92,8 +97,43 @@ const Form = () => {
     fetchPracticeRecord()
   }, [id])
 
+  const [tracksOptions, setTrackOptions] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  const fetchOptions = () => {
+    if (tracksOptions.length) {
+      return
+    }
+    setLoading(true)
+    apiClient.get('/regions/').then((res) => {
+      setTrackOptions(res.data)
+      setLoading(false)
+    })
+  }
+
+  const onChangeSelect = (e, value) => {
+    if (!value) return
+    setInputState({ ...inputState, regionId: value.id })
+  }
+
+  const [showModal, setShowModal] = useState(false)
+
+  const handleCloseSelect = () => {
+    setShowModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+  }
+
   return (
     <Container component="main" maxWidth="xs">
+      <Dialog fullScreen open={showModal} onClose={handleCloseModal}>
+        <PrefectureList
+          regionId={inputState.regionId}
+          handleClose={handleCloseModal}
+        ></PrefectureList>
+      </Dialog>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -120,22 +160,34 @@ const Form = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControl variant="outlined" fullWidth>
-                <InputLabel required>コース</InputLabel>
-                <Select
-                  name="course"
-                  value={inputState.course}
-                  onChange={handleChange}
-                  label="コース"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              </FormControl>
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                onOpen={fetchOptions}
+                onClose={handleCloseSelect}
+                options={tracksOptions}
+                getOptionLabel={(option) => option.name}
+                loading={loading}
+                onChange={onChangeSelect}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="コース"
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <React.Fragment>
+                          {loading ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </React.Fragment>
+                      ),
+                    }}
+                  />
+                )}
+                sx={{ width: 300 }}
+              />
             </Grid>
 
             <Grid item xs={12}>
