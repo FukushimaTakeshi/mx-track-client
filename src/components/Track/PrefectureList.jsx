@@ -17,14 +17,9 @@ import TrackList from './TrackList'
 const PrefectureList = ({ regionId, onClose, handleSelectTrack }) => {
   const [region, setRegion] = useState(null)
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    apiClient
-      .get(`/regions/${regionId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setRegion(res.data)
-      })
+    apiClient.get(`/regions/${regionId}`).then((res) => {
+      setRegion(res.data)
+    })
   }, [regionId])
 
   const [showModal, setShowModal] = useState(false)

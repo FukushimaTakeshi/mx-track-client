@@ -1,22 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { apiClient } from '../../lib/api_client'
+import { apiClientWithAuth } from '../../lib/api_client'
 
 const PracticeRecordList = () => {
   const [practiceRecords, setPracticeRecords] = useState([])
   useEffect(() => {
-    const token = localStorage.getItem('token')
-
-    apiClient
-      .get('/practice_records/', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setPracticeRecords(res.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    apiClientWithAuth.get('/practice_records/').then((res) => {
+      setPracticeRecords(res.data)
+    })
   }, [])
 
   return (

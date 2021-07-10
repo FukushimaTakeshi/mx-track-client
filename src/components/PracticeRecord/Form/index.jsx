@@ -19,7 +19,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import { apiClient } from '../../../lib/api_client'
+import { apiClient, apiClientWithAuth } from '../../../lib/api_client'
 import PrefectureList from '../../Track/PrefectureList'
 
 const useStyles = makeStyles((theme) => ({
@@ -52,24 +52,17 @@ const Form = () => {
   }
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem('token')
+    const { track, ...restState } = inputState
     const params = {
-      practice_date: inputState.practiceDate,
-      off_road_track_id: inputState.track.id,
-      hours: inputState.hours,
-      minutes: inputState.minutes,
-      memo: inputState.memo,
+      ...restState,
+      offRoadTrackId: track.id,
     }
 
     let res
     if (id) {
-      res = await apiClient.put(`/practice_records/${id}`, params, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      res = await apiClientWithAuth.put(`/practice_records/${id}`, params)
     } else {
-      res = await apiClient.post(`/practice_records/`, params, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      res = await apiClientWithAuth.post(`/practice_records/`, params)
     }
 
     if (res.status === 201) {
@@ -82,23 +75,9 @@ const Form = () => {
   useEffect(() => {
     const fetchPracticeRecord = () => {
       if (!id) return
-      const token = localStorage.getItem('token')
-      apiClient
-        .get(`/practice_records/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          setInputState({
-            practiceDate: res.data.practice_date,
-            track: {
-              id: res.data.track.id,
-              name: res.data.track.name,
-            },
-            hours: res.data.hours,
-            minutes: res.data.minutes,
-            memo: res.data.memo,
-          })
-        })
+      apiClientWithAuth.get(`/practice_records/${id}`, {}).then((res) => {
+        setInputState(res.data)
+      })
     }
     fetchPracticeRecord()
   }, [id])
