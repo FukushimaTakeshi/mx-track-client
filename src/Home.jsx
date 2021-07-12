@@ -1,21 +1,19 @@
 import React, { useContext } from 'react'
 import { AuthContext } from './auth/AuthProvider'
+import PracticeChart from './components/Chart/PracticeChart'
 import PracticeRecordList from './components/PracticeRecord/PracticeRecordList'
 import { Dashboard } from './components/templates/Dashboard'
 
 const Home = () => {
-  const { currentUser, logout } = useContext(AuthContext)
+  const { logout } = useContext(AuthContext)
 
   return (
     <Dashboard>
-      <div>
-        {currentUser && <>OK</>}
+      <h2>Home Page</h2>
+      <button onClick={logout}>Sign out</button>
 
-        <h2>Home Page</h2>
-        <button onClick={logout}>Sign out</button>
-
-        <PracticeRecordList />
-      </div>
+      <PracticeChart />
+      <PracticeRecordList />
     </Dashboard>
   )
 }

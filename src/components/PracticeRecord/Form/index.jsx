@@ -7,7 +7,6 @@ import {
   Dialog,
   FormControlLabel,
   Grid,
-  InputLabel,
   MenuItem,
   Select,
   TextField,
@@ -20,6 +19,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { apiClient, apiClientWithAuth } from '../../../lib/api_client'
+import { Dashboard } from '../../templates/Dashboard'
 import PrefectureList from '../../Track/PrefectureList'
 
 const useStyles = makeStyles((theme) => ({
@@ -53,23 +53,11 @@ const Form = () => {
 
   const handleSubmit = async () => {
     const { track, ...restState } = inputState
-    const params = {
-      ...restState,
-      offRoadTrackId: track.id,
-    }
+    const params = { ...restState, offRoadTrackId: track.id }
 
-    let res
-    if (id) {
-      res = await apiClientWithAuth.put(`/practice_records/${id}`, params)
-    } else {
-      res = await apiClientWithAuth.post(`/practice_records/`, params)
-    }
-
-    if (res.status === 201) {
-      console.log('OK')
-    } else {
-      console.log('NG')
-    }
+    id
+      ? await apiClientWithAuth.put(`/practice_records/${id}`, params)
+      : await apiClientWithAuth.post(`/practice_records/`, params)
   }
 
   useEffect(() => {
@@ -86,6 +74,9 @@ const Form = () => {
   const [loading, setLoading] = useState(false)
 
   const fetchOptions = () => {
+    if (inputState.regionId) {
+      setInputState({ ...inputState, regionId: null })
+    }
     if (tracksOptions.length) {
       return
     }
@@ -122,158 +113,167 @@ const Form = () => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Dialog fullScreen open={showModal} onClose={handleCloseModal}>
-        <PrefectureList
-          regionId={inputState.regionId}
+    <Dashboard>
+      <Container component="main" maxWidth="xs">
+        <Dialog
+          fullScreen
+          open={showModal && !!inputState.regionId}
           onClose={handleCloseModal}
-          handleSelectTrack={handleSelectTrack}
-        ></PrefectureList>
-      </Dialog>
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          練習記録
-        </Typography>
-        <div className={classes.form}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                id="date"
-                name="practiceDate"
-                value={inputState.practiceDate}
-                variant="outlined"
-                required
-                label="練習日付"
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                onOpen={fetchOptions}
-                onClose={!loading && handleCloseSelect}
-                options={tracksOptions}
-                getOptionLabel={(option) => option.name}
-                loading={loading}
-                onChange={onChangeSelect}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="エリア"
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <React.Fragment>
-                          {loading ? (
-                            <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          {params.InputProps.endAdornment}
-                        </React.Fragment>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-            {inputState.track && (
-              <React.Fragment>
-                <Grid item xs={7}>
-                  <Typography variant="caption" color="textSecondary">
-                    コース
-                  </Typography>
-                  <Typography variant="body1" gutterBottom>
-                    {inputState.track.name}
-                  </Typography>
-                </Grid>
-                <Grid item xs={1}>
-                  <ClearIcon
-                    color="disabled"
-                    fontSize="small"
-                    onClick={handleClearTrack}
-                  />
-                </Grid>
-              </React.Fragment>
-            )}
+        >
+          <PrefectureList
+            regionId={inputState.regionId}
+            onClose={handleCloseModal}
+            handleSelectTrack={handleSelectTrack}
+          ></PrefectureList>
+        </Dialog>
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            練習記録
+          </Typography>
+          <div className={classes.form}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  id="date"
+                  name="practiceDate"
+                  value={inputState.practiceDate}
+                  variant="outlined"
+                  required
+                  label="練習日付"
+                  type="date"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  onOpen={fetchOptions}
+                  onClose={!loading && handleCloseSelect}
+                  options={tracksOptions}
+                  getOptionLabel={(option) => option.name}
+                  loading={loading}
+                  onChange={onChangeSelect}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="エリア"
+                      required
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <React.Fragment>
+                            {loading ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </React.Fragment>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+              {inputState.track && (
+                <React.Fragment>
+                  <Grid item xs={7}>
+                    <Typography variant="caption" color="textSecondary">
+                      コース
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      {inputState.track.name}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <ClearIcon
+                      color="disabled"
+                      fontSize="small"
+                      onClick={handleClearTrack}
+                    />
+                  </Grid>
+                </React.Fragment>
+              )}
 
-            <Grid item xs={12}>
-              <InputLabel>走行時間</InputLabel>
-              <Grid container justify="flex-end" spacing={2}>
-                <Grid item>
-                  <FormControlLabel
-                    control={
-                      <Select
-                        name="hours"
-                        value={Number(inputState.hours)}
-                        onChange={handleChange}
-                        label="時"
-                      >
-                        {[...Array(24).keys()].map((value) => (
-                          <MenuItem key={value} value={value}>
-                            {value}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    }
-                    label="時間"
-                  />
-                </Grid>
-                <Grid item>
-                  <FormControlLabel
-                    control={
-                      <Select
-                        name="minutes"
-                        value={Number(inputState.minutes)}
-                        onChange={handleChange}
-                        label="分"
-                      >
-                        {[...Array(60).keys()].map((value) => (
-                          <MenuItem key={value} value={value}>
-                            {value}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    }
-                    label="分"
-                  />
+              <Grid item xs={12}>
+                <Typography variant="caption" color="textSecondary">
+                  走行時間
+                </Typography>
+                <Grid container justify="flex-end" spacing={2}>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Select
+                          name="hours"
+                          value={Number(inputState.hours)}
+                          onChange={handleChange}
+                          label="時"
+                        >
+                          {[...Array(24).keys()].map((value) => (
+                            <MenuItem key={value} value={value}>
+                              {value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      }
+                      label="時間"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Select
+                          name="minutes"
+                          value={Number(inputState.minutes)}
+                          onChange={handleChange}
+                          label="分"
+                        >
+                          {[...Array(60).keys()].map((value) => (
+                            <MenuItem key={value} value={value}>
+                              {value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      }
+                      label="分"
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  name="memo"
+                  variant="outlined"
+                  fullWidth
+                  label="メモ"
+                  multiline
+                  rows={4}
+                  placeholder="タイムやセッティングなどのメモ"
+                  value={inputState.memo}
+                  onChange={handleChange}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                name="memo"
-                variant="outlined"
-                fullWidth
-                label="メモ"
-                multiline
-                rows={4}
-                placeholder="タイムやセッティングなどのメモ"
-                value={inputState.memo}
-                onChange={handleChange}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleSubmit}
-          >
-            送信
-          </Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={handleSubmit}
+            >
+              送信
+            </Button>
+          </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </Dashboard>
   )
 }
 
