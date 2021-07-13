@@ -1,3 +1,4 @@
+import { Toolbar, Typography } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import Chart from 'react-apexcharts'
 import { apiClientWithAuth } from '../../lib/api_client'
@@ -66,6 +67,11 @@ const PracticeChart = () => {
 
   return (
     <>
+      <Toolbar>
+        <Typography color="textSecondary" variant="subtitle1" component="div">
+          my activity
+        </Typography>
+      </Toolbar>
       <Chart
         options={options}
         series={series}

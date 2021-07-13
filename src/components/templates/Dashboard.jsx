@@ -4,11 +4,9 @@ import Container from '@material-ui/core/Container'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
-import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import Link from '@material-ui/core/Link'
 import List from '@material-ui/core/List'
-import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -166,12 +164,7 @@ export const Dashboard = ({ children }) => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>{children}</Paper>
-            </Grid>
-          </Grid>
-
+          {children}
           <Box pt={4}>
             <Copyright />
           </Box>
