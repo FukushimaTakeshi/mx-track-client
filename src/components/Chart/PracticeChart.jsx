@@ -2,14 +2,18 @@ import { Toolbar, Typography } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import Chart from 'react-apexcharts'
 import { apiClientWithAuth } from '../../lib/api_client'
+import InnerLoading from '../InnerLoading'
 
 const PracticeChart = () => {
+  const [loading, setLoading] = useState(false)
   const [practiceRecords, setPracticeRecords] = useState({})
   useEffect(() => {
+    setLoading(true)
     apiClientWithAuth
       .get('/practice_records/?sort=+practice_date&field=number_of_monthly')
       .then((res) => {
         setPracticeRecords(res.data)
+        setLoading(false)
       })
   }, [])
 
@@ -77,13 +81,15 @@ const PracticeChart = () => {
           my activity
         </Typography>
       </Toolbar>
-      <Chart
-        options={options}
-        series={series}
-        type="line"
-        width={500}
-        height={320}
-      />
+      <InnerLoading loading={loading}>
+        <Chart
+          options={options}
+          series={series}
+          type="line"
+          width={500}
+          height={320}
+        />
+      </InnerLoading>
     </>
   )
 }
