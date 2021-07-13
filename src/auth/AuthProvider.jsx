@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token')
   }
 
+  // TODO: エラー処理
   const verifyUser = () => {
     return new Promise((resolve) => {
       auth.auth().onAuthStateChanged(async (user) => {

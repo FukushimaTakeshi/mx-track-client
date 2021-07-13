@@ -35,6 +35,7 @@ const PracticeRecordList = () => {
         setPracticeRecords(res.data)
         setLoading(false)
       })
+    // TODO: エラー時
   }, [])
 
   return (

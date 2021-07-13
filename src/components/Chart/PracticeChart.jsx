@@ -15,6 +15,7 @@ const PracticeChart = () => {
         setPracticeRecords(res.data)
         setLoading(false)
       })
+    // TODO: エラー時
   }, [])
 
   const { numberOfMonthly } = practiceRecords
@@ -68,7 +69,7 @@ const PracticeChart = () => {
       type: 'line',
       data: numberOfMonthly
         ? numberOfMonthly.map(
-            ({ practiceTime }) => Math.round((practiceTime / 60) * 10) / 10
+            ({ practiceTime }) => Math.round((practiceTime / 60) * 10) / 10 //小数点第1位まで
           )
         : [],
     },

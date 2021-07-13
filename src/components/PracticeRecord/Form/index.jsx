@@ -66,6 +66,7 @@ const Form = () => {
       apiClientWithAuth.get(`/practice_records/${id}`, {}).then((res) => {
         setInputState(res.data)
       })
+      // TODO: エラー処理
     }
     fetchPracticeRecord()
   }, [id])

@@ -20,6 +20,7 @@ const PrefectureList = ({ regionId, onClose, handleSelectTrack }) => {
     apiClient.get(`/regions/${regionId}`).then((res) => {
       setRegion(res.data)
     })
+    // TODO: エラー処理
   }, [regionId])
 
   const [showModal, setShowModal] = useState(false)
