@@ -6,9 +6,9 @@ import PracticeChart from './components/Chart/PracticeChart'
 import PracticeRecordList from './components/PracticeRecord/PracticeRecordList'
 import { Dashboard } from './components/templates/Dashboard'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   paper: {
-    padding: theme.spacing(2),
+    // padding: theme.spacing(2),
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',

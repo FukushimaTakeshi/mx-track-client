@@ -16,6 +16,14 @@ const PracticeChart = () => {
   const { numberOfMonthly } = practiceRecords
 
   const options = {
+    chart: {
+      zoom: {
+        enabled: false,
+      },
+      toolbar: {
+        show: false,
+      },
+    },
     stroke: {
       width: [0, 4],
     },
@@ -35,9 +43,6 @@ const PracticeChart = () => {
       },
       {
         opposite: true,
-        labels: {
-          formatter: (val) => Math.floor(val),
-        },
         title: {
           text: '走行時間(h)',
         },
