@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Redirect, Route } from 'react-router-dom'
-import Loading from '../components/Loading'
+import Loading from '../components/Spinner/Loading'
 import { AuthContext } from './AuthProvider'
 
 const PrivateRoute = (props) => {

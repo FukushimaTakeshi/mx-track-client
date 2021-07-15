@@ -19,7 +19,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { apiClient, apiClientWithAuth } from '../../../lib/api_client'
-import HandleFetch from '../../HandleFetch'
+import HandleFetch from '../../Spinner/HandleFetch'
 import { Dashboard } from '../../templates/Dashboard'
 import PrefectureList from '../../Track/PrefectureList'
 

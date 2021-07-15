@@ -15,7 +15,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { apiClientWithAuth } from '../../lib/api_client'
-import HandleFetch from '../HandleFetch'
+import HandleFetch from '../Spinner/HandleFetch'
 
 const useStyles = makeStyles({
   table: { minWidth: 650 },

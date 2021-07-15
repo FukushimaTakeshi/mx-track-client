@@ -9,7 +9,7 @@ const Error = (props) => {
 
 const HandleFetch = ({ loading, error, inner, children }) => {
   const handleClose = () => {
-    // TODO:
+    // TODO: リダイレクト
   }
 
   const LoadingComponent = inner ? InnerLoading : Loading
