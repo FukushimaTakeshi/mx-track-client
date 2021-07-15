@@ -9,30 +9,20 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import CloseIcon from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
-import { apiClient } from '../../lib/api_client'
+import React from 'react'
 
-const TrackList = ({ prefectureId, prefectureName, onClose, onClickTrack }) => {
-  const [tracks, setTracks] = useState([])
-  useEffect(() => {
-    apiClient
-      .get(`/off_road_tracks/?prefecture_id=${prefectureId}`)
-      .then((res) => {
-        setTracks(res.data)
-      })
-    // TODO: エラー処理
-  }, [prefectureId])
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    position: 'relative',
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+}))
 
-  const useStyles = makeStyles((theme) => ({
-    appBar: {
-      position: 'relative',
-    },
-    title: {
-      marginLeft: theme.spacing(2),
-      flex: 1,
-    },
-  }))
-
+const TrackList = ({ prefecture, onClose, onClickTrack }) => {
+  const tracks = prefecture.offRoadTracks
   const classes = useStyles()
 
   const handleClick = (track) => {
@@ -45,7 +35,7 @@ const TrackList = ({ prefectureId, prefectureName, onClose, onClickTrack }) => {
       <AppBar className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            {prefectureName}のモトクロスコース一覧
+            {prefecture.name}のモトクロスコース一覧
           </Typography>
           <IconButton
             edge="start"

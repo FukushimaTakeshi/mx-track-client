@@ -72,7 +72,7 @@ const PrefectureList = ({ regionId, onClose, handleSelectTrack }) => {
             <ListItem button key={prefecture.id}>
               <ListItemText
                 primary={prefecture.name}
-                secondary="Titania"
+                secondary={`登録コース: ${prefecture.offRoadTracks.length} 件`}
                 onClick={() => handleClick(prefecture)}
               />
             </ListItem>
@@ -80,8 +80,7 @@ const PrefectureList = ({ regionId, onClose, handleSelectTrack }) => {
       </List>
       <Dialog fullScreen open={showModal} onClose={handleCloseModal}>
         <TrackList
-          prefectureId={clickedPrefecture.id}
-          prefectureName={clickedPrefecture.name}
+          prefecture={clickedPrefecture}
           onClose={handleCloseModal}
           onClickTrack={(track) => handleClickTrack(track)}
         />
