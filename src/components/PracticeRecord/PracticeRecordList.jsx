@@ -15,7 +15,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { apiClientWithAuth } from '../../lib/api_client'
-import InnerLoading from '../InnerLoading'
+import HandleFetch from '../HandleFetch'
 
 const useStyles = makeStyles({
   table: { minWidth: 650 },
@@ -45,7 +45,7 @@ const PracticeRecordList = () => {
           activities
         </Typography>
       </Toolbar>
-      <InnerLoading loading={loading}>
+      <HandleFetch inner loading={loading}>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
@@ -90,7 +90,7 @@ const PracticeRecordList = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </InnerLoading>
+      </HandleFetch>
     </>
   )
 }

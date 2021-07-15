@@ -23,7 +23,7 @@ const PrivateRoute = (props) => {
       <Redirect to="/login" />
     )
   ) : (
-    <Loading />
+    <Loading loading={!authChecked} />
   )
 }
 
