@@ -18,8 +18,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
+import { useHistory } from 'react-router-dom'
 import { apiClient, apiClientWithAuth } from '../../../lib/api_client'
 import HandleFetch from '../../Spinner/HandleFetch'
+import SuccessSnackbar from '../../SuccessSnackbar'
 import { Dashboard } from '../../templates/Dashboard'
 import PrefectureList from '../../Track/PrefectureList'
 
@@ -56,15 +58,20 @@ const Form = () => {
     setInputState({ ...inputState, [event.target.name]: event.target.value })
   }
 
+  const history = useHistory()
+
   const handleSubmit = async () => {
     setLoading(true)
+    setSuccess(false)
     const { track, ...restState } = inputState
     const params = { ...restState, offRoadTrackId: track.id }
 
     id
       ? await apiClientWithAuth.put(`/practice_records/${id}`, params)
       : await apiClientWithAuth.post(`/practice_records/`, params)
+    setInputState({})
     setLoading(false)
+    setSuccess(true)
   }
 
   useEffect(() => {
@@ -81,6 +88,7 @@ const Form = () => {
   const [tracksOptions, setTrackOptions] = useState([])
   const [loading, setLoading] = useState(false)
   const [optionsLoading, setOptionsLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   const fetchOptions = () => {
     if (inputState.regionId) {
@@ -284,6 +292,12 @@ const Form = () => {
           </div>
         </Container>
       </HandleFetch>
+      {success && (
+        <SuccessSnackbar
+          open={success}
+          onClose={() => history.push('/mypage')}
+        />
+      )}
     </Dashboard>
   )
 }
