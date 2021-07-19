@@ -1,24 +1,89 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
-import { apiClientWithAuth } from '../../lib/api_client'
+import {
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  IconButton,
+  Typography,
+} from '@material-ui/core'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import SuccessSnackbar from '../SuccessSnackbar'
 
-const PracticeRecord = () => {
-  const [record, setRecord] = useState({})
-  const { id } = useParams()
+const PracticeRecord = ({
+  id,
+  offRoadTrack,
+  practiceDate,
+  hours,
+  minutes,
+  memo,
+  onDelete,
+  onClose,
+}) => {
+  const [deleted, setDeleted] = useState(false)
 
-  useEffect(() => {
-    apiClientWithAuth.get(`/practice_records/${id}`).then((res) => {
-      setRecord(res.data)
-    })
-  }, [id])
+  const handleDelete = () => {
+    onDelete()
+    setDeleted(true)
+  }
 
+  const handleClose = () => {
+    onClose()
+  }
   return (
     <>
-      {record.id}
-      {record.practice_date}
-      {record.hours}
-      {record.minutes}
-      {record.memo}
+      <Card>
+        <CardActionArea>
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {practiceDate}
+            </Typography>
+
+            <Typography variant="caption" color="textSecondary">
+              コース
+            </Typography>
+            <Typography variant="body2" component="p">
+              {offRoadTrack.name}
+            </Typography>
+
+            <Typography variant="caption" color="textSecondary">
+              走行時間
+            </Typography>
+            <Typography variant="body1" component="p">
+              {`${hours} 時間 ${minutes} 分`}
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              メモ
+            </Typography>
+            <Typography
+              variant="body1"
+              component="p"
+              style={{ whiteSpace: 'pre-line' }}
+            >
+              {memo}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
+          <IconButton>
+            <Link to={`practice_records/${id}`}>
+              <EditIcon fontSize="small" />
+            </Link>
+          </IconButton>
+          <IconButton onClick={handleDelete}>
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </CardActions>
+        {deleted && (
+          <SuccessSnackbar
+            open={deleted}
+            onClose={handleClose}
+            message="削除しました！"
+          />
+        )}
+      </Card>
     </>
   )
 }

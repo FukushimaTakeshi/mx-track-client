@@ -48,7 +48,7 @@ const SuccessSnackbar = (props) => {
         message={
           <span id="client-snackbar" className={classes.message}>
             <CheckCircleIcon className={classes.iconVariant} />
-            登録しました !
+            {props.message}
           </span>
         }
       />

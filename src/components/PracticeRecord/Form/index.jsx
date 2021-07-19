@@ -296,6 +296,7 @@ const Form = () => {
         <SuccessSnackbar
           open={success}
           onClose={() => history.push('/mypage')}
+          message="登録しました !"
         />
       )}
     </Dashboard>

@@ -1,5 +1,6 @@
 import {
   Box,
+  Dialog,
   Paper,
   Table,
   TableBody,
@@ -16,6 +17,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { apiClientWithAuth } from '../../lib/api_client'
 import HandleFetch from '../Spinner/HandleFetch'
+import PracticeRecord from './PracticeRecord'
 
 const useStyles = makeStyles({
   table: { minWidth: 650 },
@@ -28,6 +30,10 @@ const PracticeRecordList = () => {
   const [loading, setLoading] = useState(false)
   const [practiceRecords, setPracticeRecords] = useState([])
   useEffect(() => {
+    fetchPracticeRecords()
+  }, [])
+
+  const fetchPracticeRecords = () => {
     setLoading(true)
     apiClientWithAuth
       .get('/practice_records/?sort=-practice_date')
@@ -36,10 +42,38 @@ const PracticeRecordList = () => {
         setLoading(false)
       })
     // TODO: エラー時
-  }, [])
+  }
+
+  const [practiceRecord, setPracticeRecord] = useState({})
+  const [showPracticeRecord, setShowPracticeRecord] = useState(false)
+  const showDetail = (practiceRecord) => {
+    setPracticeRecord(practiceRecord)
+    setShowPracticeRecord(true)
+  }
+  const handleCloseDetail = () => {
+    setShowPracticeRecord(false)
+  }
+
+  const handleDelete = async (id) => {
+    await apiClientWithAuth.delete(`/practice_records/${id}`)
+  }
 
   return (
     <>
+      <Dialog
+        open={showPracticeRecord}
+        onClose={handleCloseDetail}
+        fullWidth={true}
+      >
+        <PracticeRecord
+          {...practiceRecord}
+          onDelete={() => handleDelete(practiceRecord.id)}
+          onClose={() => {
+            fetchPracticeRecords()
+            setShowPracticeRecord(false)
+          }}
+        ></PracticeRecord>
+      </Dialog>
       <Toolbar>
         <Typography color="textSecondary" variant="subtitle1" component="div">
           activities
@@ -59,7 +93,7 @@ const PracticeRecordList = () => {
             </TableHead>
             <TableBody>
               {practiceRecords.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} onClick={() => showDetail(row)}>
                   <StyledTableCell component="th" scope="row">
                     {row.practiceDate}
                   </StyledTableCell>
