@@ -1,35 +1,39 @@
-import React, { useContext } from 'react'
-import { withRouter } from 'react-router'
+import firebase from 'firebase/app'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { AuthContext } from './AuthProvider'
 
 const Login = () => {
-  const { login } = useContext(AuthContext)
   const history = useHistory()
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    const { email, password } = event.target.elements
-    await login(email.value, password.value)
-    history.push('/mypage')
+  const handleSignInWithGoogle = () => {
+    const provider = new firebase.auth.GoogleAuthProvider()
+    // TODO: いい感じにする
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((result) => {
+        alert('success : ' + result.user.displayName + 'さんでログインしました')
+        history.push('/mypage')
+      })
+      .catch((error) => {
+        alert(error.message)
+      })
   }
 
   return (
     <div>
-      <h1>Log in</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email
-          <input name="email" type="email" placeholder="Email" />
-        </label>
-        <label>
-          Password
-          <input name="password" type="password" placeholder="Password" />
-        </label>
-        <button type="submit">Log in</button>
-      </form>
+      <div className="login">
+        <h1>ログイン</h1>
+      </div>
+      <div className="signin_button">
+        <img
+          src="../btn_google_signin.png"
+          onClick={handleSignInWithGoogle}
+          alt="google signin"
+        />
+      </div>
     </div>
   )
 }
 
-export default withRouter(Login)
+export default Login

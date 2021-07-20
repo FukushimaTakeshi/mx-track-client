@@ -20,7 +20,7 @@ const PrivateRoute = (props) => {
     currentUser ? (
       <Route {...props} />
     ) : (
-      <Redirect to="/login" />
+      <Redirect to="/" />
     )
   ) : (
     <Loading loading={!authChecked} />

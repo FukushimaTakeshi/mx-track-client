@@ -1,4 +1,4 @@
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
+import { Button, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import CreateIcon from '@material-ui/icons/Create'
 import MenuIcon from '@material-ui/icons/Menu'
+import PersonAddIcon from '@material-ui/icons/PersonAdd'
 import TimelineIcon from '@material-ui/icons/Timeline'
 import clsx from 'clsx'
 import React, { useContext } from 'react'
@@ -162,7 +163,6 @@ export const Dashboard = ({ children }) => {
             <ChevronLeftIcon />
           </IconButton>
         </div>
-        <Divider />
         <List>
           <Link
             to="/mypage"
@@ -189,20 +189,33 @@ export const Dashboard = ({ children }) => {
             </ListItem>
           </Link>
         </List>
-
-        {currentUser && (
-          <>
-            <Divider />
-            <List>
-              <ListItem button className={classes.link} onClick={logout}>
-                <ListItemIcon>
-                  <span className="material-icons">logout</span>
-                </ListItemIcon>
-                <ListItemText primary="ログアウト" />
+        <Divider />
+        <List>
+          {currentUser ? (
+            <ListItem button className={classes.link} onClick={logout}>
+              <ListItemIcon>
+                <span className="material-icons">logout</span>
+              </ListItemIcon>
+              <ListItemText primary="ログアウト" />
+            </ListItem>
+          ) : (
+            <Link
+              to="/login"
+              className={classes.link}
+              onClick={handleDrawerClose}
+            >
+              <ListItem>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<PersonAddIcon />}
+                >
+                  ログイン / ユーザー登録
+                </Button>
               </ListItem>
-            </List>
-          </>
-        )}
+            </Link>
+          )}
+        </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
