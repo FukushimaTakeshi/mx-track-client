@@ -5,6 +5,7 @@ import { AuthProvider } from './auth/AuthProvider'
 import Login from './auth/Login'
 import PrivateRoute from './auth/PrivateRoute'
 import SignUp from './auth/SignUp'
+import MyPage from './components/MyPage'
 import Form from './components/PracticeRecord/Form'
 import Home from './Home'
 
@@ -13,7 +14,8 @@ const App = () => {
     <AuthProvider>
       <Router>
         <Switch>
-          <PrivateRoute exact path="/mypage" component={Home} />
+          <Route exact path="/" component={Home} />
+          <PrivateRoute exact path="/mypage" component={MyPage} />
           <PrivateRoute exact path="/practice_records/new" component={Form} />
           <PrivateRoute exact path="/practice_records/:id" component={Form} />
           <Route exact path="/login" component={Login} />

@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ClearIcon from '@material-ui/icons/Clear'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import CreateIcon from '@material-ui/icons/Create'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
@@ -147,7 +147,7 @@ const Form = () => {
           <CssBaseline />
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
+              <CreateIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               練習記録

@@ -44,7 +44,7 @@ const PracticeRecord = ({
             <Typography variant="caption" color="textSecondary">
               コース
             </Typography>
-            <Typography variant="body2" component="p">
+            <Typography variant="body1" component="p">
               {offRoadTrack.name}
             </Typography>
 

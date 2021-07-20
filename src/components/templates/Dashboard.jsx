@@ -1,3 +1,4 @@
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
@@ -5,25 +6,23 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import IconButton from '@material-ui/core/IconButton'
-import Link from '@material-ui/core/Link'
 import List from '@material-ui/core/List'
 import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import CreateIcon from '@material-ui/icons/Create'
 import MenuIcon from '@material-ui/icons/Menu'
+import TimelineIcon from '@material-ui/icons/Timeline'
 import clsx from 'clsx'
-import React from 'react'
+import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
+import { AuthContext } from '../../auth/AuthProvider'
 
-function Copyright() {
+const Copyright = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
+      {`Copyright © MX Track ${new Date().getFullYear()}.`}
     </Typography>
   )
 }
@@ -107,6 +106,10 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
+  link: {
+    textDecoration: 'none',
+    color: theme.palette.text.secondary,
+  },
 }))
 
 export const Dashboard = ({ children }) => {
@@ -114,6 +117,7 @@ export const Dashboard = ({ children }) => {
   const [open, setOpen] = React.useState(false)
   const handleDrawerOpen = () => setOpen(true)
   const handleDrawerClose = () => setOpen(false)
+  const { currentUser, logout } = useContext(AuthContext)
 
   return (
     <div className={classes.root}>
@@ -142,7 +146,7 @@ export const Dashboard = ({ children }) => {
             noWrap
             className={classes.title}
           >
-            Dashboard
+            MX Track
           </Typography>
         </Toolbar>
       </AppBar>
@@ -159,7 +163,46 @@ export const Dashboard = ({ children }) => {
           </IconButton>
         </div>
         <Divider />
-        <List></List>
+        <List>
+          <Link
+            to="/mypage"
+            className={classes.link}
+            onClick={handleDrawerClose}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <TimelineIcon />
+              </ListItemIcon>
+              <ListItemText primary="アクティビティ" />
+            </ListItem>
+          </Link>
+          <Link
+            to="/practice_records/new"
+            className={classes.link}
+            onClick={handleDrawerClose}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <CreateIcon />
+              </ListItemIcon>
+              <ListItemText primary="走行を記録する" />
+            </ListItem>
+          </Link>
+        </List>
+
+        {currentUser && (
+          <>
+            <Divider />
+            <List>
+              <ListItem button className={classes.link} onClick={logout}>
+                <ListItemIcon>
+                  <span className="material-icons">logout</span>
+                </ListItemIcon>
+                <ListItemText primary="ログアウト" />
+              </ListItem>
+            </List>
+          </>
+        )}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
