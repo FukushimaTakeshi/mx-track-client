@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('token', token)
           const res = await apiClient.post('/users', {
             token,
-            displayName,
+            name: displayName,
             email,
             photoURL,
           })
