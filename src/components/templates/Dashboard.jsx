@@ -1,4 +1,11 @@
-import { Button, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
+import {
+  Button,
+  Grid,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+} from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
@@ -220,7 +227,15 @@ export const Dashboard = ({ children }) => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          {children}
+          {React.Children.map(children, (child, index) => (
+            <Grid key={index} container spacing={5}>
+              <Grid item xs={12}>
+                <Paper elevation={0} className={classes.paper}>
+                  {child}
+                </Paper>
+              </Grid>
+            </Grid>
+          ))}
           <Box pt={4}>
             <Copyright />
           </Box>

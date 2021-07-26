@@ -8,8 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Toolbar,
-  Typography,
 } from '@material-ui/core'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import EditIcon from '@material-ui/icons/Edit'
@@ -17,6 +15,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { apiClientWithAuth } from '../../lib/api_client'
 import HandleFetch from '../Spinner/HandleFetch'
+import Title from '../Title'
 import PracticeRecord from './PracticeRecord'
 
 const useStyles = makeStyles({
@@ -74,11 +73,8 @@ const PracticeRecordList = () => {
           }}
         ></PracticeRecord>
       </Dialog>
-      <Toolbar>
-        <Typography color="textSecondary" variant="subtitle1" component="div">
-          activities
-        </Typography>
-      </Toolbar>
+      <Title>activities</Title>
+
       <HandleFetch inner loading={loading}>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="simple table">

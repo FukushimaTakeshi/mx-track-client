@@ -291,14 +291,14 @@ const Form = () => {
             </div>
           </div>
         </Container>
+        {success && (
+          <SuccessSnackbar
+            open={success}
+            onClose={() => history.push('/mypage')}
+            message="登録しました !"
+          />
+        )}
       </HandleFetch>
-      {success && (
-        <SuccessSnackbar
-          open={success}
-          onClose={() => history.push('/mypage')}
-          message="登録しました !"
-        />
-      )}
     </Dashboard>
   )
 }

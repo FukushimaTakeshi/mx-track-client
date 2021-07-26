@@ -1,8 +1,9 @@
-import { Toolbar, Typography } from '@material-ui/core'
+import { Toolbar } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import Chart from 'react-apexcharts'
 import { apiClientWithAuth } from '../../lib/api_client'
 import HandleFetch from '../Spinner/HandleFetch'
+import Title from '../Title'
 
 const PracticeChart = () => {
   const [loading, setLoading] = useState(false)
@@ -78,9 +79,7 @@ const PracticeChart = () => {
   return (
     <>
       <Toolbar>
-        <Typography color="textSecondary" variant="subtitle1" component="div">
-          my activity
-        </Typography>
+        <Title>my activity</Title>
       </Toolbar>
       <HandleFetch inner loading={loading}>
         <Chart
