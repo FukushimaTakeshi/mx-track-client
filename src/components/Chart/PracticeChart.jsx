@@ -1,4 +1,3 @@
-import { Toolbar } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import Chart from 'react-apexcharts'
 import { apiClientWithAuth } from '../../lib/api_client'
@@ -78,9 +77,7 @@ const PracticeChart = () => {
 
   return (
     <>
-      <Toolbar>
-        <Title>my activity</Title>
-      </Toolbar>
+      <Title>my activity</Title>
       <HandleFetch inner loading={loading}>
         <Chart
           options={options}
