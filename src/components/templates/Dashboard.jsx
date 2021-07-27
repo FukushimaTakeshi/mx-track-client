@@ -4,6 +4,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
   Paper,
 } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
@@ -17,13 +19,16 @@ import List from '@material-ui/core/List'
 import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
+import AccountCircle from '@material-ui/icons/AccountCircle'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import CreateIcon from '@material-ui/icons/Create'
 import MenuIcon from '@material-ui/icons/Menu'
+import PersonIcon from '@material-ui/icons/Person'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
+import SettingsIcon from '@material-ui/icons/Settings'
 import TimelineIcon from '@material-ui/icons/Timeline'
 import clsx from 'clsx'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../auth/AuthProvider'
 
@@ -118,14 +123,27 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     color: theme.palette.text.secondary,
   },
+  AccountLink: {
+    textDecoration: 'none',
+    color: theme.palette.text.primary,
+  },
 }))
 
 export const Dashboard = ({ children }) => {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   const handleDrawerOpen = () => setOpen(true)
   const handleDrawerClose = () => setOpen(false)
   const { currentUser, logout } = useContext(AuthContext)
+
+  const [anchorEl, setAnchorEl] = useState(null)
+
+  const handleAccountMenu = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleCloseAccountMenu = () => {
+    setAnchorEl(null)
+  }
 
   return (
     <div className={classes.root}>
@@ -156,6 +174,58 @@ export const Dashboard = ({ children }) => {
           >
             MX Track
           </Typography>
+          {currentUser && (
+            <>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleAccountMenu}
+                color="inherit"
+              >
+                <AccountCircle fontSize="large" />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleCloseAccountMenu}
+              >
+                <Link
+                  to="/user/edit"
+                  className={classes.AccountLink}
+                  onClick={handleCloseAccountMenu}
+                >
+                  <MenuItem>
+                    <ListItemIcon>
+                      <PersonIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText primary="Profile" />
+                  </MenuItem>
+                </Link>
+                <MenuItem onClick={handleCloseAccountMenu}>
+                  <ListItemIcon>
+                    <SettingsIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Settings" />
+                </MenuItem>
+                <MenuItem onClick={logout}>
+                  <ListItemIcon>
+                    <span className="material-icons">logout</span>
+                  </ListItemIcon>
+                  <ListItemText primary="ログアウト" />
+                </MenuItem>
+              </Menu>
+            </>
+          )}
         </Toolbar>
       </AppBar>
       <Drawer

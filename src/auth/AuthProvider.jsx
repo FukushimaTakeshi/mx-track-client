@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
             email,
             photoURL,
           })
-          setCurrentUser(res)
+          setCurrentUser(res.data)
         }
         // FIXME: なんかへん
         resolve()
