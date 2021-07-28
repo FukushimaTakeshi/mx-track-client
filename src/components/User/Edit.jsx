@@ -71,7 +71,7 @@ const Edit = () => {
           className={classes.submit}
           onClick={handleSubmit}
         >
-          保存
+          更新
         </Button>
       </Container>
     </Dashboard>

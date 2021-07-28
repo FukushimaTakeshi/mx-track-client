@@ -25,7 +25,6 @@ import CreateIcon from '@material-ui/icons/Create'
 import MenuIcon from '@material-ui/icons/Menu'
 import PersonIcon from '@material-ui/icons/Person'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
-import SettingsIcon from '@material-ui/icons/Settings'
 import TimelineIcon from '@material-ui/icons/Timeline'
 import clsx from 'clsx'
 import React, { useContext, useState } from 'react'
@@ -211,12 +210,6 @@ export const Dashboard = ({ children }) => {
                     <ListItemText primary="Profile" />
                   </MenuItem>
                 </Link>
-                <MenuItem onClick={handleCloseAccountMenu}>
-                  <ListItemIcon>
-                    <SettingsIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText primary="Settings" />
-                </MenuItem>
                 <MenuItem onClick={logout}>
                   <ListItemIcon>
                     <span className="material-icons">logout</span>
