@@ -107,7 +107,7 @@ const VehicleSelects = () => {
           <Grid container spacing={0} className={classes.gridContainer}>
             {myVehicles.map((myVehicle) => (
               <Grid item xs={12} key={myVehicle.id}>
-                <Typography component="span" variant="body1" gutterBottom>
+                <Typography component="span" variant="subtitle1" gutterBottom>
                   {myVehicle.vehicle.name}
                 </Typography>
                 <IconButton onClick={() => handleDelete(myVehicle.id)}>
