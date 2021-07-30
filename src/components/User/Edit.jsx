@@ -11,6 +11,8 @@ import React, { useContext, useState } from 'react'
 import { AuthContext } from '../../auth/AuthProvider'
 import { apiClientWithAuth } from '../../lib/api_client'
 import { Dashboard } from '../templates/Dashboard'
+import Title from '../Title'
+import VehicleSelects from '../Vehicle/VehicleSelects'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,39 +43,43 @@ const Edit = () => {
 
   return (
     <Dashboard>
-      <Container component="main" maxWidth="xs">
-        <Box pb={3}>
-          <Avatar
-            alt="Remy Sharp"
-            src={user.photoUrl}
-            className={classes.avatar}
-          />
-        </Box>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              required
-              name="name"
-              label="名前"
-              fullWidth
-              variant="outlined"
-              autoComplete="given-name"
-              value={user.name}
-              onChange={handleChange}
+      <>
+        <Title>アカウント</Title>
+        <Container component="main" maxWidth="xs">
+          <Box pb={3}>
+            <Avatar
+              alt="Remy Sharp"
+              src={user.photoUrl}
+              className={classes.avatar}
             />
+          </Box>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                name="name"
+                label="名前"
+                fullWidth
+                variant="outlined"
+                autoComplete="given-name"
+                value={user.name}
+                onChange={handleChange}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-          onClick={handleSubmit}
-        >
-          更新
-        </Button>
-      </Container>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handleSubmit}
+          >
+            更新
+          </Button>
+        </Container>
+      </>
+      <VehicleSelects />
     </Dashboard>
   )
 }
