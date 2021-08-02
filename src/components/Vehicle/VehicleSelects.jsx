@@ -2,9 +2,12 @@ import {
   Button,
   Container,
   Divider,
+  FormControlLabel,
   Grid,
   IconButton,
   InputAdornment,
+  Radio,
+  RadioGroup,
   TextField,
   Typography,
 } from '@material-ui/core'
@@ -39,10 +42,14 @@ const VehicleSelects = () => {
   const [vehicles, setVehicles] = useState([])
   const [selected, setSelected] = useState({ brand: {} })
   const [myVehicles, setMyVehicles] = useState([])
+  const [currentVehicleId, setCurrentVehicleId] = useState(0)
 
   useEffect(() => {
     apiClientWithAuth.get('/user_vehicles').then((response) => {
       setMyVehicles(response.data)
+    })
+    apiClientWithAuth.get('/current_vehicles').then((response) => {
+      setCurrentVehicleId(response.data.userVehicleId)
     })
   }, [])
 
@@ -99,22 +106,48 @@ const VehicleSelects = () => {
     apiClientWithAuth.delete(`/user_vehicles/${id}`)
   }
 
+  const handleRadioChange = (event) => {
+    const currentVehicleId = Number(event.target.value)
+    setCurrentVehicleId(currentVehicleId)
+    apiClientWithAuth.post('/current_vehicles', {
+      userVehicleId: currentVehicleId,
+    })
+  }
+
   return (
     <>
       <Title>マイバイク</Title>
       <Container component="main" maxWidth="xs">
         {!!myVehicles.length && (
           <Grid container spacing={0} className={classes.gridContainer}>
-            {myVehicles.map((myVehicle) => (
-              <Grid item xs={12} key={myVehicle.id}>
-                <Typography component="span" variant="subtitle1" gutterBottom>
-                  {myVehicle.vehicle.name}
-                </Typography>
-                <IconButton onClick={() => handleDelete(myVehicle.id)}>
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              </Grid>
-            ))}
+            <RadioGroup value={currentVehicleId} onChange={handleRadioChange}>
+              {myVehicles.map((myVehicle) => (
+                <FormControlLabel
+                  key={myVehicle.id}
+                  value={myVehicle.id}
+                  control={<Radio />}
+                  label={
+                    <Grid item xs={12}>
+                      <Typography
+                        component="span"
+                        variant="subtitle1"
+                        gutterBottom
+                        color={
+                          myVehicle.id === currentVehicleId
+                            ? 'initial'
+                            : 'textSecondary'
+                        }
+                      >
+                        {myVehicle.vehicle.name}
+                      </Typography>
+                      <IconButton onClick={() => handleDelete(myVehicle.id)}>
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Grid>
+                  }
+                />
+              ))}
+            </RadioGroup>
           </Grid>
         )}
         <Divider />
