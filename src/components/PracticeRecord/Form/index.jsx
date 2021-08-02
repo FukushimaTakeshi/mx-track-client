@@ -63,8 +63,12 @@ const Form = () => {
   const handleSubmit = async () => {
     setLoading(true)
     setSuccess(false)
-    const { track, ...restState } = inputState
-    const params = { ...restState, offRoadTrackId: track.id }
+    const { track, userVehicle, ...restState } = inputState
+    const params = {
+      ...restState,
+      offRoadTrackId: track.id,
+      userVehicleId: userVehicle.id,
+    }
 
     id
       ? await apiClientWithAuth.put(`/practice_records/${id}`, params)
@@ -74,12 +78,37 @@ const Form = () => {
     setSuccess(true)
   }
 
+  const [userVehicles, setUserVehicles] = useState([])
+
   useEffect(() => {
-    const fetchPracticeRecord = () => {
-      if (!id) return
-      apiClientWithAuth.get(`/practice_records/${id}`, {}).then((res) => {
-        setInputState(res.data)
+    const fetchUserVehicles = async () => {
+      apiClientWithAuth
+        .get('/user_vehicles/')
+        .then((response) => setUserVehicles(response.data))
+    }
+
+    const fetchCurrentVehicles = () => {
+      apiClientWithAuth.get('/current_vehicles').then((response) => {
+        const foundUserVehicle = userVehicles.find(
+          ({ id }) => id == response.data.userVehicleId
+        )
+        setInputState({
+          ...inputState,
+          userVehicle: foundUserVehicle ? foundUserVehicle : {},
+        })
       })
+    }
+
+    const fetchPracticeRecord = async () => {
+      await fetchUserVehicles()
+      if (id) {
+        apiClientWithAuth.get(`/practice_records/${id}`).then((response) => {
+          setInputState(response.data)
+          !response.data.userVehicle && fetchCurrentVehicles()
+        })
+      } else {
+        fetchCurrentVehicles()
+      }
       // TODO: エラー処理
     }
     fetchPracticeRecord()
@@ -129,6 +158,10 @@ const Form = () => {
     setInputState(rest)
   }
 
+  const handleChangeUserVehicle = (event, newUserVehicle) => {
+    setInputState({ ...inputState, userVehicle: newUserVehicle })
+  }
+
   return (
     <Dashboard>
       <HandleFetch loading={loading}>
@@ -172,7 +205,6 @@ const Form = () => {
                 <Grid item xs={4}>
                   <Autocomplete
                     disablePortal
-                    id="combo-box-demo"
                     onOpen={fetchOptions}
                     onClose={!optionsLoading && handleCloseSelect}
                     options={tracksOptions}
@@ -218,6 +250,22 @@ const Form = () => {
                     </Grid>
                   </React.Fragment>
                 )}
+
+                <Grid item xs={12}>
+                  <Autocomplete
+                    key={inputState.userVehicle}
+                    disablePortal
+                    value={inputState.userVehicle}
+                    options={userVehicles}
+                    getOptionLabel={(option) =>
+                      option.vehicle ? option.vehicle.name : ''
+                    }
+                    onChange={handleChangeUserVehicle}
+                    renderInput={(params) => (
+                      <TextField {...params} label="バイク" required />
+                    )}
+                  />
+                </Grid>
 
                 <Grid item xs={12}>
                   <Typography variant="caption" color="textSecondary">
