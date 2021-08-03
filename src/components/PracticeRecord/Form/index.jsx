@@ -82,12 +82,12 @@ const Form = () => {
 
   useEffect(() => {
     const fetchUserVehicles = async () => {
-      apiClientWithAuth
-        .get('/user_vehicles/')
-        .then((response) => setUserVehicles(response.data))
+      const response = await apiClientWithAuth.get('/user_vehicles/')
+      setUserVehicles(response.data)
+      return response.data
     }
 
-    const fetchCurrentVehicles = () => {
+    const fetchCurrentVehicles = (userVehicles) => {
       apiClientWithAuth.get('/current_vehicles').then((response) => {
         const foundUserVehicle = userVehicles.find(
           ({ id }) => id == response.data.userVehicleId
@@ -100,14 +100,14 @@ const Form = () => {
     }
 
     const fetchPracticeRecord = async () => {
-      await fetchUserVehicles()
+      const userVehicles = await fetchUserVehicles()
       if (id) {
         apiClientWithAuth.get(`/practice_records/${id}`).then((response) => {
           setInputState(response.data)
-          !response.data.userVehicle && fetchCurrentVehicles()
+          !response.data.userVehicle && fetchCurrentVehicles(userVehicles)
         })
       } else {
-        fetchCurrentVehicles()
+        fetchCurrentVehicles(userVehicles)
       }
       // TODO: エラー処理
     }
@@ -277,7 +277,7 @@ const Form = () => {
                         control={
                           <Select
                             name="hours"
-                            value={Number(inputState.hours)}
+                            value={Number(inputState.hours) || 0}
                             onChange={handleChange}
                             label="時"
                           >
@@ -296,7 +296,7 @@ const Form = () => {
                         control={
                           <Select
                             name="minutes"
-                            value={Number(inputState.minutes)}
+                            value={Number(inputState.minutes) || 0}
                             onChange={handleChange}
                             label="分"
                           >

@@ -1,6 +1,11 @@
 import {
   Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   FormControlLabel,
   Grid,
@@ -98,13 +103,9 @@ const VehicleSelects = () => {
     setSelected({ brand: {} })
   }
 
-  const handleDelete = (id) => {
-    const filteredVehicles = myVehicles.filter(
-      (myVehicle) => myVehicle.id !== id
-    )
-    setMyVehicles([...filteredVehicles])
-    apiClientWithAuth.delete(`/user_vehicles/${id}`)
-  }
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const handleShowDialog = () => setShowDeleteDialog(true)
+  const handleCloseDialog = () => setShowDeleteDialog(false)
 
   const handleRadioChange = (event) => {
     const currentVehicleId = Number(event.target.value)
@@ -112,6 +113,15 @@ const VehicleSelects = () => {
     apiClientWithAuth.post('/current_vehicles', {
       userVehicleId: currentVehicleId,
     })
+  }
+
+  const handleDelete = (id) => {
+    const filteredVehicles = myVehicles.filter(
+      (myVehicle) => myVehicle.id !== id
+    )
+    setMyVehicles([...filteredVehicles])
+    apiClientWithAuth.delete(`/user_vehicles/${id}`)
+    handleCloseDialog()
   }
 
   return (
@@ -122,30 +132,52 @@ const VehicleSelects = () => {
           <Grid container spacing={0} className={classes.gridContainer}>
             <RadioGroup value={currentVehicleId} onChange={handleRadioChange}>
               {myVehicles.map((myVehicle) => (
-                <FormControlLabel
-                  key={myVehicle.id}
-                  value={myVehicle.id}
-                  control={<Radio />}
-                  label={
-                    <Grid item xs={12}>
-                      <Typography
-                        component="span"
-                        variant="subtitle1"
-                        gutterBottom
-                        color={
-                          myVehicle.id === currentVehicleId
-                            ? 'initial'
-                            : 'textSecondary'
-                        }
+                <>
+                  <FormControlLabel
+                    key={myVehicle.id}
+                    value={myVehicle.id}
+                    control={<Radio />}
+                    label={
+                      <Grid item xs={12}>
+                        <Typography
+                          component="span"
+                          variant="subtitle1"
+                          gutterBottom
+                          color={
+                            myVehicle.id === currentVehicleId
+                              ? 'initial'
+                              : 'textSecondary'
+                          }
+                        >
+                          {myVehicle.vehicle.name}
+                        </Typography>
+                        <IconButton onClick={handleShowDialog}>
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Grid>
+                    }
+                  />
+                  <Dialog open={showDeleteDialog} onClose={handleCloseDialog}>
+                    <DialogTitle>{'削除してもよろしいですか？'}</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText>
+                        削除すると、該当バイクで登録した練習記録がすべて無効になります。
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseDialog} color="primary">
+                        キャンセル
+                      </Button>
+                      <Button
+                        onClick={() => handleDelete(myVehicle.id)}
+                        color="primary"
+                        autoFocus
                       >
-                        {myVehicle.vehicle.name}
-                      </Typography>
-                      <IconButton onClick={() => handleDelete(myVehicle.id)}>
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    </Grid>
-                  }
-                />
+                        削除
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </>
               ))}
             </RadioGroup>
           </Grid>
