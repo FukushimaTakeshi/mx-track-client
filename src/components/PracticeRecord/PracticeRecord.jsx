@@ -15,6 +15,7 @@ import SuccessSnackbar from '../SuccessSnackbar'
 const PracticeRecord = ({
   id,
   offRoadTrack,
+  vehicle,
   practiceDate,
   hours,
   minutes,
@@ -46,6 +47,13 @@ const PracticeRecord = ({
             </Typography>
             <Typography variant="body1" component="p">
               {offRoadTrack.name}
+            </Typography>
+
+            <Typography variant="caption" color="textSecondary">
+              バイク
+            </Typography>
+            <Typography variant="body1" component="p">
+              {vehicle.modelName}
             </Typography>
 
             <Typography variant="caption" color="textSecondary">

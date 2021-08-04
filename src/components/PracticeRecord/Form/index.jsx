@@ -92,10 +92,10 @@ const Form = () => {
         const foundUserVehicle = userVehicles.find(
           ({ id }) => id == response.data.userVehicleId
         )
-        setInputState({
-          ...inputState,
+        setInputState((preState) => ({
+          ...preState,
           userVehicle: foundUserVehicle ? foundUserVehicle : {},
-        })
+        }))
       })
     }
 

@@ -19,7 +19,7 @@ import Title from '../Title'
 import PracticeRecord from './PracticeRecord'
 
 const useStyles = makeStyles({
-  table: { minWidth: 650 },
+  table: { minWidth: 750 },
 })
 
 const StyledTableCell = withStyles({ root: { padding: '1.6em' } })(TableCell)
@@ -82,6 +82,7 @@ const PracticeRecordList = () => {
               <TableRow>
                 <TableCell>日付</TableCell>
                 <TableCell align="right">コース</TableCell>
+                <TableCell align="right">バイク</TableCell>
                 <TableCell align="right">走行時間</TableCell>
                 <TableCell align="right">メモ</TableCell>
                 <TableCell align="right"></TableCell>
@@ -95,6 +96,9 @@ const PracticeRecordList = () => {
                   </StyledTableCell>
                   <StyledTableCell align="right">
                     {row.offRoadTrack.name}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.vehicle.modelName}
                   </StyledTableCell>
                   <StyledTableCell align="right">{`${row.hours}時間${row.minutes}分`}</StyledTableCell>
                   <StyledTableCell align="right">
