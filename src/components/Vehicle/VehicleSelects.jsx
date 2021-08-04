@@ -132,9 +132,8 @@ const VehicleSelects = () => {
           <Grid container spacing={0} className={classes.gridContainer}>
             <RadioGroup value={currentVehicleId} onChange={handleRadioChange}>
               {myVehicles.map((myVehicle) => (
-                <>
+                <React.Fragment key={myVehicle.id}>
                   <FormControlLabel
-                    key={myVehicle.id}
                     value={myVehicle.id}
                     control={<Radio />}
                     label={
@@ -177,7 +176,7 @@ const VehicleSelects = () => {
                       </Button>
                     </DialogActions>
                   </Dialog>
-                </>
+                </React.Fragment>
               ))}
             </RadioGroup>
           </Grid>
