@@ -7,9 +7,12 @@ import {
   TextField,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { AuthContext } from '../../auth/AuthProvider'
+import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
+import { useForm } from '../../hooks/useForm'
 import { apiClientWithAuth } from '../../lib/api_client'
+import ErrorNotification from '../Notification/ErrorNotification'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
 import VehicleSelects from '../Vehicle/VehicleSelects'
@@ -30,16 +33,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const useUserForm = (user) => {
+  const name = useForm(user.name)
+  return { name }
+}
+
 const Edit = () => {
   const classes = useStyles()
   const { currentUser } = useContext(AuthContext)
-  const [user, setUser] = useState(currentUser)
-  const handleChange = (event) => {
-    setUser({ ...user, [event.target.name]: event.target.value })
+  const form = useUserForm(currentUser)
+  const validator = () => {
+    // TODO: validate
+    return true
   }
-  const handleSubmit = () => {
-    apiClientWithAuth.put(`/users/${user.id}`, { ...user })
-  }
+
+  const save = useAsyncExecutor(() => {
+    const params = { name: form.name.value }
+    return apiClientWithAuth.put(`/users/${currentUser.id}`, params)
+  }, validator)
 
   return (
     <Dashboard>
@@ -47,12 +58,9 @@ const Edit = () => {
         <Title>アカウント</Title>
         <Container component="main" maxWidth="xs">
           <Box pb={3}>
-            <Avatar
-              alt="Remy Sharp"
-              src={user.photoUrl}
-              className={classes.avatar}
-            />
+            <Avatar src={currentUser.photoUrl} className={classes.avatar} />
           </Box>
+          <ErrorNotification task={save} />
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -62,8 +70,10 @@ const Edit = () => {
                 fullWidth
                 variant="outlined"
                 autoComplete="given-name"
-                value={user.name}
-                onChange={handleChange}
+                value={form.name.value}
+                onChange={form.name.setValueFromEvent}
+                error={!!form.name.error}
+                helperText={form.name.error}
               />
             </Grid>
           </Grid>
@@ -73,7 +83,8 @@ const Edit = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSubmit}
+            onClick={save.execute}
+            disabled={save.isExecuting}
           >
             更新
           </Button>

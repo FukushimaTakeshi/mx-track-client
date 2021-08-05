@@ -20,8 +20,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { useHistory } from 'react-router-dom'
 import { apiClient, apiClientWithAuth } from '../../../lib/api_client'
+import SuccessNotification from '../../Notification/SuccessNotification'
 import HandleFetch from '../../Spinner/HandleFetch'
-import SuccessSnackbar from '../../SuccessSnackbar'
 import { Dashboard } from '../../templates/Dashboard'
 import PrefectureList from '../../Track/PrefectureList'
 
@@ -340,7 +340,7 @@ const Form = () => {
           </div>
         </Container>
         {success && (
-          <SuccessSnackbar
+          <SuccessNotification
             open={success}
             onClose={() => history.push('/mypage')}
             message="登録しました !"

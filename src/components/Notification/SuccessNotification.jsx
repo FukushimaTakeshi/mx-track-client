@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const SuccessSnackbar = (props) => {
+const SuccessNotification = (props) => {
   const classes = useStyles()
   const [open, setOpen] = useState(props.open)
 
@@ -56,4 +56,4 @@ const SuccessSnackbar = (props) => {
   )
 }
 
-export default SuccessSnackbar
+export default SuccessNotification

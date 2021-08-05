@@ -10,7 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import SuccessSnackbar from '../SuccessSnackbar'
+import SuccessNotification from '../Notification/SuccessNotification'
 
 const PracticeRecord = ({
   id,
@@ -85,7 +85,7 @@ const PracticeRecord = ({
           </IconButton>
         </CardActions>
         {deleted && (
-          <SuccessSnackbar
+          <SuccessNotification
             open={deleted}
             onClose={handleClose}
             message="削除しました！"
