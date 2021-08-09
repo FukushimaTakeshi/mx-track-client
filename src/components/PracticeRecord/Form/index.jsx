@@ -19,7 +19,10 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { useHistory } from 'react-router-dom'
+import { useAsyncExecutor } from '../../../hooks/useAsyncExecutor'
+import { useForm } from '../../../hooks/useForm'
 import { apiClient, apiClientWithAuth } from '../../../lib/api_client'
+import ErrorNotification from '../../Notification/ErrorNotification'
 import SuccessNotification from '../../Notification/SuccessNotification'
 import HandleFetch from '../../Spinner/HandleFetch'
 import { Dashboard } from '../../templates/Dashboard'
@@ -49,65 +52,87 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const usePracticeRecordForm = () => {
+  const regionId = useForm()
+  const practiceDate = useForm()
+  const track = useForm()
+  const userVehicle = useForm()
+  const hours = useForm()
+  const minutes = useForm()
+  const memo = useForm()
+  return {
+    regionId,
+    practiceDate,
+    track,
+    userVehicle,
+    hours,
+    minutes,
+    memo,
+  }
+}
+
 const Form = () => {
   const classes = useStyles()
+  const form = usePracticeRecordForm()
   const { id } = useParams()
-  const [inputState, setInputState] = useState({})
-
-  const handleChange = (event) => {
-    setInputState({ ...inputState, [event.target.name]: event.target.value })
-  }
-
   const history = useHistory()
-
-  const handleSubmit = async () => {
-    setLoading(true)
-    setSuccess(false)
-    const { track, userVehicle, ...restState } = inputState
-    const params = {
-      ...restState,
-      offRoadTrackId: track.id,
-      userVehicleId: userVehicle.id,
-    }
-
-    id
-      ? await apiClientWithAuth.put(`/practice_records/${id}`, params)
-      : await apiClientWithAuth.post(`/practice_records/`, params)
-    setInputState({})
-    setLoading(false)
-    setSuccess(true)
+  const validator = () => {
+    // TODO: validate
+    return true
   }
+
+  const save = useAsyncExecutor(() => {
+    setSuccess(false)
+    const params = {
+      practiceDate: form.practiceDate.value,
+      offRoadTrackId: form.track.value.id,
+      userVehicleId: form.userVehicle.value.id,
+      hours: form.hours.value,
+      minutes: form.minutes.value,
+      memo: form.memo.value,
+    }
+    const request = id
+      ? apiClientWithAuth.put(`/practice_records/${id}`, params)
+      : apiClientWithAuth.post(`/practice_records/`, params)
+    return request.then(() => setSuccess(true))
+  }, validator)
 
   const [userVehicles, setUserVehicles] = useState([])
 
   useEffect(() => {
-    const fetchUserVehicles = async () => {
-      const response = await apiClientWithAuth.get('/user_vehicles/')
-      setUserVehicles(response.data)
-      return response.data
-    }
+    apiClientWithAuth
+      .get('/user_vehicles/')
+      .then((response) => setUserVehicles(response.data))
+  }, [])
 
-    const fetchCurrentVehicles = (userVehicles) => {
+  useEffect(() => {
+    const fetchCurrentVehicles = () => {
       apiClientWithAuth.get('/current_vehicles').then((response) => {
         const foundUserVehicle = userVehicles.find(
           ({ id }) => id == response.data.userVehicleId
         )
-        setInputState((preState) => ({
-          ...preState,
-          userVehicle: foundUserVehicle ? foundUserVehicle : {},
-        }))
+        form.userVehicle.setValue(foundUserVehicle ? foundUserVehicle : {})
       })
     }
 
+    const setFormValues = (data = {}) => {
+      form.practiceDate.setValue(data.practiceDate || '')
+      form.track.setValue(data.track)
+      form.userVehicle.setValue(data.userVehicle)
+      form.hours.setValue(data.hours)
+      form.minutes.setValue(data.minutes)
+      form.memo.setValue(data.memo || '')
+    }
+
     const fetchPracticeRecord = async () => {
-      const userVehicles = await fetchUserVehicles()
       if (id) {
         apiClientWithAuth.get(`/practice_records/${id}`).then((response) => {
-          setInputState(response.data)
-          !response.data.userVehicle && fetchCurrentVehicles(userVehicles)
+          setFormValues(response.data)
+          !response.data.userVehicle && fetchCurrentVehicles()
         })
       } else {
-        fetchCurrentVehicles(userVehicles)
+        setFormValues()
+        fetchCurrentVehicles()
       }
       // TODO: エラー処理
     }
@@ -115,14 +140,11 @@ const Form = () => {
   }, [id])
 
   const [tracksOptions, setTrackOptions] = useState([])
-  const [loading, setLoading] = useState(false)
   const [optionsLoading, setOptionsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  const fetchOptions = () => {
-    if (inputState.regionId) {
-      setInputState({ ...inputState, regionId: null })
-    }
+  const fetchRegions = () => {
+    form.regionId.setValue(null)
     if (tracksOptions.length) {
       return
     }
@@ -133,48 +155,32 @@ const Form = () => {
     })
   }
 
-  const onChangeSelect = (e, value) => {
+  const onChangeRegion = (e, value) => {
     if (!value) return
-    setInputState({ ...inputState, regionId: value.id })
+    form.regionId.setValue(value.id)
   }
 
   const [showModal, setShowModal] = useState(false)
+  const handleCloseSelect = () => setShowModal(true)
+  const handleCloseModal = () => setShowModal(false)
 
-  const handleCloseSelect = () => {
-    setShowModal(true)
-  }
-
-  const handleCloseModal = () => {
-    setShowModal(false)
-  }
-
-  const handleSelectTrack = (track) => {
-    setInputState({ ...inputState, track: { id: track.id, name: track.name } })
-  }
-
-  const handleClearTrack = () => {
-    const { track, ...rest } = inputState
-    if (!track) return
-    setInputState(rest)
-  }
-
-  const handleChangeUserVehicle = (event, newUserVehicle) => {
-    setInputState({ ...inputState, userVehicle: newUserVehicle })
-  }
+  const handleChangeUserVehicle = (e, newUserVehicle) =>
+    form.userVehicle.setValue(newUserVehicle)
 
   return (
     <Dashboard>
-      <HandleFetch loading={loading}>
+      <HandleFetch loading={save.isExecuting}>
+        <ErrorNotification task={save} />
         <Container component="main" maxWidth="xs">
           <Dialog
             fullScreen
-            open={showModal && !!inputState.regionId}
+            open={showModal && !!form.regionId.value}
             onClose={handleCloseModal}
           >
             <PrefectureList
-              regionId={inputState.regionId}
+              regionId={form.regionId.value}
               onClose={handleCloseModal}
-              handleSelectTrack={handleSelectTrack}
+              handleSelectTrack={form.track.setValue}
             ></PrefectureList>
           </Dialog>
           <CssBaseline />
@@ -191,7 +197,7 @@ const Form = () => {
                   <TextField
                     id="date"
                     name="practiceDate"
-                    value={inputState.practiceDate}
+                    value={form.practiceDate.value}
                     variant="outlined"
                     required
                     label="練習日付"
@@ -199,18 +205,18 @@ const Form = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    onChange={handleChange}
+                    onChange={form.practiceDate.setValueFromEvent}
                   />
                 </Grid>
                 <Grid item xs={4}>
                   <Autocomplete
                     disablePortal
-                    onOpen={fetchOptions}
+                    onOpen={fetchRegions}
                     onClose={!optionsLoading && handleCloseSelect}
                     options={tracksOptions}
                     getOptionLabel={(option) => option.name}
                     loading={optionsLoading}
-                    onChange={onChangeSelect}
+                    onChange={onChangeRegion}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -231,21 +237,21 @@ const Form = () => {
                     )}
                   />
                 </Grid>
-                {inputState.track && (
+                {form.track.value && (
                   <React.Fragment>
                     <Grid item xs={7}>
                       <Typography variant="caption" color="textSecondary">
                         コース
                       </Typography>
                       <Typography variant="body1" gutterBottom>
-                        {inputState.track.name}
+                        {form.track.value.name}
                       </Typography>
                     </Grid>
                     <Grid item xs={1}>
                       <ClearIcon
                         color="disabled"
                         fontSize="small"
-                        onClick={handleClearTrack}
+                        onClick={() => form.track.setValue({})}
                       />
                     </Grid>
                   </React.Fragment>
@@ -253,9 +259,9 @@ const Form = () => {
 
                 <Grid item xs={12}>
                   <Autocomplete
-                    key={inputState.userVehicle}
+                    key={form.userVehicle.value}
                     disablePortal
-                    value={inputState.userVehicle}
+                    value={form.userVehicle.value}
                     options={userVehicles}
                     getOptionLabel={(option) =>
                       option.vehicle ? option.vehicle.name : ''
@@ -277,8 +283,8 @@ const Form = () => {
                         control={
                           <Select
                             name="hours"
-                            value={Number(inputState.hours) || 0}
-                            onChange={handleChange}
+                            value={Number(form.hours.value) || 0}
+                            onChange={form.hours.setValueFromEvent}
                             label="時"
                           >
                             {[...Array(24).keys()].map((value) => (
@@ -296,8 +302,8 @@ const Form = () => {
                         control={
                           <Select
                             name="minutes"
-                            value={Number(inputState.minutes) || 0}
-                            onChange={handleChange}
+                            value={Number(form.minutes.value) || 0}
+                            onChange={form.minutes.setValueFromEvent}
                             label="分"
                           >
                             {[...Array(60).keys()].map((value) => (
@@ -321,8 +327,8 @@ const Form = () => {
                     multiline
                     rows={4}
                     placeholder="タイムやセッティングなどのメモ"
-                    value={inputState.memo}
-                    onChange={handleChange}
+                    value={form.memo.value}
+                    onChange={form.memo.setValueFromEvent}
                   />
                 </Grid>
               </Grid>
@@ -332,7 +338,8 @@ const Form = () => {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={handleSubmit}
+                onClick={save.execute}
+                disabled={save.isExecuting}
               >
                 送信
               </Button>

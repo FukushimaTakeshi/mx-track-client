@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export const useForm = (defaultValue) => {
+export const useForm = (defaultValue = '') => {
   const [error, setError] = useState('')
   const [value, setValue] = useState(defaultValue)
 
