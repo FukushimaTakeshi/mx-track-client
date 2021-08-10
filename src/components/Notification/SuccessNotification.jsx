@@ -1,57 +1,21 @@
-import { Snackbar, SnackbarContent } from '@material-ui/core'
-import { green } from '@material-ui/core/colors'
-import { makeStyles } from '@material-ui/core/styles'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-import React, { useState } from 'react'
+import { Snackbar } from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
+import React from 'react'
 
-const useStyles = makeStyles((theme) => ({
-  success: {
-    backgroundColor: green[600],
-  },
-
-  icon: {
-    fontSize: 20,
-  },
-  iconVariant: {
-    fontSize: 20,
-    opacity: 0.9,
-    marginRight: theme.spacing(1),
-  },
-  message: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-}))
-
-const SuccessNotification = (props) => {
-  const classes = useStyles()
-  const [open, setOpen] = useState(props.open)
-
+const SuccessNotification = ({ open, onClose, message }) => {
   const handleClose = () => {
-    setOpen(false)
-    props.onClose && props.onClose()
+    onClose && onClose()
+  }
+
+  if (!open) {
+    return null
   }
 
   return (
-    <Snackbar
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
-      }}
-      open={open}
-      autoHideDuration={6000}
-      onClose={handleClose}
-    >
-      <SnackbarContent
-        className={classes.success}
-        aria-describedby="client-snackbar"
-        message={
-          <span id="client-snackbar" className={classes.message}>
-            <CheckCircleIcon className={classes.iconVariant} />
-            {props.message}
-          </span>
-        }
-      />
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Alert onClose={handleClose} severity="success">
+        {message}
+      </Alert>
     </Snackbar>
   )
 }

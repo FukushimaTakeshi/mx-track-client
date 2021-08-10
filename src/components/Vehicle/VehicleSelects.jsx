@@ -24,10 +24,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import { apiClient, apiClientWithAuth } from '../../lib/api_client'
 import Title from '../Title'
+import Setting from './Setting'
 
 const useStyles = makeStyles((theme) => ({
   gridContainer: {
-    margin: theme.spacing(2),
+    // margin: theme.spacing(2),
+    width: '270px',
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -124,15 +126,23 @@ const VehicleSelects = () => {
     handleCloseDialog()
   }
 
+  const [setting, setSetting] = useState({})
+  const handleOpenSetting = (vehicle) => {
+    setSetting({ show: true, vehicle })
+  }
+  const handleCloseSetting = () => {
+    setSetting({ show: false })
+  }
+
   return (
     <>
       <Title>マイバイク</Title>
       <Container component="main" maxWidth="xs">
         {!!myVehicles.length && (
-          <Grid container spacing={0} className={classes.gridContainer}>
-            <RadioGroup value={currentVehicleId} onChange={handleRadioChange}>
-              {myVehicles.map((myVehicle) => (
-                <React.Fragment key={myVehicle.id}>
+          <RadioGroup value={currentVehicleId} onChange={handleRadioChange}>
+            {myVehicles.map((myVehicle) => (
+              <React.Fragment key={myVehicle.id}>
+                <Grid container className={classes.gridContainer}>
                   <FormControlLabel
                     value={myVehicle.id}
                     control={<Radio />}
@@ -150,36 +160,62 @@ const VehicleSelects = () => {
                         >
                           {myVehicle.vehicle.name}
                         </Typography>
-                        <IconButton onClick={handleShowDialog}>
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
                       </Grid>
                     }
                   />
-                  <Dialog open={showDeleteDialog} onClose={handleCloseDialog}>
-                    <DialogTitle>{'削除してもよろしいですか？'}</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText>
-                        削除すると、該当バイクで登録した練習記録がすべて無効になります。
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={handleCloseDialog} color="primary">
-                        キャンセル
-                      </Button>
-                      <Button
-                        onClick={() => handleDelete(myVehicle.id)}
-                        color="primary"
-                        autoFocus
-                      >
-                        削除
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </React.Fragment>
-              ))}
-            </RadioGroup>
-          </Grid>
+                </Grid>
+                <Grid container justifyContent="flex-end" spacing={0}>
+                  <Grid item>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => handleOpenSetting(myVehicle)}
+                    >
+                      稼働時間を設定
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <IconButton onClick={handleShowDialog}>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+
+                <Dialog
+                  open={setting.show && setting.vehicle.id === myVehicle.id}
+                  onClose={handleCloseSetting}
+                  fullScreen
+                >
+                  <Setting
+                    id={myVehicle.id}
+                    onClose={() => setSetting({ show: false })}
+                  />
+                </Dialog>
+
+                <Dialog open={showDeleteDialog} onClose={handleCloseDialog}>
+                  <DialogTitle>{'削除してもよろしいですか？'}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      削除すると、該当バイクで登録した練習記録がすべて無効になります。
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                      キャンセル
+                    </Button>
+                    <Button
+                      onClick={() => handleDelete(myVehicle.id)}
+                      color="primary"
+                      autoFocus
+                    >
+                      削除
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </React.Fragment>
+            ))}
+          </RadioGroup>
         )}
         <Divider />
         <Typography variant="subtitle2" color="textSecondary">

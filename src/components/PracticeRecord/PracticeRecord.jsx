@@ -84,13 +84,12 @@ const PracticeRecord = ({
             <DeleteIcon fontSize="small" />
           </IconButton>
         </CardActions>
-        {deleted && (
-          <SuccessNotification
-            open={deleted}
-            onClose={handleClose}
-            message="削除しました！"
-          />
-        )}
+
+        <SuccessNotification
+          open={deleted}
+          onClose={handleClose}
+          message="削除しました！"
+        />
       </Card>
     </>
   )

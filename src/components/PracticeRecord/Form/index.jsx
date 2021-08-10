@@ -277,7 +277,7 @@ const Form = () => {
                   <Typography variant="caption" color="textSecondary">
                     走行時間
                   </Typography>
-                  <Grid container justify="flex-end" spacing={2}>
+                  <Grid container justifyContent="flex-end" spacing={2}>
                     <Grid item>
                       <FormControlLabel
                         control={
@@ -346,13 +346,12 @@ const Form = () => {
             </div>
           </div>
         </Container>
-        {success && (
-          <SuccessNotification
-            open={success}
-            onClose={() => history.push('/mypage')}
-            message="登録しました !"
-          />
-        )}
+
+        <SuccessNotification
+          open={success}
+          onClose={() => history.push('/mypage')}
+          message="登録しました !"
+        />
       </HandleFetch>
     </Dashboard>
   )
