@@ -39,7 +39,7 @@ const MaintenanceList = () => {
   const [maintenances, setMaintenances] = useState([])
   useEffect(() => {
     apiClientWithAuth
-      .get(`maintenances/?user_vehicle_id=${userVehicleId}`)
+      .get(`periodic_maintenances/?user_vehicle_id=${userVehicleId}`)
       .then((response) => setMaintenances(response.data))
   }, [userVehicleId])
 
@@ -55,7 +55,7 @@ const MaintenanceList = () => {
 
   const handleDeleteMaintenance = (maintenanceId) => {
     apiClientWithAuth
-      .delete(`maintenances/${maintenanceId}`)
+      .delete(`periodic_maintenances/${maintenanceId}`)
       .then(() =>
         setMaintenances(maintenances.filter(({ id }) => id !== maintenanceId))
       )

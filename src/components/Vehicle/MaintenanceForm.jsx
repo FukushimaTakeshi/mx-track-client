@@ -51,8 +51,8 @@ const MaintenanceForm = () => {
         userVehicleId: userVehicleId,
       }
       const response = id
-        ? apiClientWithAuth.put(`/maintenances/${id}`, params)
-        : apiClientWithAuth.post('/maintenances', params)
+        ? apiClientWithAuth.put(`/periodic_maintenances/${id}`, params)
+        : apiClientWithAuth.post('/periodic_maintenances', params)
       return response.then(() => setSuccess(true))
     },
     () => true
@@ -60,7 +60,7 @@ const MaintenanceForm = () => {
 
   useEffect(() => {
     if (id) {
-      apiClientWithAuth.get(`/maintenances/${id}`).then((response) => {
+      apiClientWithAuth.get(`/periodic_maintenances/${id}`).then((response) => {
         const { name, cycleHours, cycleMinutes, memo } = response.data
         form.name.setValue(name)
         form.cycleHours.setValue(cycleHours)
