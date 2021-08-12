@@ -1,8 +1,12 @@
 import {
   Button,
   Container,
+  FormControl,
   Grid,
   InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from '@material-ui/core'
@@ -11,7 +15,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { useForm } from '../../hooks/useForm'
-import { apiClientWithAuth } from '../../lib/api_client'
+import { apiClient, apiClientWithAuth } from '../../lib/api_client'
 import ErrorNotification from '../Notification/ErrorNotification'
 import SuccessNotification from '../Notification/SuccessNotification'
 import HandleFetch from '../Spinner/HandleFetch'
@@ -26,14 +30,17 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  formControl: {
+    minWidth: '100%',
+  },
 }))
 
 const useMaintenanceForm = () => {
-  const name = useForm()
+  const menu = useForm()
   const cycleHours = useForm(0)
   const cycleMinutes = useForm(0)
   const memo = useForm()
-  return { name, cycleHours, cycleMinutes, memo }
+  return { menu, cycleHours, cycleMinutes, memo }
 }
 
 const MaintenanceForm = () => {
@@ -44,7 +51,7 @@ const MaintenanceForm = () => {
   const save = useAsyncExecutor(
     () => {
       const params = {
-        name: form.name.value,
+        maintenanceMenuId: form.menu.value.id,
         cycleHours: form.cycleHours.value,
         cycleMinutes: form.cycleMinutes.value,
         memo: form.memo.value,
@@ -58,11 +65,19 @@ const MaintenanceForm = () => {
     () => true
   )
 
+  const [maintenanceMenus, setMaintenanceMenus] = useState([])
+
+  useEffect(() => {
+    apiClient.get('/maintenance_menus').then((response) => {
+      setMaintenanceMenus(response.data)
+    })
+  }, [])
+
   useEffect(() => {
     if (id) {
       apiClientWithAuth.get(`/periodic_maintenances/${id}`).then((response) => {
-        const { name, cycleHours, cycleMinutes, memo } = response.data
-        form.name.setValue(name)
+        const { menu, cycleHours, cycleMinutes, memo } = response.data
+        form.menu.setValue(menu)
         form.cycleHours.setValue(cycleHours)
         form.cycleMinutes.setValue(cycleMinutes)
         form.memo.setValue(memo)
@@ -88,17 +103,26 @@ const MaintenanceForm = () => {
             <div className={classes.form}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <TextField
-                    name="name"
-                    value={form.name.value}
+                  <FormControl
                     variant="outlined"
-                    required
-                    fullWidth
-                    label="メンテナンス項目"
-                    placeholder="エンジンオイル、ピストンなど"
-                    InputLabelProps={{ shrink: true }}
-                    onChange={form.name.setValueFromEvent}
-                  />
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="menu-label">メンテナンス項目</InputLabel>
+                    <Select
+                      name="menu"
+                      label="メンテナンス項目"
+                      labelId="menu-label"
+                      value={form.menu.value}
+                      onChange={form.menu.setValueFromEvent}
+                      renderValue={(value) => value.name}
+                    >
+                      {maintenanceMenus.map((value) => (
+                        <MenuItem key={value.id} value={value}>
+                          {value.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>
