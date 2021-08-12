@@ -22,6 +22,7 @@ import CheckIcon from '@material-ui/icons/Check'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { apiClient, apiClientWithAuth } from '../../lib/api_client'
 import Title from '../Title'
 import Setting from './Setting'
@@ -165,6 +166,18 @@ const VehicleSelects = () => {
                   />
                 </Grid>
                 <Grid container justifyContent="flex-end" spacing={0}>
+                  <Grid item>
+                    <Link to={`/vehicles/${myVehicle.id}/maintenances`}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => handleOpenSetting(myVehicle)}
+                      >
+                        メンテナンス
+                      </Button>
+                    </Link>
+                  </Grid>
                   <Grid item>
                     <Button
                       fullWidth
