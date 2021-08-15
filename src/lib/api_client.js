@@ -5,10 +5,10 @@ import snakecaseKeys from 'snakecase-keys'
 axios.defaults.baseURL = 'http://localhost:3000/'
 
 const axiosInstance = axios.create()
-const axiosWithTokenInstance = axios.create()
+const axiosInstanceWithToken = axios.create()
 
 export const apiClient = axiosInstance
-export const apiClientWithAuth = axiosWithTokenInstance
+export const apiClientWithAuth = axiosInstanceWithToken
 
 const snakedRequest = (request) => {
   return {
@@ -25,7 +25,7 @@ const camelizeRequest = (response) => {
 }
 axiosInstance.interceptors.request.use(snakedRequest)
 
-axiosWithTokenInstance.interceptors.request.use((request) => {
+axiosInstanceWithToken.interceptors.request.use((request) => {
   const token = localStorage.getItem('token')
   if (!token) {
     throw new axios.Cancel('token does not exist.')
@@ -48,4 +48,4 @@ const errorHandler = (error) => {
 }
 
 axiosInstance.interceptors.response.use(camelizeRequest, errorHandler)
-axiosWithTokenInstance.interceptors.response.use(camelizeRequest, errorHandler)
+axiosInstanceWithToken.interceptors.response.use(camelizeRequest, errorHandler)
