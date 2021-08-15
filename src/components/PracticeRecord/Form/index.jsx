@@ -109,7 +109,7 @@ const Form = () => {
     const fetchCurrentVehicles = () => {
       apiClientWithAuth.get('/current_vehicles').then((response) => {
         const foundUserVehicle = userVehicles.find(
-          ({ id }) => id == response.data.userVehicleId
+          ({ id }) => id === response.data.id
         )
         form.userVehicle.setValue(foundUserVehicle ? foundUserVehicle : {})
       })
