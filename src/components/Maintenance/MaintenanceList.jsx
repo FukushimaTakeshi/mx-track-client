@@ -37,10 +37,14 @@ const MaintenanceList = () => {
   const { userVehicleId } = useParams()
   const history = useHistory()
   const [maintenances, setMaintenances] = useState([])
+  const [maintenanceTotalTimes, setMaintenanceTotalTimes] = useState([])
   useEffect(() => {
     apiClientWithAuth
-      .get(`periodic_maintenances/?user_vehicle_id=${userVehicleId}`)
+      .get(`/periodic_maintenances/?user_vehicle_id=${userVehicleId}`)
       .then((response) => setMaintenances(response.data))
+    apiClientWithAuth
+      .get(`/user_vehicles/${userVehicleId}/total_times`)
+      .then((response) => setMaintenanceTotalTimes(response.data))
   }, [userVehicleId])
 
   const [anchorEl, setAnchorEl] = useState(null)
@@ -55,12 +59,17 @@ const MaintenanceList = () => {
 
   const handleDeleteMaintenance = (maintenanceId) => {
     apiClientWithAuth
-      .delete(`periodic_maintenances/${maintenanceId}`)
+      .delete(`/periodic_maintenances/${maintenanceId}`)
       .then(() =>
         setMaintenances(maintenances.filter(({ id }) => id !== maintenanceId))
       )
     handleCloseMoreVert()
   }
+
+  const findTotalTime = (maintenanceMenuId) =>
+    maintenanceTotalTimes.find((o) => o.maintenanceMenuId === maintenanceMenuId)
+
+  const zeroPadding = (value) => String(value).padStart(2, '0')
 
   return (
     <Dashboard>
@@ -79,12 +88,20 @@ const MaintenanceList = () => {
                 </ListItemIcon>
                 <ListItemText>
                   <Typography variant="subtitle2">
-                    {maintenance.name}
+                    {maintenance.maintenanceMenu.name}
                   </Typography>
                 </ListItemText>
                 <Typography variant="subtitle2">
-                  00:00
-                  {` / ${maintenance.cycleHours}:${maintenance.cycleMinutes}`}
+                  {`${
+                    findTotalTime(maintenance.maintenanceMenu.id)
+                      ?.totalOperationHours
+                  }:${zeroPadding(
+                    findTotalTime(maintenance.maintenanceMenu.id)
+                      ?.totalOperationMinutes
+                  )}`}
+                  {` / ${maintenance.cycleHours}:${zeroPadding(
+                    maintenance.cycleMinutes
+                  )}`}
                 </Typography>
                 <ListItemSecondaryAction>
                   <IconButton

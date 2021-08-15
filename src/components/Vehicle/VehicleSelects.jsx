@@ -196,7 +196,7 @@ const VehicleSelects = () => {
                 </Grid>
 
                 <Dialog
-                  open={setting.show && setting.vehicle.id === myVehicle.id}
+                  open={!!setting.show && setting.vehicle.id === myVehicle.id}
                   onClose={handleCloseSetting}
                   fullScreen
                 >
