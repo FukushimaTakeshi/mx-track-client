@@ -37,11 +37,10 @@ axiosWithTokenInstance.interceptors.request.use((request) => {
 })
 
 axiosInstance.interceptors.response.use(camelizeRequest)
-axiosWithTokenInstance.interceptors.response.use(
-  camelizeRequest,
-  async (error) => {
-    if (error.response.status == 401) {
-      window.location.reload()
-    }
+axiosWithTokenInstance.interceptors.response.use(camelizeRequest, (error) => {
+  if (error.response.status == 401) {
+    window.location.reload()
+  } else {
+    return Promise.reject(error)
   }
-)
+})
