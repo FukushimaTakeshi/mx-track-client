@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { apiClient } from '../lib/api_client'
 import { auth } from './auth'
 
@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   // TODO: エラー処理
-  const verifyUser = () => {
+  const verifyUser = useCallback(() => {
     return new Promise((resolve) => {
       auth.auth().onAuthStateChanged(async (user) => {
         if (user) {
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         resolve()
       })
     })
-  }
+  }, [])
 
   return (
     <AuthContext.Provider

@@ -14,7 +14,7 @@ const PrivateRoute = (props) => {
       setAuthChecked(true)
     }
     getUser()
-  }, [])
+  }, [verifyUser])
 
   return authChecked ? (
     currentUser ? (
