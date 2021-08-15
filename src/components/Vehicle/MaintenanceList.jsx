@@ -62,10 +62,6 @@ const MaintenanceList = () => {
     handleCloseMoreVert()
   }
 
-  if (!maintenances.length) {
-    return null
-  }
-
   return (
     <Dashboard>
       <>
@@ -129,11 +125,15 @@ const MaintenanceList = () => {
                 fullWidth
                 startIcon={<AddIcon />}
               >
-                <Typography variant="subtitle1">メンテナンス追加</Typography>
+                <Typography variant="subtitle1">
+                  メンテナンス項目の追加
+                </Typography>
               </Button>
             </ListItem>
           </Link>
         </List>
+        <Link to={'maintenances/records'}>履歴</Link>
+        <Link to={'maintenance_records/new'}>新規作成</Link>
       </>
     </Dashboard>
   )

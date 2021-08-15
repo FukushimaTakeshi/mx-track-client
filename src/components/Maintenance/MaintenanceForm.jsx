@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
-import { useForm } from '../../hooks/useForm'
+import { formToObject, responseToForm, useForm } from '../../hooks/useForm'
 import { apiClient, apiClientWithAuth } from '../../lib/api_client'
 import ErrorNotification from '../Notification/ErrorNotification'
 import SuccessNotification from '../Notification/SuccessNotification'
@@ -36,11 +36,18 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const useMaintenanceForm = () => {
-  const menu = useForm()
-  const cycleHours = useForm(0)
-  const cycleMinutes = useForm(0)
+  const maintenanceOn = useForm()
+  const maintenanceMenu = useForm()
+  const operationHours = useForm(0)
+  const operationMinutes = useForm(0)
   const memo = useForm()
-  return { menu, cycleHours, cycleMinutes, memo }
+  return {
+    maintenanceOn,
+    maintenanceMenu,
+    operationHours,
+    operationMinutes,
+    memo,
+  }
 }
 
 const MaintenanceForm = () => {
@@ -51,15 +58,13 @@ const MaintenanceForm = () => {
   const save = useAsyncExecutor(
     () => {
       const params = {
-        maintenanceMenuId: form.menu.value.id,
-        cycleHours: form.cycleHours.value,
-        cycleMinutes: form.cycleMinutes.value,
-        memo: form.memo.value,
+        ...formToObject(form),
+        maintenanceMenuId: form.maintenanceMenu.value.id,
         userVehicleId: userVehicleId,
       }
       const response = id
-        ? apiClientWithAuth.put(`/periodic_maintenances/${id}`, params)
-        : apiClientWithAuth.post('/periodic_maintenances', params)
+        ? apiClientWithAuth.put(`/maintenance_records/${id}`, params)
+        : apiClientWithAuth.post('/maintenance_records', params)
       return response.then(() => setSuccess(true))
     },
     () => true
@@ -75,17 +80,26 @@ const MaintenanceForm = () => {
 
   useEffect(() => {
     if (id) {
-      apiClientWithAuth.get(`/periodic_maintenances/${id}`).then((response) => {
-        const { menu, cycleHours, cycleMinutes, memo } = response.data
-        form.menu.setValue(menu)
-        form.cycleHours.setValue(cycleHours)
-        form.cycleMinutes.setValue(cycleMinutes)
-        form.memo.setValue(memo)
+      apiClientWithAuth.get(`/maintenance_records/${id}`).then((response) => {
+        responseToForm(response, form)
       })
     }
   }, [id])
 
   const [success, setSuccess] = useState(false)
+
+  const handleChangeMaintenanceOn = () => {
+    if (!form.maintenanceOn.value) return
+    apiClientWithAuth
+      .get(
+        `/operation_time/?user_vehicle_id=${userVehicleId}&date=${form.maintenanceOn.value}`
+      )
+      .then((response) => {
+        const { hours, minutes } = response.data
+        form.operationHours.setValue(hours)
+        form.operationMinutes.setValue(minutes)
+      })
+  }
 
   return (
     <Dashboard>
@@ -103,17 +117,34 @@ const MaintenanceForm = () => {
             <div className={classes.form}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
+                  <TextField
+                    name="maintenanceOn"
+                    value={form.maintenanceOn.value}
+                    variant="outlined"
+                    required
+                    label="日付"
+                    type="date"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    onChange={form.maintenanceOn.setValueFromEvent}
+                    onBlur={handleChangeMaintenanceOn}
+                  />
+                </Grid>
+                <Grid item xs={12}>
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
                   >
-                    <InputLabel id="menu-label">メンテナンス項目</InputLabel>
+                    <InputLabel required id="menu-label">
+                      メンテナンス項目
+                    </InputLabel>
                     <Select
-                      name="menu"
+                      name="maintenanceMenu"
                       label="メンテナンス項目"
                       labelId="menu-label"
-                      value={form.menu.value}
-                      onChange={form.menu.setValueFromEvent}
+                      value={form.maintenanceMenu.value}
+                      onChange={form.maintenanceMenu.setValueFromEvent}
                       renderValue={(value) => value.name}
                     >
                       {maintenanceMenus.map((value) => (
@@ -127,15 +158,15 @@ const MaintenanceForm = () => {
 
                 <Grid item xs={12}>
                   <Typography variant="caption" color="textSecondary">
-                    整備期間
+                    メンテナンス時の稼働時間
                   </Typography>
                   <Grid container justifyContent="flex-end" spacing={2}>
-                    <Grid item xs={4}>
+                    <Grid item xs={5}>
                       <TextField
-                        name="cycleHours"
+                        name="operationHours"
                         type="number"
-                        value={form.cycleHours.value}
-                        onChange={form.cycleHours.setValueFromEvent}
+                        value={form.operationHours.value}
+                        onChange={form.operationHours.setValueFromEvent}
                         variant="outlined"
                         InputProps={{
                           endAdornment: (
@@ -146,10 +177,10 @@ const MaintenanceForm = () => {
                     </Grid>
                     <Grid item xs={4}>
                       <TextField
-                        name="cycleMinutes"
+                        name="operationMinutes"
                         type="number"
-                        value={form.cycleMinutes.value}
-                        onChange={form.cycleMinutes.setValueFromEvent}
+                        value={form.operationMinutes.value}
+                        onChange={form.operationMinutes.setValueFromEvent}
                         variant="outlined"
                         InputProps={{
                           endAdornment: (
@@ -169,7 +200,7 @@ const MaintenanceForm = () => {
                     label="メモ"
                     multiline
                     rows={4}
-                    placeholder="オイル量などのメモ"
+                    placeholder="メモ"
                     value={form.memo.value}
                     onChange={form.memo.setValueFromEvent}
                     InputLabelProps={{ shrink: true }}

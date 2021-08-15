@@ -18,3 +18,19 @@ export const useForm = (defaultValue = '') => {
     },
   }
 }
+
+export const responseToForm = (response, form) => {
+  const data = response.data
+  Object.keys(data).forEach((name) => {
+    if (name in form) {
+      form[name].setValue(data[name])
+    }
+  })
+}
+
+export const formToObject = (form) => {
+  return Object.keys(form).reduce((object, name) => {
+    object[name] = form[name].value
+    return object
+  }, {})
+}

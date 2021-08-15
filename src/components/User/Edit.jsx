@@ -47,6 +47,7 @@ const Edit = () => {
     return true
   }
 
+  // FIXME: 名前を更新してもリロードしないと表示が変わらない
   const save = useAsyncExecutor(() => {
     const params = { name: form.name.value }
     return apiClientWithAuth.put(`/users/${currentUser.id}`, params)
