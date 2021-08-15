@@ -107,11 +107,12 @@ const Form = () => {
 
   useEffect(() => {
     const fetchCurrentVehicles = () => {
+      if (!userVehicles.length) return
       apiClientWithAuth.get('/current_vehicles').then((response) => {
         const foundUserVehicle = userVehicles.find(
           ({ id }) => id === response.data.id
         )
-        form.userVehicle.setValue(foundUserVehicle ? foundUserVehicle : {})
+        form.userVehicle.setValue(foundUserVehicle ?? {})
       })
     }
 
@@ -137,7 +138,7 @@ const Form = () => {
       // TODO: エラー処理
     }
     fetchPracticeRecord()
-  }, [id])
+  }, [id, userVehicles])
 
   const [tracksOptions, setTrackOptions] = useState([])
   const [optionsLoading, setOptionsLoading] = useState(false)

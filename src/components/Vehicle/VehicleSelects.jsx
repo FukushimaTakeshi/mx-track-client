@@ -57,7 +57,7 @@ const VehicleSelects = () => {
       setMyVehicles(response.data)
     })
     apiClientWithAuth.get('/current_vehicles').then((response) => {
-      setCurrentVehicleId(response.data.userVehicleId)
+      setCurrentVehicleId(response.data.id)
     })
   }, [])
 
