@@ -5,8 +5,8 @@ import { AuthProvider } from './auth/AuthProvider'
 import Login from './auth/Login'
 import PrivateRoute from './auth/PrivateRoute'
 import MaintenanceForm from './components/Maintenance/MaintenanceForm'
+import MaintenanceHistory from './components/Maintenance/MaintenanceHistory'
 import MaintenanceList from './components/Maintenance/MaintenanceList'
-import MaintenanceRecords from './components/Maintenance/MaintenanceRecords'
 import PeriodicMaintenanceForm from './components/Maintenance/PeriodicMaintenanceForm'
 import MyPage from './components/MyPage'
 import Form from './components/PracticeRecord/Form'
@@ -30,8 +30,8 @@ const App = () => {
           />
           <PrivateRoute
             exact
-            path="/vehicles/:userVehicleId/maintenances/records"
-            component={MaintenanceRecords}
+            path="/vehicles/:userVehicleId/maintenances/history"
+            component={MaintenanceHistory}
           />
           <PrivateRoute
             exact

@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const MaintenanceRecords = () => {
+const MaintenanceHistory = () => {
   const classes = useStyles()
   const { userVehicleId } = useParams()
   const [maintenanceRecords, setMaintenanceRecords] = useState([])
@@ -143,4 +143,4 @@ const MaintenanceRecords = () => {
   )
 }
 
-export default MaintenanceRecords
+export default MaintenanceHistory
