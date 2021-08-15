@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom'
 import { apiClientWithAuth } from '../../lib/api_client'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
+import OperationTime from './OperationTime'
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -29,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: 'none',
     color: theme.palette.text.secondary,
+  },
+  iconButton: {
+    padding: 0,
   },
 }))
 
@@ -66,15 +70,10 @@ const MaintenanceList = () => {
     handleCloseMoreVert()
   }
 
-  const findTotalTime = (maintenanceMenuId) =>
-    maintenanceTotalTimes.find((o) => o.maintenanceMenuId === maintenanceMenuId)
-
-  const zeroPadding = (value) => String(value).padStart(2, '0')
-
   return (
     <Dashboard>
       <>
-        <Title>メンテナンス</Title>
+        <Title>定期メンテナンス項目</Title>
         <List>
           {maintenances.map((maintenance) => (
             <React.Fragment key={maintenance.id}>
@@ -91,20 +90,14 @@ const MaintenanceList = () => {
                     {maintenance.maintenanceMenu.name}
                   </Typography>
                 </ListItemText>
-                <Typography variant="subtitle2">
-                  {`${
-                    findTotalTime(maintenance.maintenanceMenu.id)
-                      ?.totalOperationHours
-                  }:${zeroPadding(
-                    findTotalTime(maintenance.maintenanceMenu.id)
-                      ?.totalOperationMinutes
-                  )}`}
-                  {` / ${maintenance.cycleHours}:${zeroPadding(
-                    maintenance.cycleMinutes
-                  )}`}
-                </Typography>
+                <OperationTime
+                  maintenance={maintenance}
+                  maintenanceTotalTimes={maintenanceTotalTimes}
+                />
+
                 <ListItemSecondaryAction>
                   <IconButton
+                    className={classes.iconButton}
                     edge="end"
                     aria-label="menu"
                     aria-controls="menu"
