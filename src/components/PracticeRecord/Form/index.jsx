@@ -20,7 +20,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { useHistory } from 'react-router-dom'
 import { useAsyncExecutor } from '../../../hooks/useAsyncExecutor'
-import { useForm } from '../../../hooks/useForm'
+import { formToObject, responseToForm, useForm } from '../../../hooks/useForm'
 import { apiClient, apiClientWithAuth } from '../../../lib/api_client'
 import ErrorNotification from '../../Notification/ErrorNotification'
 import SuccessNotification from '../../Notification/SuccessNotification'
@@ -54,12 +54,12 @@ const useStyles = makeStyles((theme) => ({
 
 const usePracticeRecordForm = () => {
   const regionId = useForm()
-  const practiceDate = useForm()
+  const practiceDate = useForm('')
   const track = useForm()
   const userVehicle = useForm()
   const hours = useForm()
   const minutes = useForm()
-  const memo = useForm()
+  const memo = useForm('')
   return {
     regionId,
     practiceDate,
@@ -84,12 +84,9 @@ const Form = () => {
   const save = useAsyncExecutor(() => {
     setSuccess(false)
     const params = {
-      practiceDate: form.practiceDate.value,
+      ...formToObject(form),
       offRoadTrackId: form.track.value.id,
       userVehicleId: form.userVehicle.value.id,
-      hours: form.hours.value,
-      minutes: form.minutes.value,
-      memo: form.memo.value,
     }
     const request = id
       ? apiClientWithAuth.put(`/practice_records/${id}`, params)
@@ -116,23 +113,13 @@ const Form = () => {
       })
     }
 
-    const setFormValues = (data = {}) => {
-      form.practiceDate.setValue(data.practiceDate || '')
-      form.track.setValue(data.track)
-      form.userVehicle.setValue(data.userVehicle)
-      form.hours.setValue(data.hours)
-      form.minutes.setValue(data.minutes)
-      form.memo.setValue(data.memo || '')
-    }
-
     const fetchPracticeRecord = async () => {
       if (id) {
         apiClientWithAuth.get(`/practice_records/${id}`).then((response) => {
-          setFormValues(response.data)
+          responseToForm(response, form)
           !response.data.userVehicle && fetchCurrentVehicles()
         })
       } else {
-        setFormValues()
         fetchCurrentVehicles()
       }
       // TODO: エラー処理
