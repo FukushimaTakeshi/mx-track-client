@@ -104,7 +104,6 @@ const Form = () => {
 
   useEffect(() => {
     const fetchCurrentVehicles = () => {
-      if (!userVehicles.length) return
       apiClientWithAuth.get('/current_vehicles').then((response) => {
         const foundUserVehicle = userVehicles.find(
           ({ id }) => id === response.data.id
@@ -113,7 +112,8 @@ const Form = () => {
       })
     }
 
-    const fetchPracticeRecord = async () => {
+    const fetchPracticeRecord = () => {
+      if (!userVehicles.length) return
       if (id) {
         apiClientWithAuth.get(`/practice_records/${id}`).then((response) => {
           responseToForm(response, form)
@@ -158,6 +158,11 @@ const Form = () => {
   return (
     <Dashboard>
       <HandleFetch loading={save.isExecuting}>
+        <SuccessNotification
+          open={success}
+          onClose={() => history.push('/mypage')}
+          message="登録しました !"
+        />
         <ErrorNotification task={save} />
         <Container component="main" maxWidth="xs">
           <Dialog
@@ -334,12 +339,6 @@ const Form = () => {
             </div>
           </div>
         </Container>
-
-        <SuccessNotification
-          open={success}
-          onClose={() => history.push('/mypage')}
-          message="登録しました !"
-        />
       </HandleFetch>
     </Dashboard>
   )
