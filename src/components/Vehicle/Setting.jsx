@@ -52,6 +52,7 @@ const Setting = ({ id, onClose }) => {
       form.initialHours.setValue(response.data.initialHours)
       form.initialMinutes.setValue(response.data.initialMinutes)
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   const handleClose = () => {
