@@ -346,7 +346,7 @@ const Form = () => {
                                 label="時"
                               >
                                 {[...Array(24).keys()].map((value) => (
-                                  <option key={value} value={Number(value)}>
+                                  <option key={value} value={value}>
                                     {value}
                                   </option>
                                 ))}
@@ -365,7 +365,7 @@ const Form = () => {
                                 label="分"
                               >
                                 {[...Array(60).keys()].map((value) => (
-                                  <option key={value} value={Number(value)}>
+                                  <option key={value} value={value}>
                                     {value}
                                   </option>
                                 ))}
@@ -414,7 +414,7 @@ const Form = () => {
                               {[...Array(24).keys()].map((value) => (
                                 <option
                                   key={`times-hour-${value}`}
-                                  value={Number(value)}
+                                  value={value}
                                 >
                                   {value}
                                 </option>
@@ -426,14 +426,14 @@ const Form = () => {
                             <InputLabel htmlFor="minutes-dialog">分</InputLabel>
                             <NativeSelect
                               native
-                              value={Number(form.minutes.value)}
+                              value={form.minutes.value}
                               onChange={form.minutes.setValueFromEvent}
                               input={<Input id="minutes-dialog" />}
                             >
                               {[...Array(10).keys()].map((value) => (
                                 <option
                                   key={`times-minute-${value}`}
-                                  value={Number(value)}
+                                  value={value}
                                 >
                                   {value}
                                 </option>
