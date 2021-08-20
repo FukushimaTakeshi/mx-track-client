@@ -5,10 +5,17 @@ import {
   Container,
   CssBaseline,
   Dialog,
+  DialogActions,
+  DialogContent,
+  FormControl,
   FormControlLabel,
   Grid,
-  MenuItem,
-  Select,
+  Input,
+  InputAdornment,
+  InputLabel,
+  NativeSelect,
+  Radio,
+  RadioGroup,
   TextField,
   Typography,
 } from '@material-ui/core'
@@ -50,6 +57,10 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#e6e6e6',
   },
+  dialogFormControl: {
+    margin: theme.spacing(1),
+    minWidth: 80,
+  },
 }))
 
 const usePracticeRecordForm = () => {
@@ -60,6 +71,7 @@ const usePracticeRecordForm = () => {
   const hours = useForm()
   const minutes = useForm()
   const memo = useForm('')
+  const times = useForm()
   return {
     regionId,
     practiceDate,
@@ -68,6 +80,7 @@ const usePracticeRecordForm = () => {
     hours,
     minutes,
     memo,
+    times,
   }
 }
 
@@ -85,6 +98,10 @@ const Form = () => {
     setSuccess(false)
     const params = {
       ...formToObject(form),
+      minutes:
+        timeFormat === 'time'
+          ? form.minutes.value
+          : Number(form.minutes.value) * 6,
       offRoadTrackId: form.track.value.id,
       userVehicleId: form.userVehicle.value.id,
     }
@@ -117,6 +134,8 @@ const Form = () => {
       if (id) {
         apiClientWithAuth.get(`/practice_records/${id}`).then((response) => {
           responseToForm(response, form)
+          const { hours, minutes } = response.data
+          form.times.setValue(parseFloat(`${hours}.${Math.round(minutes / 6)}`))
           !response.data.userVehicle && fetchCurrentVehicles()
         })
       } else {
@@ -155,6 +174,26 @@ const Form = () => {
 
   const handleChangeUserVehicle = (e, newUserVehicle) =>
     form.userVehicle.setValue(newUserVehicle)
+
+  const [timeFormat, setTimeFormat] = useState('time')
+  const handleChangeTimeFormat = (event) => {
+    if (event.target.value === 'time') {
+      form.minutes.setValue(Number(form.minutes.value) * 6)
+    } else {
+      const minute = Math.round(Number(form.minutes.value) / 6)
+      form.minutes.setValue(minute)
+      form.times.setValue(parseFloat(`${form.hours.value}.${minute}`))
+    }
+    setTimeFormat(event.target.value)
+  }
+
+  const [openTimesDialog, setOpenTimesDialog] = useState(false)
+  const handleClickTimes = () => setOpenTimesDialog(true)
+  const handleCloseTimesDialog = () => setOpenTimesDialog(false)
+  const handleSubmitTimes = () => {
+    handleCloseTimesDialog()
+    form.times.setValue(parseFloat(`${form.hours.value}.${form.minutes.value}`))
+  }
 
   return (
     <Dashboard>
@@ -271,45 +310,144 @@ const Form = () => {
                   <Typography variant="caption" color="textSecondary">
                     走行時間
                   </Typography>
+
+                  <Grid item xs={12}>
+                    <RadioGroup
+                      row
+                      aria-label="time-format"
+                      name="timeFormat"
+                      value={timeFormat}
+                      onChange={handleChangeTimeFormat}
+                    >
+                      <FormControlLabel
+                        value="time"
+                        control={<Radio />}
+                        label={<Typography variant="caption">時刻</Typography>}
+                      />
+                      <FormControlLabel
+                        value="decimal"
+                        control={<Radio />}
+                        label={
+                          <Typography variant="caption">小数点</Typography>
+                        }
+                      />
+                    </RadioGroup>
+                  </Grid>
                   <Grid container justifyContent="flex-end" spacing={2}>
-                    <Grid item>
-                      <FormControlLabel
-                        control={
-                          <Select
-                            name="hours"
-                            value={Number(form.hours.value) || 0}
-                            onChange={form.hours.setValueFromEvent}
-                            label="時"
-                          >
-                            {[...Array(24).keys()].map((value) => (
-                              <MenuItem key={value} value={value}>
-                                {value}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        }
-                        label="時間"
-                      />
-                    </Grid>
-                    <Grid item>
-                      <FormControlLabel
-                        control={
-                          <Select
-                            name="minutes"
-                            value={Number(form.minutes.value) || 0}
-                            onChange={form.minutes.setValueFromEvent}
+                    {timeFormat === 'time' ? (
+                      <>
+                        <Grid item>
+                          <FormControlLabel
+                            control={
+                              <NativeSelect
+                                name="hours"
+                                value={form.hours.value || 0}
+                                onChange={form.hours.setValueFromEvent}
+                                label="時"
+                              >
+                                {[...Array(24).keys()].map((value) => (
+                                  <option key={value} value={Number(value)}>
+                                    {value}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            }
+                            label="時間"
+                          />
+                        </Grid>
+                        <Grid item>
+                          <FormControlLabel
+                            control={
+                              <NativeSelect
+                                name="minutes"
+                                value={form.minutes.value || 0}
+                                onChange={form.minutes.setValueFromEvent}
+                                label="分"
+                              >
+                                {[...Array(60).keys()].map((value) => (
+                                  <option key={value} value={Number(value)}>
+                                    {value}
+                                  </option>
+                                ))}
+                              </NativeSelect>
+                            }
                             label="分"
-                          >
-                            {[...Array(60).keys()].map((value) => (
-                              <MenuItem key={value} value={value}>
-                                {value}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        }
-                        label="分"
-                      />
-                    </Grid>
+                          />
+                        </Grid>
+                      </>
+                    ) : (
+                      <Grid item xs={4}>
+                        <TextField
+                          name="time"
+                          value={form.times.value}
+                          onClick={handleClickTimes}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <Typography
+                                  variant="button"
+                                  color="textSecondary"
+                                >
+                                  時間
+                                </Typography>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Grid>
+                    )}
+
+                    <Dialog
+                      open={openTimesDialog}
+                      onClose={handleCloseTimesDialog}
+                    >
+                      <DialogContent>
+                        <Grid container alignItems="flex-end" spacing={2}>
+                          <FormControl className={classes.dialogFormControl}>
+                            <InputLabel htmlFor="hours-dialog">時</InputLabel>
+                            <NativeSelect
+                              native
+                              value={form.hours.value}
+                              onChange={form.hours.setValueFromEvent}
+                              input={<Input id="hours-dialog" />}
+                            >
+                              {[...Array(24).keys()].map((value) => (
+                                <option
+                                  key={`times-hour-${value}`}
+                                  value={Number(value)}
+                                >
+                                  {value}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </FormControl>
+                          <Typography variant="h6">.</Typography>
+                          <FormControl className={classes.dialogFormControl}>
+                            <InputLabel htmlFor="minutes-dialog">分</InputLabel>
+                            <NativeSelect
+                              native
+                              value={Number(form.minutes.value)}
+                              onChange={form.minutes.setValueFromEvent}
+                              input={<Input id="minutes-dialog" />}
+                            >
+                              {[...Array(10).keys()].map((value) => (
+                                <option
+                                  key={`times-minute-${value}`}
+                                  value={Number(value)}
+                                >
+                                  {value}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </FormControl>
+                        </Grid>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleSubmitTimes} color="primary">
+                          OK
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
