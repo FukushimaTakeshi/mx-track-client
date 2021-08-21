@@ -5,14 +5,9 @@ import {
   Container,
   CssBaseline,
   Dialog,
-  DialogActions,
-  DialogContent,
-  FormControl,
   FormControlLabel,
   Grid,
-  Input,
   InputAdornment,
-  InputLabel,
   NativeSelect,
   Radio,
   RadioGroup,
@@ -34,10 +29,11 @@ import SuccessNotification from '../../Notification/SuccessNotification'
 import HandleFetch from '../../Spinner/HandleFetch'
 import { Dashboard } from '../../templates/Dashboard'
 import PrefectureList from '../../Track/PrefectureList'
+import TimesDialog from './TimesDialog'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -56,10 +52,6 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#e6e6e6',
-  },
-  dialogFormControl: {
-    margin: theme.spacing(1),
-    minWidth: 80,
   },
 }))
 
@@ -193,6 +185,26 @@ const Form = () => {
   const handleSubmitTimes = () => {
     handleCloseTimesDialog()
     form.times.setValue(parseFloat(`${form.hours.value}.${form.minutes.value}`))
+  }
+
+  const [operationTotalTime, setOperationTotalTime] = useState(null)
+  useEffect(() => {
+    if (form.userVehicle.value) {
+      apiClientWithAuth
+        .get(`/operation_time/?user_vehicle_id=${form.userVehicle.value.id}`)
+        .then((response) => {
+          const { hours, minutes } = response.data
+          setOperationTotalTime({ hours, minutes })
+        })
+    }
+  }, [form.userVehicle.value])
+
+  const totalTime = () => {
+    if (!operationTotalTime) return null
+    const { hours, minutes } = operationTotalTime
+    return timeFormat === 'time'
+      ? `${hours}時間${minutes}分`
+      : `${hours}.${Math.round(Number(minutes) / 6)}時間`
   }
 
   return (
@@ -396,58 +408,19 @@ const Form = () => {
                         />
                       </Grid>
                     )}
-
-                    <Dialog
+                    <TimesDialog
                       open={openTimesDialog}
                       onClose={handleCloseTimesDialog}
-                    >
-                      <DialogContent>
-                        <Grid container alignItems="flex-end" spacing={2}>
-                          <FormControl className={classes.dialogFormControl}>
-                            <InputLabel htmlFor="hours-dialog">時</InputLabel>
-                            <NativeSelect
-                              native
-                              value={form.hours.value}
-                              onChange={form.hours.setValueFromEvent}
-                              input={<Input id="hours-dialog" />}
-                            >
-                              {[...Array(24).keys()].map((value) => (
-                                <option
-                                  key={`times-hour-${value}`}
-                                  value={value}
-                                >
-                                  {value}
-                                </option>
-                              ))}
-                            </NativeSelect>
-                          </FormControl>
-                          <Typography variant="h6">.</Typography>
-                          <FormControl className={classes.dialogFormControl}>
-                            <InputLabel htmlFor="minutes-dialog">分</InputLabel>
-                            <NativeSelect
-                              native
-                              value={form.minutes.value}
-                              onChange={form.minutes.setValueFromEvent}
-                              input={<Input id="minutes-dialog" />}
-                            >
-                              {[...Array(10).keys()].map((value) => (
-                                <option
-                                  key={`times-minute-${value}`}
-                                  value={value}
-                                >
-                                  {value}
-                                </option>
-                              ))}
-                            </NativeSelect>
-                          </FormControl>
-                        </Grid>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handleSubmitTimes} color="primary">
-                          OK
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
+                      form={form}
+                      handleSubmit={handleSubmitTimes}
+                    />
+                  </Grid>
+                  <Grid container justifyContent="flex-end" spacing={2}>
+                    <Grid item>
+                      <Typography variant="caption" color="textSecondary">
+                        現在の稼働時間は {totalTime()} です
+                      </Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
