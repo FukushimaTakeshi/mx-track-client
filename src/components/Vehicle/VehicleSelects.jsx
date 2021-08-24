@@ -22,8 +22,8 @@ import CheckIcon from '@material-ui/icons/Check'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { apiClient, apiClientWithAuth } from '../../lib/api_client'
+import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
 import Setting from './Setting'
 
@@ -136,175 +136,165 @@ const VehicleSelects = () => {
   }
 
   return (
-    <>
-      <Title>マイバイク</Title>
-      <Container component="main" maxWidth="xs">
-        {!!myVehicles.length && (
-          <RadioGroup value={currentVehicleId} onChange={handleRadioChange}>
-            {myVehicles.map((myVehicle) => (
-              <React.Fragment key={myVehicle.id}>
-                <Grid container className={classes.gridContainer}>
-                  <FormControlLabel
-                    value={myVehicle.id}
-                    control={<Radio />}
-                    label={
-                      <Grid item xs={12}>
-                        <Typography
-                          component="span"
-                          variant="subtitle1"
-                          gutterBottom
-                          color={
-                            myVehicle.id === currentVehicleId
-                              ? 'initial'
-                              : 'textSecondary'
-                          }
-                        >
-                          {myVehicle.vehicle.name}
-                        </Typography>
-                      </Grid>
-                    }
-                  />
-                </Grid>
-                <Grid container justifyContent="flex-end" spacing={0}>
-                  <Grid item>
-                    <Link to={`/vehicles/${myVehicle.id}/maintenances`}>
+    <Dashboard>
+      <>
+        <Title>マイバイク</Title>
+        <Container component="main" maxWidth="xs">
+          {!!myVehicles.length && (
+            <RadioGroup value={currentVehicleId} onChange={handleRadioChange}>
+              {myVehicles.map((myVehicle) => (
+                <React.Fragment key={myVehicle.id}>
+                  <Grid container className={classes.gridContainer}>
+                    <FormControlLabel
+                      value={myVehicle.id}
+                      control={<Radio />}
+                      label={
+                        <Grid item xs={12}>
+                          <Typography
+                            component="span"
+                            variant="subtitle1"
+                            gutterBottom
+                            color={
+                              myVehicle.id === currentVehicleId
+                                ? 'initial'
+                                : 'textSecondary'
+                            }
+                          >
+                            {myVehicle.vehicle.name}
+                          </Typography>
+                        </Grid>
+                      }
+                    />
+                  </Grid>
+                  <Grid container justifyContent="flex-end" spacing={0}>
+                    <Grid item>
                       <Button
                         fullWidth
                         variant="outlined"
                         color="primary"
                         onClick={() => handleOpenSetting(myVehicle)}
                       >
-                        メンテナンス
+                        稼働時間を設定
                       </Button>
-                    </Link>
+                    </Grid>
+                    <Grid item>
+                      <IconButton onClick={handleShowDialog}>
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <Button
-                      fullWidth
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => handleOpenSetting(myVehicle)}
-                    >
-                      稼働時間を設定
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <IconButton onClick={handleShowDialog}>
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </Grid>
-                </Grid>
 
-                <Dialog
-                  open={!!setting.show && setting.vehicle.id === myVehicle.id}
-                  onClose={handleCloseSetting}
-                  fullScreen
-                >
-                  <Setting
-                    id={myVehicle.id}
-                    onClose={() => setSetting({ show: false })}
-                  />
-                </Dialog>
+                  <Dialog
+                    open={!!setting.show && setting.vehicle.id === myVehicle.id}
+                    onClose={handleCloseSetting}
+                    fullScreen
+                  >
+                    <Setting
+                      id={myVehicle.id}
+                      onClose={() => setSetting({ show: false })}
+                    />
+                  </Dialog>
 
-                <Dialog open={showDeleteDialog} onClose={handleCloseDialog}>
-                  <DialogTitle>{'削除してもよろしいですか？'}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>
-                      削除すると、該当バイクで登録した練習記録がすべて無効になります。
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">
-                      キャンセル
-                    </Button>
-                    <Button
-                      onClick={() => handleDelete(myVehicle.id)}
-                      color="primary"
-                      autoFocus
-                    >
-                      削除
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </React.Fragment>
-            ))}
-          </RadioGroup>
-        )}
-        <Divider />
-        <Typography variant="subtitle2" color="textSecondary">
-          自分のバイクを登録すると、稼働時間を記録できます。
-        </Typography>
-        <Autocomplete
-          // see. https://stackoverflow.com/questions/59790956/material-ui-autocomplete-clear-value
-          key={myVehicles.length}
-          disablePortal
-          disableClearable
-          onOpen={handleFetchBrands}
-          options={brands}
-          getOptionLabel={(option) => option.name}
-          onChange={handleChangeBrand}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="メーカー"
-              InputProps={{
-                ...params.InputProps,
-                startAdornment: selected.brand.id && <SelectedIcon />,
-              }}
-            />
+                  <Dialog open={showDeleteDialog} onClose={handleCloseDialog}>
+                    <DialogTitle>{'削除してもよろしいですか？'}</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText>
+                        削除すると、該当バイクで登録した練習記録がすべて無効になります。
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseDialog} color="primary">
+                        キャンセル
+                      </Button>
+                      <Button
+                        onClick={() => handleDelete(myVehicle.id)}
+                        color="primary"
+                        autoFocus
+                      >
+                        削除
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </React.Fragment>
+              ))}
+            </RadioGroup>
           )}
-        />
-        <Autocomplete
-          key={selected.brand.id}
-          disablePortal
-          disableClearable
-          options={years}
-          getOptionLabel={(option) => String(option)}
-          disabled={!years.length}
-          onChange={handleChangeYear}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="年式"
-              InputProps={{
-                ...params.InputProps,
-                startAdornment: selected.year && <SelectedIcon />,
-              }}
-            />
-          )}
-        />
-        <Autocomplete
-          key={`${selected.brand.id}-${selected.year}`}
-          disablePortal
-          disableClearable
-          options={vehicles}
-          getOptionLabel={(option) => option.modelName}
-          disabled={!vehicles.length}
-          onChange={handleChangeVehicle}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="車両"
-              InputProps={{
-                ...params.InputProps,
-                startAdornment: selected.vehicle && <SelectedIcon />,
-              }}
-            />
-          )}
-        />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-          onClick={handleSubmit}
-          disabled={!selected.vehicle}
-        >
-          登録
-        </Button>
-      </Container>
-    </>
+          <Divider />
+          <Typography variant="subtitle2" color="textSecondary">
+            自分のバイクを登録すると、稼働時間を記録できます。
+          </Typography>
+          <Autocomplete
+            // see. https://stackoverflow.com/questions/59790956/material-ui-autocomplete-clear-value
+            key={myVehicles.length}
+            disablePortal
+            disableClearable
+            onOpen={handleFetchBrands}
+            options={brands}
+            getOptionLabel={(option) => option.name}
+            onChange={handleChangeBrand}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="メーカー"
+                InputProps={{
+                  ...params.InputProps,
+                  startAdornment: selected.brand.id && <SelectedIcon />,
+                }}
+              />
+            )}
+          />
+          <Autocomplete
+            key={selected.brand.id}
+            disablePortal
+            disableClearable
+            options={years}
+            getOptionLabel={(option) => String(option)}
+            disabled={!years.length}
+            onChange={handleChangeYear}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="年式"
+                InputProps={{
+                  ...params.InputProps,
+                  startAdornment: selected.year && <SelectedIcon />,
+                }}
+              />
+            )}
+          />
+          <Autocomplete
+            key={`${selected.brand.id}-${selected.year}`}
+            disablePortal
+            disableClearable
+            options={vehicles}
+            getOptionLabel={(option) => option.modelName}
+            disabled={!vehicles.length}
+            onChange={handleChangeVehicle}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="車両"
+                InputProps={{
+                  ...params.InputProps,
+                  startAdornment: selected.vehicle && <SelectedIcon />,
+                }}
+              />
+            )}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handleSubmit}
+            disabled={!selected.vehicle}
+          >
+            登録
+          </Button>
+        </Container>
+      </>
+    </Dashboard>
   )
 }
 

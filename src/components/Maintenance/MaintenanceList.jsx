@@ -142,8 +142,6 @@ const MaintenanceList = () => {
             </ListItem>
           </Link>
         </List>
-        <Link to={'maintenances/history'}>履歴</Link>
-        <Link to={'maintenance_records/new'}>新規作成</Link>
       </>
     </Dashboard>
   )

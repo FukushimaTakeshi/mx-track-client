@@ -15,7 +15,6 @@ import { apiClientWithAuth } from '../../lib/api_client'
 import ErrorNotification from '../Notification/ErrorNotification'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
-import VehicleSelects from '../Vehicle/VehicleSelects'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -91,7 +90,6 @@ const Edit = () => {
           </Button>
         </Container>
       </>
-      <VehicleSelects />
     </Dashboard>
   )
 }

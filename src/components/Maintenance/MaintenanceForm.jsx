@@ -217,7 +217,7 @@ const MaintenanceForm = () => {
                 onClick={save.execute}
                 disabled={save.isExecuting}
               >
-                更新
+                {id ? '更新' : '登録'}
               </Button>
               <Button
                 fullWidth

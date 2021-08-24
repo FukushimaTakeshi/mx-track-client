@@ -20,12 +20,16 @@ import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import AccountCircle from '@material-ui/icons/AccountCircle'
+import BuildIcon from '@material-ui/icons/Build'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import CreateIcon from '@material-ui/icons/Create'
+import HistoryIcon from '@material-ui/icons/History'
 import MenuIcon from '@material-ui/icons/Menu'
+import MotorcycleIcon from '@material-ui/icons/Motorcycle'
 import PersonIcon from '@material-ui/icons/Person'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
 import TimelineIcon from '@material-ui/icons/Timeline'
+import TimerIcon from '@material-ui/icons/Timer'
 import clsx from 'clsx'
 import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -210,6 +214,18 @@ export const Dashboard = ({ children }) => {
                     <ListItemText primary="Profile" />
                   </MenuItem>
                 </Link>
+                <Link
+                  to="/vehicles/edit"
+                  className={classes.AccountLink}
+                  onClick={handleCloseAccountMenu}
+                >
+                  <MenuItem>
+                    <ListItemIcon>
+                      <MotorcycleIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText primary="マイバイク" />
+                  </MenuItem>
+                </Link>
                 <MenuItem onClick={logout}>
                   <ListItemIcon>
                     <span className="material-icons">logout</span>
@@ -247,6 +263,18 @@ export const Dashboard = ({ children }) => {
             </ListItem>
           </Link>
           <Link
+            to="/vehicles/?to=maintenance-records"
+            className={classes.link}
+            onClick={handleDrawerClose}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <HistoryIcon />
+              </ListItemIcon>
+              <ListItemText primary="メンテナンス履歴" />
+            </ListItem>
+          </Link>
+          <Link
             to="/practice_records/new"
             className={classes.link}
             onClick={handleDrawerClose}
@@ -256,6 +284,30 @@ export const Dashboard = ({ children }) => {
                 <CreateIcon />
               </ListItemIcon>
               <ListItemText primary="走行を記録する" />
+            </ListItem>
+          </Link>
+          <Link
+            to="/vehicles/?to=practice-record"
+            className={classes.link}
+            onClick={handleDrawerClose}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <BuildIcon />
+              </ListItemIcon>
+              <ListItemText primary="整備を記録する" />
+            </ListItem>
+          </Link>
+          <Link
+            to="/vehicles?to=periodic-maintenance"
+            className={classes.link}
+            onClick={handleDrawerClose}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <TimerIcon />
+              </ListItemIcon>
+              <ListItemText primary="定期メンテナンス" />
             </ListItem>
           </Link>
         </List>
