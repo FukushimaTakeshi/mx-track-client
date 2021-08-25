@@ -2,12 +2,28 @@ import React from 'react'
 import InnerLoading from './InnerLoading'
 import Loading from './Loading'
 
-const Error = (props) => {
+interface HandleFetchProps {
+  loading: boolean
+  inner?: boolean
+  error?: string
+}
+
+interface ErrorProps {
+  error: string
+  onClose: () => void
+}
+
+const Error: React.FunctionComponent<ErrorProps> = (props) => {
   // TODO:
   return <div {...props}></div>
 }
 
-const HandleFetch = ({ loading, error, inner, children }) => {
+const HandleFetch: React.FunctionComponent<HandleFetchProps> = ({
+  loading,
+  error,
+  inner,
+  children,
+}) => {
   const handleClose = () => {
     // TODO: リダイレクト
   }

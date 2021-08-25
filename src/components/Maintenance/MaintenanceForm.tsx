@@ -22,6 +22,11 @@ import HandleFetch from '../Spinner/HandleFetch'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
 
+interface IMaintenanceMenu {
+  id: number
+  name: string
+}
+
 const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -37,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 const useMaintenanceForm = () => {
   const maintenanceOn = useForm()
-  const maintenanceMenu = useForm()
+  const maintenanceMenu = useForm({} as IMaintenanceMenu)
   const operationHours = useForm(0)
   const operationMinutes = useForm(0)
   const memo = useForm()
@@ -50,8 +55,11 @@ const useMaintenanceForm = () => {
   }
 }
 
-const MaintenanceForm = () => {
-  const { userVehicleId, id } = useParams()
+const MaintenanceForm: React.FC = () => {
+  const { userVehicleId, id } = useParams<{
+    userVehicleId?: string
+    id?: string
+  }>()
   const history = useHistory()
   const classes = useStyles()
   const form = useMaintenanceForm()
@@ -70,7 +78,9 @@ const MaintenanceForm = () => {
     () => true
   )
 
-  const [maintenanceMenus, setMaintenanceMenus] = useState([])
+  const [maintenanceMenus, setMaintenanceMenus] = useState<
+    Array<IMaintenanceMenu>
+  >([])
 
   useEffect(() => {
     apiClient.get('/maintenance_menus').then((response) => {
@@ -146,10 +156,14 @@ const MaintenanceForm = () => {
                       labelId="menu-label"
                       value={form.maintenanceMenu.value}
                       onChange={form.maintenanceMenu.setValueFromEvent}
-                      renderValue={(value) => value.name}
+                      renderValue={(value) => (value as IMaintenanceMenu).name}
                     >
                       {maintenanceMenus.map((value) => (
-                        <MenuItem key={value.id} value={value}>
+                        <MenuItem
+                          key={value.id}
+                          // @ts-ignore [2]
+                          value={value}
+                        >
                           {value.name}
                         </MenuItem>
                       ))}

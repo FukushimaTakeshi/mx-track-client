@@ -21,6 +21,8 @@ module.exports = {
   ],
   rules: {
     'react/prop-types': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
     // 'prettier/prettier': 'error',
   },
 }

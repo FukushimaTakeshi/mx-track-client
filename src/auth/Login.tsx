@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Login = () => {
+const Login: React.FunctionComponent = () => {
   const classes = useStyles()
   const history = useHistory()
 
@@ -34,7 +34,11 @@ const Login = () => {
       .auth()
       .signInWithPopup(provider)
       .then((result) => {
-        alert('success : ' + result.user.displayName + 'さんでログインしました')
+        if (result.user) {
+          alert(
+            'success : ' + result.user.displayName + 'さんでログインしました'
+          )
+        }
         history.push('/mypage')
       })
       .catch((error) => {

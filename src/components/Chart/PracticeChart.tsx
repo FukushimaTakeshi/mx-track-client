@@ -1,12 +1,21 @@
+import { ApexOptions } from 'apexcharts'
 import React, { useEffect, useState } from 'react'
 import Chart from 'react-apexcharts'
 import { apiClientWithAuth } from '../../lib/api_client'
 import HandleFetch from '../Spinner/HandleFetch'
 import Title from '../Title'
 
-const PracticeChart = () => {
+interface IPracticeRecords {
+  numberOfMonthly: Array<{
+    yearMonth: string
+    count: number
+    practiceTime: number
+  }>
+}
+
+const PracticeChart: React.FunctionComponent = () => {
   const [loading, setLoading] = useState(false)
-  const [practiceRecords, setPracticeRecords] = useState({})
+  const [practiceRecords, setPracticeRecords] = useState({} as IPracticeRecords)
   useEffect(() => {
     setLoading(true)
     apiClientWithAuth
@@ -20,7 +29,7 @@ const PracticeChart = () => {
 
   const { numberOfMonthly } = practiceRecords
 
-  const options = {
+  const options: ApexOptions = {
     chart: {
       zoom: {
         enabled: false,
@@ -40,7 +49,7 @@ const PracticeChart = () => {
     yaxis: [
       {
         labels: {
-          formatter: (val) => Number(val),
+          formatter: (val) => String(val),
         },
         title: {
           text: '走行回数',
