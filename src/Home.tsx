@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const Home: React.FunctionComponent = () => {
+const Home: React.FC = () => {
   const classes = useStyles()
 
   return (

@@ -20,9 +20,7 @@ interface AuthProviderProps {
 
 export const AuthContext = React.createContext({} as IAuthContext)
 
-export const AuthProvider: React.FunctionComponent<AuthProviderProps> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
 
   const logout = () => {

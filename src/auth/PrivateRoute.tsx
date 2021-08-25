@@ -3,7 +3,7 @@ import { Redirect, Route, RouteProps } from 'react-router-dom'
 import Loading from '../components/Spinner/Loading'
 import { AuthContext } from './AuthProvider'
 
-const PrivateRoute: React.FunctionComponent<RouteProps> = (props) => {
+const PrivateRoute: React.FC<RouteProps> = (props) => {
   const { currentUser, verifyUser } = useContext(AuthContext)
 
   const [authChecked, setAuthChecked] = useState(false)

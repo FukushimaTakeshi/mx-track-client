@@ -6,7 +6,7 @@ interface Props {
   loading: boolean
 }
 
-const Loading: React.FunctionComponent<Props> = ({ loading, children }) => {
+const Loading: React.FC<Props> = ({ loading, children }) => {
   const useStyles = makeStyles((theme) => ({
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,

@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Login: React.FunctionComponent = () => {
+const Login: React.FC = () => {
   const classes = useStyles()
   const history = useHistory()
 

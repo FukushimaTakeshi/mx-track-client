@@ -13,12 +13,12 @@ interface ErrorProps {
   onClose: () => void
 }
 
-const Error: React.FunctionComponent<ErrorProps> = (props) => {
+const Error: React.FC<ErrorProps> = (props) => {
   // TODO:
   return <div {...props}></div>
 }
 
-const HandleFetch: React.FunctionComponent<HandleFetchProps> = ({
+const HandleFetch: React.FC<HandleFetchProps> = ({
   loading,
   error,
   inner,

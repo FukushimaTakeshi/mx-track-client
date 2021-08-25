@@ -13,7 +13,7 @@ interface IPracticeRecords {
   }>
 }
 
-const PracticeChart: React.FunctionComponent = () => {
+const PracticeChart: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [practiceRecords, setPracticeRecords] = useState({} as IPracticeRecords)
   useEffect(() => {
