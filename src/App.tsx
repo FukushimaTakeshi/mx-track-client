@@ -15,7 +15,7 @@ import UserVehicleList from './components/Vehicle/UserVehicleList'
 import VehicleSelects from './components/Vehicle/VehicleSelects'
 import Home from './Home'
 
-const App = () => (
+const App: React.FunctionComponent = () => (
   <AuthProvider>
     <Router>
       <Switch>

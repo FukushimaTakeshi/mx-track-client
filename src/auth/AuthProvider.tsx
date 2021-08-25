@@ -2,9 +2,27 @@ import React, { useCallback, useState } from 'react'
 import { apiClient } from '../lib/api_client'
 import { auth } from './auth'
 
-export const AuthContext = React.createContext()
+interface IAuthContext {
+  logout: () => void
+  verifyUser: () => Promise<void>
+  currentUser: IUser | null
+}
 
-export const AuthProvider = ({ children }) => {
+interface IUser {
+  id: number
+  name: string
+  photoUrl: string
+}
+
+interface AuthProviderProps {
+  children?: React.ReactNode
+}
+
+export const AuthContext = React.createContext({} as IAuthContext)
+
+export const AuthProvider: React.FunctionComponent<AuthProviderProps> = ({
+  children,
+}) => {
   const [currentUser, setCurrentUser] = useState(null)
 
   const logout = () => {
@@ -14,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   // TODO: エラー処理
-  const verifyUser = useCallback(() => {
+  const verifyUser = useCallback((): Promise<void> => {
     return new Promise((resolve) => {
       auth.auth().onAuthStateChanged(async (user) => {
         if (user) {

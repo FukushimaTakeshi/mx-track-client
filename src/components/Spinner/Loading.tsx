@@ -2,7 +2,11 @@ import { Backdrop, CircularProgress } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
-const Loading = ({ loading, children }) => {
+interface Props {
+  loading: boolean
+}
+
+const Loading: React.FunctionComponent<Props> = ({ loading, children }) => {
   const useStyles = makeStyles((theme) => ({
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,

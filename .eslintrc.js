@@ -4,8 +4,8 @@ module.exports = {
     node: true,
     browser: true,
   },
-  parser: 'babel-eslint',
-  plugins: ['react-hooks', 'react'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['react-hooks', 'react', '@typescript-eslint'],
   parserOptions: {
     version: 2020,
     sourceType: 'module',
