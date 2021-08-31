@@ -1,6 +1,19 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
-export const useAsyncExecutor = (run, validate) => {
+interface Task {
+  error: string
+  setError(value: string): void
+  isExecuting: boolean
+  setIsExecuting(value: boolean): void
+}
+
+type Run = (
+  task: Task,
+  event: React.ChangeEvent<HTMLInputElement>
+) => Promise<unknown>
+type Validate = () => boolean
+
+export const useAsyncExecutor = (run: Run, validate: Validate) => {
   const [isExecuting, setIsExecuting] = useState(false)
   const [error, setError] = useState('')
   const execute = (event) => {

@@ -17,6 +17,13 @@ import { apiClientWithAuth } from '../../lib/api_client'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
 
+interface IUserVehicle {
+  id: number
+  vehicle: {
+    name: string
+  }
+}
+
 const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: 'none',
@@ -31,7 +38,7 @@ const useQuery = () => {
 const UserVehicleList = () => {
   const classes = useStyles()
   const query = useQuery()
-  const [userVehicles, setUserVehicles] = useState(null)
+  const [userVehicles, setUserVehicles] = useState<IUserVehicle[]>([])
 
   useEffect(() => {
     apiClientWithAuth.get('/user_vehicles').then((response) => {
@@ -48,10 +55,6 @@ const UserVehicleList = () => {
       case 'periodic-maintenance':
         return 'maintenances'
     }
-  }
-
-  if (!userVehicles) {
-    return null
   }
 
   return (

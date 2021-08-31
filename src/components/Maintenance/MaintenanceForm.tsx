@@ -78,9 +78,9 @@ const MaintenanceForm: React.FC = () => {
     () => true
   )
 
-  const [maintenanceMenus, setMaintenanceMenus] = useState<
-    Array<IMaintenanceMenu>
-  >([])
+  const [maintenanceMenus, setMaintenanceMenus] = useState<IMaintenanceMenu[]>(
+    []
+  )
 
   useEffect(() => {
     apiClient.get('/maintenance_menus').then((response) => {

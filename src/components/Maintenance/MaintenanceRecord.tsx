@@ -11,8 +11,14 @@ import EditIcon from '@material-ui/icons/Edit'
 import React, { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import SuccessNotification from '../Notification/SuccessNotification'
+import type { IMaintenanceRecord } from './MaintenanceHistory'
 
-const MaintenanceRecord = ({
+type Props = {
+  onDelete(): void
+  onClose(): void
+} & IMaintenanceRecord
+
+const MaintenanceRecord: React.FC<Props> = ({
   id,
   maintenanceOn,
   operationHours,
@@ -22,7 +28,7 @@ const MaintenanceRecord = ({
   onDelete,
   onClose,
 }) => {
-  const { userVehicleId } = useParams()
+  const { userVehicleId } = useParams<{ userVehicleId?: string }>()
   const [deleted, setDeleted] = useState(false)
 
   const handleDelete = () => {

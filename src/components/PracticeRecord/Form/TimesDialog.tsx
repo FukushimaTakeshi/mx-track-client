@@ -29,7 +29,6 @@ const TimesDialog = ({ open, onClose, form, handleSubmit }) => {
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="hours-dialog">時</InputLabel>
             <NativeSelect
-              native
               value={form.hours.value}
               onChange={form.hours.setValueFromEvent}
               input={<Input id="hours-dialog" />}
@@ -45,7 +44,6 @@ const TimesDialog = ({ open, onClose, form, handleSubmit }) => {
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="minutes-dialog">分</InputLabel>
             <NativeSelect
-              native
               value={form.minutes.value}
               onChange={form.minutes.setValueFromEvent}
               input={<Input id="minutes-dialog" />}

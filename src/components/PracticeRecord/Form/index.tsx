@@ -31,6 +31,23 @@ import { Dashboard } from '../../templates/Dashboard'
 import PrefectureList from '../../Track/PrefectureList'
 import TimesDialog from './TimesDialog'
 
+interface ITrack {
+  id: number
+  name: string
+}
+
+interface IUserVehicle {
+  id: number
+  vehicle: {
+    name: string
+  }
+}
+
+interface IRegin {
+  id: number
+  name: string
+}
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
@@ -56,14 +73,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const usePracticeRecordForm = () => {
-  const regionId = useForm()
+  const regionId = useForm<number | null>()
   const practiceDate = useForm('')
-  const track = useForm()
-  const userVehicle = useForm()
-  const hours = useForm()
-  const minutes = useForm()
+  const track = useForm({} as ITrack)
+  const userVehicle = useForm({} as IUserVehicle)
+  const hours = useForm<number>()
+  const minutes = useForm<number>()
   const memo = useForm('')
-  const times = useForm()
+  const times = useForm<number>()
   return {
     regionId,
     practiceDate,
@@ -79,7 +96,7 @@ const usePracticeRecordForm = () => {
 const Form = () => {
   const classes = useStyles()
   const form = usePracticeRecordForm()
-  const { id } = useParams()
+  const { id } = useParams<{ id?: string }>()
   const history = useHistory()
   const validator = () => {
     // TODO: validate
@@ -103,7 +120,7 @@ const Form = () => {
     return request.then(() => setSuccess(true))
   }, validator)
 
-  const [userVehicles, setUserVehicles] = useState([])
+  const [userVehicles, setUserVehicles] = useState<IUserVehicle[]>([])
 
   useEffect(() => {
     apiClientWithAuth
@@ -117,7 +134,7 @@ const Form = () => {
         const foundUserVehicle = userVehicles.find(
           ({ id }) => id === response.data.id
         )
-        form.userVehicle.setValue(foundUserVehicle ?? {})
+        form.userVehicle.setValue(foundUserVehicle ?? ({} as IUserVehicle))
       })
     }
 
@@ -139,7 +156,7 @@ const Form = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, userVehicles])
 
-  const [tracksOptions, setTrackOptions] = useState([])
+  const [tracksOptions, setTrackOptions] = useState<IRegin[]>([])
   const [optionsLoading, setOptionsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
@@ -187,9 +204,12 @@ const Form = () => {
     form.times.setValue(parseFloat(`${form.hours.value}.${form.minutes.value}`))
   }
 
-  const [operationTotalTime, setOperationTotalTime] = useState(null)
+  const [operationTotalTime, setOperationTotalTime] = useState<{
+    hours: number
+    minutes: number
+  } | null>(null)
   useEffect(() => {
-    if (form.userVehicle.value) {
+    if (form.userVehicle.value.id) {
       apiClientWithAuth
         .get(`/operation_time/?user_vehicle_id=${form.userVehicle.value.id}`)
         .then((response) => {
@@ -197,7 +217,7 @@ const Form = () => {
           setOperationTotalTime({ hours, minutes })
         })
     }
-  }, [form.userVehicle.value])
+  }, [form.userVehicle.value.id])
 
   const totalTime = () => {
     if (!operationTotalTime) return null
@@ -257,7 +277,7 @@ const Form = () => {
                   <Autocomplete
                     disablePortal
                     onOpen={fetchRegions}
-                    onClose={!optionsLoading && handleCloseSelect}
+                    onClose={() => !optionsLoading && handleCloseSelect()}
                     options={tracksOptions}
                     getOptionLabel={(option) => option.name}
                     loading={optionsLoading}
@@ -296,7 +316,7 @@ const Form = () => {
                       <ClearIcon
                         color="disabled"
                         fontSize="small"
-                        onClick={() => form.track.setValue({})}
+                        onClick={() => form.track.setValue({} as ITrack)}
                       />
                     </Grid>
                   </React.Fragment>
@@ -304,7 +324,7 @@ const Form = () => {
 
                 <Grid item xs={12}>
                   <Autocomplete
-                    key={form.userVehicle.value}
+                    key={form.userVehicle.value.id}
                     disablePortal
                     value={form.userVehicle.value}
                     options={userVehicles}
@@ -355,7 +375,6 @@ const Form = () => {
                                 name="hours"
                                 value={form.hours.value || 0}
                                 onChange={form.hours.setValueFromEvent}
-                                label="時"
                               >
                                 {[...Array(24).keys()].map((value) => (
                                   <option key={value} value={value}>
@@ -374,7 +393,6 @@ const Form = () => {
                                 name="minutes"
                                 value={form.minutes.value || 0}
                                 onChange={form.minutes.setValueFromEvent}
-                                label="分"
                               >
                                 {[...Array(60).keys()].map((value) => (
                                   <option key={value} value={value}>

@@ -27,6 +27,29 @@ import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
 import Setting from './Setting'
 
+interface IVehicle {
+  id: number
+  year: number
+  modelName: string
+}
+
+interface IBrand {
+  id: number
+  name: string
+}
+
+interface IMyVehicle {
+  id: number
+  vehicle: {
+    name: string
+  }
+}
+
+interface ISetting {
+  show: boolean
+  vehicle?: IVehicle
+}
+
 const useStyles = makeStyles((theme) => ({
   gridContainer: {
     // margin: theme.spacing(2),
@@ -45,11 +68,13 @@ const SelectedIcon = () => (
 
 const VehicleSelects = () => {
   const classes = useStyles()
-  const [brands, setBrands] = useState([])
+  const [brands, setBrands] = useState<IBrand[]>([])
   const [years, setYears] = useState([])
-  const [vehicles, setVehicles] = useState([])
-  const [selected, setSelected] = useState({ brand: {} })
-  const [myVehicles, setMyVehicles] = useState([])
+  const [vehicles, setVehicles] = useState<IVehicle[]>([])
+  const [selectedBrand, setSelectedBrand] = useState({} as IBrand)
+  const [selectedYear, setSelectedYear] = useState(null)
+  const [selectedVehicle, setSelectedVehicle] = useState({} as IVehicle)
+  const [myVehicles, setMyVehicles] = useState<IMyVehicle[]>([])
   const [currentVehicleId, setCurrentVehicleId] = useState(0)
 
   useEffect(() => {
@@ -70,40 +95,46 @@ const VehicleSelects = () => {
   const handleChangeBrand = (event, brand) => {
     setYears([])
     setVehicles([])
-    setSelected({ brand })
+    setSelectedBrand(brand)
+    setSelectedYear(null)
+    setSelectedVehicle({} as IVehicle)
     apiClient.get(`/brands/${brand.id}`).then((response) => {
       setYears(response.data.years)
     })
   }
 
   const handleChangeYear = (event, year) => {
-    setSelected({ brand: selected.brand, year: year })
+    setSelectedYear(year)
+    setSelectedVehicle({} as IVehicle)
+    // setSelected({ brand: selected.brand, year: selectedYear })
     apiClient
-      .get(`/vehicles/?year=${year}&brand_id=${selected.brand.id}`)
+      .get(`/vehicles/?year=${year}&brand_id=${selectedBrand.id}`)
       .then((response) => {
         setVehicles(response.data)
       })
   }
 
   const handleChangeVehicle = (event, vehicle) => {
-    setSelected({ ...selected, vehicle })
+    setSelectedVehicle(vehicle)
   }
 
   const handleSubmit = async () => {
     const response = await apiClientWithAuth.post('/user_vehicles', {
-      vehicleId: selected.vehicle.id,
+      vehicleId: selectedVehicle.id,
     })
     setMyVehicles([
       ...myVehicles,
       {
         id: response.data.id,
         vehicle: {
-          name: `${selected.brand.name}  ${selected.vehicle.modelName} ${selected.year}`,
+          name: `${selectedBrand.name}  ${selectedVehicle.modelName} ${selectedYear}`,
         },
       },
     ])
 
-    setSelected({ brand: {} })
+    setSelectedBrand({} as IBrand)
+    setSelectedYear(null)
+    setSelectedVehicle({} as IVehicle)
   }
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -127,7 +158,7 @@ const VehicleSelects = () => {
     handleCloseDialog()
   }
 
-  const [setting, setSetting] = useState({})
+  const [setting, setSetting] = useState({} as ISetting)
   const handleOpenSetting = (vehicle) => {
     setSetting({ show: true, vehicle })
   }
@@ -185,7 +216,9 @@ const VehicleSelects = () => {
                   </Grid>
 
                   <Dialog
-                    open={!!setting.show && setting.vehicle.id === myVehicle.id}
+                    open={
+                      !!setting.show && setting?.vehicle?.id === myVehicle.id
+                    }
                     onClose={handleCloseSetting}
                     fullScreen
                   >
@@ -238,13 +271,13 @@ const VehicleSelects = () => {
                 label="メーカー"
                 InputProps={{
                   ...params.InputProps,
-                  startAdornment: selected.brand.id && <SelectedIcon />,
+                  startAdornment: selectedBrand.id && <SelectedIcon />,
                 }}
               />
             )}
           />
           <Autocomplete
-            key={selected.brand.id}
+            key={selectedBrand.id}
             disablePortal
             disableClearable
             options={years}
@@ -257,13 +290,13 @@ const VehicleSelects = () => {
                 label="年式"
                 InputProps={{
                   ...params.InputProps,
-                  startAdornment: selected.year && <SelectedIcon />,
+                  startAdornment: selectedYear && <SelectedIcon />,
                 }}
               />
             )}
           />
           <Autocomplete
-            key={`${selected.brand.id}-${selected.year}`}
+            key={`${selectedBrand.id}-${selectedYear}`}
             disablePortal
             disableClearable
             options={vehicles}
@@ -276,7 +309,7 @@ const VehicleSelects = () => {
                 label="車両"
                 InputProps={{
                   ...params.InputProps,
-                  startAdornment: selected.vehicle && <SelectedIcon />,
+                  startAdornment: selectedVehicle.id && <SelectedIcon />,
                 }}
               />
             )}
@@ -288,7 +321,7 @@ const VehicleSelects = () => {
             color="primary"
             className={classes.submit}
             onClick={handleSubmit}
-            disabled={!selected.vehicle}
+            disabled={!selectedVehicle.id}
           >
             登録
           </Button>

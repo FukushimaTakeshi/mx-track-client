@@ -48,6 +48,9 @@ const Edit = () => {
 
   // FIXME: 名前を更新してもリロードしないと表示が変わらない
   const save = useAsyncExecutor(() => {
+    if (!currentUser) {
+      return new Promise(() => {})
+    }
     const params = { name: form.name.value }
     return apiClientWithAuth.put(`/users/${currentUser.id}`, params)
   }, validator)
@@ -58,7 +61,7 @@ const Edit = () => {
         <Title>アカウント</Title>
         <Container component="main" maxWidth="xs">
           <Box pb={3}>
-            <Avatar src={currentUser.photoUrl} className={classes.avatar} />
+            <Avatar src={currentUser?.photoUrl} className={classes.avatar} />
           </Box>
           <ErrorNotification task={save} />
           <Grid container spacing={3}>

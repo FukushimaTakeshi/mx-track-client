@@ -18,6 +18,20 @@ import HandleFetch from '../Spinner/HandleFetch'
 import Title from '../Title'
 import PracticeRecord from './PracticeRecord'
 
+interface IPracticeRecord {
+  id: number
+  practiceDate: string
+  hours: number
+  minutes: number
+  memo: string
+  offRoadTrack: {
+    name: string
+  }
+  vehicle: {
+    modelName: string
+  }
+}
+
 const useStyles = makeStyles({
   table: { minWidth: 750 },
 })
@@ -27,7 +41,7 @@ const StyledTableCell = withStyles({ root: { padding: '1.6em' } })(TableCell)
 const PracticeRecordList = () => {
   const classes = useStyles()
   const [loading, setLoading] = useState(false)
-  const [practiceRecords, setPracticeRecords] = useState([])
+  const [practiceRecords, setPracticeRecords] = useState<IPracticeRecord[]>([])
   useEffect(() => {
     fetchPracticeRecords()
   }, [])
@@ -43,7 +57,9 @@ const PracticeRecordList = () => {
     // TODO: エラー時
   }
 
-  const [practiceRecord, setPracticeRecord] = useState({})
+  const [practiceRecord, setPracticeRecord] = useState<IPracticeRecord>(
+    {} as IPracticeRecord
+  )
   const [showPracticeRecord, setShowPracticeRecord] = useState(false)
   const showDetail = (practiceRecord) => {
     setPracticeRecord(practiceRecord)
@@ -53,8 +69,8 @@ const PracticeRecordList = () => {
     setShowPracticeRecord(false)
   }
 
-  const handleDelete = async (id) => {
-    await apiClientWithAuth.delete(`/practice_records/${id}`)
+  const handleDelete = (id) => {
+    apiClientWithAuth.delete(`/practice_records/${id}`)
   }
 
   return (

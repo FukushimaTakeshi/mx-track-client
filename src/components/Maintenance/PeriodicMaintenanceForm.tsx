@@ -22,6 +22,11 @@ import HandleFetch from '../Spinner/HandleFetch'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
 
+interface IMaintenanceMenu {
+  id: number
+  name: string
+}
+
 const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -36,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const usePeriodicMaintenanceForm = () => {
-  const menu = useForm()
+  const menu = useForm({} as IMaintenanceMenu)
   const cycleHours = useForm(0)
   const cycleMinutes = useForm(0)
   const memo = useForm()
@@ -44,7 +49,10 @@ const usePeriodicMaintenanceForm = () => {
 }
 
 const PeriodicMaintenanceForm = () => {
-  const { userVehicleId, id } = useParams()
+  const { userVehicleId, id } = useParams<{
+    userVehicleId?: string
+    id?: string
+  }>()
   const history = useHistory()
   const classes = useStyles()
   const form = usePeriodicMaintenanceForm()
@@ -63,7 +71,9 @@ const PeriodicMaintenanceForm = () => {
     () => true
   )
 
-  const [maintenanceMenus, setMaintenanceMenus] = useState([])
+  const [maintenanceMenus, setMaintenanceMenus] = useState<IMaintenanceMenu[]>(
+    []
+  )
 
   useEffect(() => {
     apiClient.get('/maintenance_menus').then((response) => {
@@ -109,10 +119,14 @@ const PeriodicMaintenanceForm = () => {
                       labelId="menu-label"
                       value={form.menu.value}
                       onChange={form.menu.setValueFromEvent}
-                      renderValue={(value) => value.name}
+                      renderValue={(value) => (value as IMaintenanceMenu).name}
                     >
                       {maintenanceMenus.map((value) => (
-                        <MenuItem key={value.id} value={value}>
+                        <MenuItem
+                          key={value.id}
+                          // @ts-ignore [2]
+                          value={value}
+                        >
                           {value.name}
                         </MenuItem>
                       ))}

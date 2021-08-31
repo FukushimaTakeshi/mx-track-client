@@ -20,6 +20,13 @@ import ErrorNotification from '../Notification/ErrorNotification'
 import SuccessNotification from '../Notification/SuccessNotification'
 import HandleFetch from '../Spinner/HandleFetch'
 
+interface IUserVehicle {
+  id: number
+  vehicle: {
+    name: string
+  }
+}
+
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(2),
@@ -45,7 +52,9 @@ const useVehicleSettingForm = () => {
 const Setting = ({ id, onClose }) => {
   const classes = useStyles()
   const form = useVehicleSettingForm()
-  const [userVehicle, setUserVehicle] = useState({})
+  const [userVehicle, setUserVehicle] = useState<IUserVehicle>(
+    {} as IUserVehicle
+  )
   useEffect(() => {
     apiClientWithAuth.get(`/user_vehicles/${id}`).then((response) => {
       setUserVehicle(response.data)

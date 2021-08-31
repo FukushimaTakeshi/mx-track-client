@@ -34,11 +34,38 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const MaintenanceHistory = () => {
+export interface IMaintenanceRecord {
+  id: number
+  maintenanceOn: string
+  operationHours: number
+  operationMinutes: number
+  memo: string
+  maintenanceMenu: {
+    id: number
+    name: string
+  }
+  vehicle: {
+    modelName: string
+  }
+}
+
+interface IUserVehicle {
+  id: number
+  initialHours: number
+  initialMinutes: number
+  vehicle: {
+    name: string
+  }
+  createdDate: string
+}
+
+const MaintenanceHistory: React.FC = () => {
   const classes = useStyles()
-  const { userVehicleId } = useParams()
-  const [maintenanceRecords, setMaintenanceRecords] = useState([])
-  const [vehicle, setVehicle] = useState({})
+  const { userVehicleId } = useParams<{ userVehicleId?: string }>()
+  const [maintenanceRecords, setMaintenanceRecords] = useState<
+    Array<IMaintenanceRecord>
+  >([])
+  const [vehicle, setVehicle] = useState({} as IUserVehicle)
 
   const fetchMaintenanceRecords = useCallback(() => {
     apiClientWithAuth
@@ -55,10 +82,11 @@ const MaintenanceHistory = () => {
       .then((response) => setVehicle(response.data))
   }, [fetchMaintenanceRecords, userVehicleId])
 
-  const [detail, setDetail] = useState({})
+  const [detail, setDetail] = useState({} as IMaintenanceRecord)
   const [showDetail, setShowDetail] = useState(false)
   const handleClickDetail = (id) => {
-    setDetail(maintenanceRecords.find((record) => record.id === id))
+    const foundValue = maintenanceRecords.find((record) => record.id === id)
+    setDetail(foundValue ?? ({} as IMaintenanceRecord))
     setShowDetail(true)
   }
   const handleCloseDetail = () => setShowDetail(false)
@@ -94,27 +122,29 @@ const MaintenanceHistory = () => {
                 </TimelineDot>
                 <TimelineConnector />
               </TimelineSeparator>
-              <TimelineContent
+              <span
                 className={classes.timelineContent}
                 onClick={() => handleClickDetail(maintenanceRecord.id)}
               >
-                <Typography variant="subtitle2" color="textSecondary">
-                  {`${maintenanceRecord.operationHours}:${zeroPadding(
-                    maintenanceRecord.operationMinutes
-                  )}`}
-                </Typography>
-                <Paper elevation={2} className={classes.paper}>
-                  <Typography variant="subtitle1">
-                    {maintenanceRecord.maintenanceMenu.name}
+                <TimelineContent>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {`${maintenanceRecord.operationHours}:${zeroPadding(
+                      maintenanceRecord.operationMinutes
+                    )}`}
                   </Typography>
-                  <Typography
-                    variant="caption"
-                    style={{ whiteSpace: 'pre-line' }}
-                  >
-                    {maintenanceRecord.memo}
-                  </Typography>
-                </Paper>
-              </TimelineContent>
+                  <Paper elevation={2} className={classes.paper}>
+                    <Typography variant="subtitle1">
+                      {maintenanceRecord.maintenanceMenu.name}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      style={{ whiteSpace: 'pre-line' }}
+                    >
+                      {maintenanceRecord.memo}
+                    </Typography>
+                  </Paper>
+                </TimelineContent>
+              </span>
             </TimelineItem>
           ))}
           <TimelineItem>
