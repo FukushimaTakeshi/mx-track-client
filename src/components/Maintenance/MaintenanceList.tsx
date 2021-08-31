@@ -47,7 +47,7 @@ interface IMaintenance {
   cycleMinutes: number
 }
 
-const MaintenanceList = () => {
+const MaintenanceList: React.FC = () => {
   const classes = useStyles()
   const { userVehicleId } = useParams<{ userVehicleId?: string }>()
   const history = useHistory()

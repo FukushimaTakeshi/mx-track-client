@@ -49,7 +49,9 @@ const Edit = () => {
   // FIXME: 名前を更新してもリロードしないと表示が変わらない
   const save = useAsyncExecutor(() => {
     if (!currentUser) {
-      return new Promise(() => {})
+      return new Promise(() => {
+        // とりあえず型をそろえる
+      })
     }
     const params = { name: form.name.value }
     return apiClientWithAuth.put(`/users/${currentUser.id}`, params)
