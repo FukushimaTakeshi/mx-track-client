@@ -17,13 +17,6 @@ import { apiClientWithAuth } from '../../lib/api_client'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
 
-interface IUserVehicle {
-  id: number
-  vehicle: {
-    name: string
-  }
-}
-
 const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: 'none',
@@ -35,10 +28,10 @@ const useQuery = () => {
   return new URLSearchParams(useLocation().search)
 }
 
-const UserVehicleList = () => {
+const UserVehicleList: React.FC = () => {
   const classes = useStyles()
   const query = useQuery()
-  const [userVehicles, setUserVehicles] = useState<IUserVehicle[]>([])
+  const [userVehicles, setUserVehicles] = useState<Models.UserVehicle[]>([])
 
   useEffect(() => {
     apiClientWithAuth.get('/user_vehicles').then((response) => {
@@ -85,7 +78,7 @@ const UserVehicleList = () => {
                     <ListItemIcon>
                       <BuildIcon />
                     </ListItemIcon>
-                    <ListItemText primary={userVehicle.vehicle.name} />
+                    <ListItemText primary={userVehicle.vehicle.modelName} />
                   </ListItem>
                   <Divider variant="inset" component="li" />
                 </Link>

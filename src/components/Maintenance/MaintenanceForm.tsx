@@ -22,11 +22,6 @@ import HandleFetch from '../Spinner/HandleFetch'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
 
-interface IMaintenanceMenu {
-  id: number
-  name: string
-}
-
 const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -42,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const useMaintenanceForm = () => {
   const maintenanceOn = useForm()
-  const maintenanceMenu = useForm({} as IMaintenanceMenu)
+  const maintenanceMenu = useForm({} as Models.MaintenanceMenu)
   const operationHours = useForm(0)
   const operationMinutes = useForm(0)
   const memo = useForm()
@@ -78,9 +73,9 @@ const MaintenanceForm: React.FC = () => {
     () => true
   )
 
-  const [maintenanceMenus, setMaintenanceMenus] = useState<IMaintenanceMenu[]>(
-    []
-  )
+  const [maintenanceMenus, setMaintenanceMenus] = useState<
+    Models.MaintenanceMenu[]
+  >([])
 
   useEffect(() => {
     apiClient.get('/maintenance_menus').then((response) => {
@@ -156,7 +151,9 @@ const MaintenanceForm: React.FC = () => {
                       labelId="menu-label"
                       value={form.maintenanceMenu.value}
                       onChange={form.maintenanceMenu.setValueFromEvent}
-                      renderValue={(value) => (value as IMaintenanceMenu).name}
+                      renderValue={(value) =>
+                        (value as Models.MaintenanceMenu).name
+                      }
                     >
                       {maintenanceMenus.map((value) => (
                         <MenuItem

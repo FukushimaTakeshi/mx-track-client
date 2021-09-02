@@ -14,25 +14,8 @@ import React, { useEffect, useState } from 'react'
 import { apiClient } from '../../lib/api_client'
 import TrackList from './TrackList'
 
-interface IRegin {
-  id: number
-  name: string
-  prefectures: IPrefecture[]
-}
-
-interface IPrefecture {
-  id: number
-  name: string
-  offRoadTracks: IOffRoadTrack[]
-}
-
-interface IOffRoadTrack {
-  id: number
-  name: string
-}
-
 const PrefectureList = ({ regionId, onClose, handleSelectTrack }) => {
-  const [region, setRegion] = useState<IRegin | null>(null)
+  const [region, setRegion] = useState<Models.Region | null>(null)
   useEffect(() => {
     apiClient.get(`/regions/${regionId}`).then((res) => {
       setRegion(res.data)

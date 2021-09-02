@@ -36,22 +36,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-interface IMaintenance {
-  id: number
-  maintenanceMenu: {
-    id: number
-    name: string
-  }
-  cycleHours: number
-
-  cycleMinutes: number
-}
-
 const MaintenanceList: React.FC = () => {
   const classes = useStyles()
   const { userVehicleId } = useParams<{ userVehicleId?: string }>()
   const history = useHistory()
-  const [maintenances, setMaintenances] = useState<IMaintenance[]>([])
+  const [maintenances, setMaintenances] = useState<
+    Models.periodicMaintenance[]
+  >([])
   const [maintenanceTotalTimes, setMaintenanceTotalTimes] = useState([])
   useEffect(() => {
     apiClientWithAuth

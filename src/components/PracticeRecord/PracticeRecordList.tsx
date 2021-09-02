@@ -13,24 +13,11 @@ import { makeStyles, withStyles } from '@material-ui/core/styles'
 import EditIcon from '@material-ui/icons/Edit'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import '../../@types/models.d.ts'
 import { apiClientWithAuth } from '../../lib/api_client'
 import HandleFetch from '../Spinner/HandleFetch'
 import Title from '../Title'
 import PracticeRecord from './PracticeRecord'
-
-interface IPracticeRecord {
-  id: number
-  practiceDate: string
-  hours: number
-  minutes: number
-  memo: string
-  offRoadTrack: {
-    name: string
-  }
-  vehicle: {
-    modelName: string
-  }
-}
 
 const useStyles = makeStyles({
   table: { minWidth: 750 },
@@ -38,10 +25,12 @@ const useStyles = makeStyles({
 
 const StyledTableCell = withStyles({ root: { padding: '1.6em' } })(TableCell)
 
-const PracticeRecordList = () => {
+const PracticeRecordList: React.FC = () => {
   const classes = useStyles()
   const [loading, setLoading] = useState(false)
-  const [practiceRecords, setPracticeRecords] = useState<IPracticeRecord[]>([])
+  const [practiceRecords, setPracticeRecords] = useState<
+    Models.PracticeRecord[]
+  >([])
   useEffect(() => {
     fetchPracticeRecords()
   }, [])
@@ -57,8 +46,8 @@ const PracticeRecordList = () => {
     // TODO: エラー時
   }
 
-  const [practiceRecord, setPracticeRecord] = useState<IPracticeRecord>(
-    {} as IPracticeRecord
+  const [practiceRecord, setPracticeRecord] = useState<Models.PracticeRecord>(
+    {} as Models.PracticeRecord
   )
   const [showPracticeRecord, setShowPracticeRecord] = useState(false)
   const showDetail = (practiceRecord) => {
@@ -114,7 +103,7 @@ const PracticeRecordList = () => {
                     {row.offRoadTrack.name}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {row.vehicle.modelName}
+                    {row.userVehicle.vehicle.modelName}
                   </StyledTableCell>
                   <StyledTableCell align="right">{`${row.hours}時間${row.minutes}分`}</StyledTableCell>
                   <StyledTableCell align="right">

@@ -132,7 +132,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const Dashboard = ({ children }) => {
+export const Dashboard: React.FC = ({ children }) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const handleDrawerOpen = () => setOpen(true)

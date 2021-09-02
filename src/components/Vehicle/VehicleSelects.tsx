@@ -32,12 +32,6 @@ interface IVehicle {
   year: number
   modelName: string
 }
-
-interface IBrand {
-  id: number
-  name: string
-}
-
 interface IMyVehicle {
   id: number
   vehicle: {
@@ -66,12 +60,12 @@ const SelectedIcon = () => (
   </InputAdornment>
 )
 
-const VehicleSelects = () => {
+const VehicleSelects: React.FC = () => {
   const classes = useStyles()
-  const [brands, setBrands] = useState<IBrand[]>([])
+  const [brands, setBrands] = useState<Models.Brand[]>([])
   const [years, setYears] = useState([])
   const [vehicles, setVehicles] = useState<IVehicle[]>([])
-  const [selectedBrand, setSelectedBrand] = useState({} as IBrand)
+  const [selectedBrand, setSelectedBrand] = useState({} as Models.Brand)
   const [selectedYear, setSelectedYear] = useState(null)
   const [selectedVehicle, setSelectedVehicle] = useState({} as IVehicle)
   const [myVehicles, setMyVehicles] = useState<IMyVehicle[]>([])
@@ -132,7 +126,7 @@ const VehicleSelects = () => {
       },
     ])
 
-    setSelectedBrand({} as IBrand)
+    setSelectedBrand({} as Models.Brand)
     setSelectedYear(null)
     setSelectedVehicle({} as IVehicle)
   }

@@ -15,7 +15,7 @@ import SuccessNotification from '../Notification/SuccessNotification'
 const PracticeRecord = ({
   id,
   offRoadTrack,
-  vehicle,
+  userVehicle,
   practiceDate,
   hours,
   minutes,
@@ -53,7 +53,7 @@ const PracticeRecord = ({
               バイク
             </Typography>
             <Typography variant="body1" component="p">
-              {vehicle.modelName}
+              {userVehicle.vehicle.modelName}
             </Typography>
 
             <Typography variant="caption" color="textSecondary">

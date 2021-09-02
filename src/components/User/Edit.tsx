@@ -37,7 +37,7 @@ const useUserForm = (user) => {
   return { name }
 }
 
-const Edit = () => {
+const Edit: React.FC = () => {
   const classes = useStyles()
   const { currentUser } = useContext(AuthContext)
   const form = useUserForm(currentUser)

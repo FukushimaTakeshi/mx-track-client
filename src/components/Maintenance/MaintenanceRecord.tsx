@@ -11,12 +11,11 @@ import EditIcon from '@material-ui/icons/Edit'
 import React, { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import SuccessNotification from '../Notification/SuccessNotification'
-import type { IMaintenanceRecord } from './MaintenanceHistory'
 
 type Props = {
   onDelete(): void
   onClose(): void
-} & IMaintenanceRecord
+} & Models.maintenanceRecord
 
 const MaintenanceRecord: React.FC<Props> = ({
   id,

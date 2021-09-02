@@ -34,38 +34,13 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export interface IMaintenanceRecord {
-  id: number
-  maintenanceOn: string
-  operationHours: number
-  operationMinutes: number
-  memo: string
-  maintenanceMenu: {
-    id: number
-    name: string
-  }
-  vehicle: {
-    modelName: string
-  }
-}
-
-interface IUserVehicle {
-  id: number
-  initialHours: number
-  initialMinutes: number
-  vehicle: {
-    name: string
-  }
-  createdDate: string
-}
-
 const MaintenanceHistory: React.FC = () => {
   const classes = useStyles()
   const { userVehicleId } = useParams<{ userVehicleId?: string }>()
   const [maintenanceRecords, setMaintenanceRecords] = useState<
-    Array<IMaintenanceRecord>
+    Array<Models.maintenanceRecord>
   >([])
-  const [vehicle, setVehicle] = useState({} as IUserVehicle)
+  const [vehicle, setVehicle] = useState({} as Models.SettingUserVehicle)
 
   const fetchMaintenanceRecords = useCallback(() => {
     apiClientWithAuth
@@ -82,11 +57,11 @@ const MaintenanceHistory: React.FC = () => {
       .then((response) => setVehicle(response.data))
   }, [fetchMaintenanceRecords, userVehicleId])
 
-  const [detail, setDetail] = useState({} as IMaintenanceRecord)
+  const [detail, setDetail] = useState({} as Models.maintenanceRecord)
   const [showDetail, setShowDetail] = useState(false)
   const handleClickDetail = (id) => {
     const foundValue = maintenanceRecords.find((record) => record.id === id)
-    setDetail(foundValue ?? ({} as IMaintenanceRecord))
+    setDetail(foundValue ?? ({} as Models.maintenanceRecord))
     setShowDetail(true)
   }
   const handleCloseDetail = () => setShowDetail(false)
@@ -160,7 +135,7 @@ const MaintenanceHistory: React.FC = () => {
             </TimelineSeparator>
             <TimelineContent className={classes.timelineContent}>
               <Typography variant="caption">
-                {`${vehicle.vehicle?.name} の`}
+                {`${vehicle.vehicle?.modelName} の`}
               </Typography>
               <Typography variant="caption" color="textSecondary">
                 管理を開始しました！

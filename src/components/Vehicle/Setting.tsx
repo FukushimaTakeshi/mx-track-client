@@ -20,11 +20,9 @@ import ErrorNotification from '../Notification/ErrorNotification'
 import SuccessNotification from '../Notification/SuccessNotification'
 import HandleFetch from '../Spinner/HandleFetch'
 
-interface IUserVehicle {
+type Props = {
   id: number
-  vehicle: {
-    name: string
-  }
+  onClose(): void
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -49,11 +47,11 @@ const useVehicleSettingForm = () => {
   return { initialHours, initialMinutes }
 }
 
-const Setting = ({ id, onClose }) => {
+const Setting: React.FC<Props> = ({ id, onClose }) => {
   const classes = useStyles()
   const form = useVehicleSettingForm()
-  const [userVehicle, setUserVehicle] = useState<IUserVehicle>(
-    {} as IUserVehicle
+  const [userVehicle, setUserVehicle] = useState<Models.SettingUserVehicle>(
+    {} as Models.SettingUserVehicle
   )
   useEffect(() => {
     apiClientWithAuth.get(`/user_vehicles/${id}`).then((response) => {
@@ -112,7 +110,9 @@ const Setting = ({ id, onClose }) => {
         <Container component="main" maxWidth="xs" className={classes.container}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="h6">{userVehicle.vehicle.name}</Typography>
+              <Typography variant="h6">
+                {userVehicle.vehicle.modelName}
+              </Typography>
               <Typography variant="body2" color="textSecondary">
                 <span>
                   以下で設定した稼働時間に対して、練習記録の走行時間が加算されます。

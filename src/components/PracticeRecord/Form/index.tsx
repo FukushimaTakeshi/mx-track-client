@@ -31,23 +31,6 @@ import { Dashboard } from '../../templates/Dashboard'
 import PrefectureList from '../../Track/PrefectureList'
 import TimesDialog from './TimesDialog'
 
-interface ITrack {
-  id: number
-  name: string
-}
-
-interface IUserVehicle {
-  id: number
-  vehicle: {
-    name: string
-  }
-}
-
-interface IRegin {
-  id: number
-  name: string
-}
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
@@ -75,8 +58,8 @@ const useStyles = makeStyles((theme) => ({
 const usePracticeRecordForm = () => {
   const regionId = useForm<number | null>()
   const practiceDate = useForm('')
-  const track = useForm({} as ITrack)
-  const userVehicle = useForm({} as IUserVehicle)
+  const track = useForm({} as Models.OffRoadTrack)
+  const userVehicle = useForm({} as Models.UserVehicle)
   const hours = useForm<number>()
   const minutes = useForm<number>()
   const memo = useForm('')
@@ -93,7 +76,7 @@ const usePracticeRecordForm = () => {
   }
 }
 
-const Form = () => {
+const Form: React.FC = () => {
   const classes = useStyles()
   const form = usePracticeRecordForm()
   const { id } = useParams<{ id?: string }>()
@@ -120,7 +103,7 @@ const Form = () => {
     return request.then(() => setSuccess(true))
   }, validator)
 
-  const [userVehicles, setUserVehicles] = useState<IUserVehicle[]>([])
+  const [userVehicles, setUserVehicles] = useState<Models.UserVehicle[]>([])
 
   useEffect(() => {
     apiClientWithAuth
@@ -134,7 +117,9 @@ const Form = () => {
         const foundUserVehicle = userVehicles.find(
           ({ id }) => id === response.data.id
         )
-        form.userVehicle.setValue(foundUserVehicle ?? ({} as IUserVehicle))
+        form.userVehicle.setValue(
+          foundUserVehicle ?? ({} as Models.UserVehicle)
+        )
       })
     }
 
@@ -156,7 +141,7 @@ const Form = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, userVehicles])
 
-  const [tracksOptions, setTrackOptions] = useState<IRegin[]>([])
+  const [tracksOptions, setTrackOptions] = useState<Models.Region[]>([])
   const [optionsLoading, setOptionsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
@@ -316,7 +301,9 @@ const Form = () => {
                       <ClearIcon
                         color="disabled"
                         fontSize="small"
-                        onClick={() => form.track.setValue({} as ITrack)}
+                        onClick={() =>
+                          form.track.setValue({} as Models.OffRoadTrack)
+                        }
                       />
                     </Grid>
                   </React.Fragment>
@@ -329,7 +316,7 @@ const Form = () => {
                     value={form.userVehicle.value}
                     options={userVehicles}
                     getOptionLabel={(option) =>
-                      option.vehicle ? option.vehicle.name : ''
+                      option.vehicle ? option.vehicle.modelName : ''
                     }
                     onChange={handleChangeUserVehicle}
                     renderInput={(params) => (
