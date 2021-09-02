@@ -12,7 +12,7 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  Typography,
+  Typography
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ClearIcon from '@material-ui/icons/Clear'
@@ -157,7 +157,7 @@ const Form: React.FC = () => {
     })
   }
 
-  const onChangeRegion = (e, value) => {
+  const onChangeRegion = (e: any, value: Models.Region | null) => {
     if (!value) return
     form.regionId.setValue(value.id)
   }
@@ -166,11 +166,15 @@ const Form: React.FC = () => {
   const handleCloseSelect = () => setShowModal(true)
   const handleCloseModal = () => setShowModal(false)
 
-  const handleChangeUserVehicle = (e, newUserVehicle) =>
-    form.userVehicle.setValue(newUserVehicle)
+  const handleChangeUserVehicle = (
+    e: any,
+    newUserVehicle: Models.UserVehicle | null
+  ) => form.userVehicle.setValue(newUserVehicle ?? ({} as Models.UserVehicle))
 
   const [timeFormat, setTimeFormat] = useState('time')
-  const handleChangeTimeFormat = (event) => {
+  const handleChangeTimeFormat = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.value === 'time') {
       form.minutes.setValue(Number(form.minutes.value) * 6)
     } else {

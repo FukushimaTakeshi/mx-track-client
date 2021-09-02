@@ -21,11 +21,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const TrackList = ({ prefecture, onClose, onClickTrack }) => {
+type Props = {
+  prefecture: Models.Prefecture
+  onClose: () => void
+  onClickTrack: (track: Models.OffRoadTrack) => void
+}
+
+const TrackList: React.FC<Props> = ({ prefecture, onClose, onClickTrack }) => {
   const tracks = prefecture.offRoadTracks
   const classes = useStyles()
 
-  const handleClick = (track) => {
+  const handleClick = (track: Models.OffRoadTrack) => {
     onClose()
     onClickTrack(track)
   }

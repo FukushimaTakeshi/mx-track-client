@@ -139,9 +139,9 @@ export const Dashboard: React.FC = ({ children }) => {
   const handleDrawerClose = () => setOpen(false)
   const { currentUser, logout } = useContext(AuthContext)
 
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
-  const handleAccountMenu = (event) => {
+  const handleAccountMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
   const handleCloseAccountMenu = () => {

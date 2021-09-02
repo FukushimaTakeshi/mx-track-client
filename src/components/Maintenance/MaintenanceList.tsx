@@ -41,9 +41,11 @@ const MaintenanceList: React.FC = () => {
   const { userVehicleId } = useParams<{ userVehicleId?: string }>()
   const history = useHistory()
   const [maintenances, setMaintenances] = useState<
-    Models.periodicMaintenance[]
+    Models.PeriodicMaintenance[]
   >([])
-  const [maintenanceTotalTimes, setMaintenanceTotalTimes] = useState([])
+  const [maintenanceTotalTimes, setMaintenanceTotalTimes] = useState<
+    Models.UserVehicleTotalTime[]
+  >([])
   useEffect(() => {
     apiClientWithAuth
       .get(`/periodic_maintenances/?user_vehicle_id=${userVehicleId}`)
@@ -53,9 +55,9 @@ const MaintenanceList: React.FC = () => {
       .then((response) => setMaintenanceTotalTimes(response.data))
   }, [userVehicleId])
 
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
-  const handleClickMoreVert = (event) => {
+  const handleClickMoreVert = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
 
@@ -63,7 +65,7 @@ const MaintenanceList: React.FC = () => {
     setAnchorEl(null)
   }
 
-  const handleDeleteMaintenance = (maintenanceId) => {
+  const handleDeleteMaintenance = (maintenanceId: number) => {
     apiClientWithAuth
       .delete(`/periodic_maintenances/${maintenanceId}`)
       .then(() =>

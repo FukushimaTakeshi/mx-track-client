@@ -12,7 +12,12 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SuccessNotification from '../Notification/SuccessNotification'
 
-const PracticeRecord = ({
+type Props = Models.PracticeRecord & {
+  onDelete: () => void
+  onClose: () => void
+}
+
+const PracticeRecord: React.FC<Props> = ({
   id,
   offRoadTrack,
   userVehicle,

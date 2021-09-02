@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const useUserForm = (user) => {
-  const name = useForm(user.name)
+const useUserForm = (user: Models.User | null) => {
+  const name = useForm(user?.name)
   return { name }
 }
 

@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
+import { Form } from '../../../hooks/useForm'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -20,7 +21,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const TimesDialog = ({ open, onClose, form, handleSubmit }) => {
+type Props = {
+  open: boolean
+  onClose: () => void
+  form: {
+    hours: Form<number>
+    minutes: Form<number>
+  }
+  handleSubmit: () => void
+}
+
+const TimesDialog: React.FC<Props> = ({
+  open,
+  onClose,
+  form,
+  handleSubmit,
+}) => {
   const classes = useStyles()
   return (
     <Dialog open={open} onClose={onClose}>

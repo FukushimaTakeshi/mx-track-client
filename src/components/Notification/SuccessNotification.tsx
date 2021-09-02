@@ -2,7 +2,13 @@ import { Snackbar } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
 import React from 'react'
 
-const SuccessNotification = ({ open, onClose, message }) => {
+type Props = {
+  open: boolean
+  onClose?: () => void
+  message: string
+}
+
+const SuccessNotification: React.FC<Props> = ({ open, onClose, message }) => {
   const handleClose = () => {
     onClose && onClose()
   }

@@ -59,19 +59,19 @@ const MaintenanceHistory: React.FC = () => {
 
   const [detail, setDetail] = useState({} as Models.maintenanceRecord)
   const [showDetail, setShowDetail] = useState(false)
-  const handleClickDetail = (id) => {
+  const handleClickDetail = (id: number) => {
     const foundValue = maintenanceRecords.find((record) => record.id === id)
     setDetail(foundValue ?? ({} as Models.maintenanceRecord))
     setShowDetail(true)
   }
   const handleCloseDetail = () => setShowDetail(false)
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     apiClientWithAuth.delete(`/maintenance_records/${id}`)
     fetchMaintenanceRecords()
   }
 
-  const zeroPadding = (value) => String(value).padStart(2, '0')
+  const zeroPadding = (value: number) => String(value).padStart(2, '0')
 
   return (
     <Dashboard>

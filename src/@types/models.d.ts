@@ -1,4 +1,10 @@
 declare namespace Models {
+  type User = {
+    id: number
+    name: string
+    photoUrl: string
+  }
+
   type Vehicle = {
     modelName: string
   }
@@ -65,13 +71,13 @@ declare namespace Models {
     vehicle: Vehicle
   }
 
-  type SettingUserVehicle = Models.UserVehicle & {
+  type SettingUserVehicle = UserVehicle & {
     initialHours: number
     initialMinutes: number
     createdDate: string
   }
 
-  type periodicMaintenance = {
+  type PeriodicMaintenance = {
     id: number
     maintenanceMenu: MaintenanceMenu
     cycleHours: number
@@ -79,7 +85,7 @@ declare namespace Models {
     memo: string
   }
 
-  type userVehicleTotalTime = {
+  type UserVehicleTotalTime = {
     maintenanceMenuId: number
     totalOperationHours: number
     totalOperationMinutes: number

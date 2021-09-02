@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 import snakecaseKeys from 'snakecase-keys'
 
@@ -10,14 +10,14 @@ const axiosInstanceWithToken = axios.create()
 export const apiClient = axiosInstance
 export const apiClientWithAuth = axiosInstanceWithToken
 
-const snakedRequest = (request) => {
+const snakedRequest = (request: AxiosRequestConfig) => {
   return {
     ...request,
     data: request.data ? snakecaseKeys(request.data, { deep: true }) : null,
   }
 }
 
-const camelizeRequest = (response) => {
+const camelizeRequest = (response: AxiosResponse) => {
   return {
     ...response,
     data: response.data ? camelcaseKeys(response.data, { deep: true }) : null,
@@ -36,10 +36,10 @@ axiosInstanceWithToken.interceptors.request.use((request) => {
   }
 })
 
-const errorHandler = (error) => {
-  if (error.response.status == 401) {
+const errorHandler = (error: AxiosError) => {
+  if (error?.response?.status == 401) {
     window.location.reload()
-  } else if (error.response.status == 404) {
+  } else if (error?.response?.status == 404) {
     // TODO: 404ページの作成
     return Promise.reject(error)
   } else {

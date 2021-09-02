@@ -32,16 +32,10 @@ interface IVehicle {
   year: number
   modelName: string
 }
-interface IMyVehicle {
-  id: number
-  vehicle: {
-    name: string
-  }
-}
 
 interface ISetting {
   show: boolean
-  vehicle?: IVehicle
+  vehicle?: Models.UserVehicle
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -66,9 +60,9 @@ const VehicleSelects: React.FC = () => {
   const [years, setYears] = useState([])
   const [vehicles, setVehicles] = useState<IVehicle[]>([])
   const [selectedBrand, setSelectedBrand] = useState({} as Models.Brand)
-  const [selectedYear, setSelectedYear] = useState(null)
+  const [selectedYear, setSelectedYear] = useState<null | number>(null)
   const [selectedVehicle, setSelectedVehicle] = useState({} as IVehicle)
-  const [myVehicles, setMyVehicles] = useState<IMyVehicle[]>([])
+  const [myVehicles, setMyVehicles] = useState<Models.UserVehicle[]>([])
   const [currentVehicleId, setCurrentVehicleId] = useState(0)
 
   useEffect(() => {
@@ -86,7 +80,7 @@ const VehicleSelects: React.FC = () => {
     })
   }
 
-  const handleChangeBrand = (event, brand) => {
+  const handleChangeBrand = (e: any, brand: Models.Brand) => {
     setYears([])
     setVehicles([])
     setSelectedBrand(brand)
@@ -97,7 +91,7 @@ const VehicleSelects: React.FC = () => {
     })
   }
 
-  const handleChangeYear = (event, year) => {
+  const handleChangeYear = (e: any, year: number) => {
     setSelectedYear(year)
     setSelectedVehicle({} as IVehicle)
     // setSelected({ brand: selected.brand, year: selectedYear })
@@ -108,7 +102,7 @@ const VehicleSelects: React.FC = () => {
       })
   }
 
-  const handleChangeVehicle = (event, vehicle) => {
+  const handleChangeVehicle = (e: any, vehicle: IVehicle) => {
     setSelectedVehicle(vehicle)
   }
 
@@ -121,7 +115,7 @@ const VehicleSelects: React.FC = () => {
       {
         id: response.data.id,
         vehicle: {
-          name: `${selectedBrand.name}  ${selectedVehicle.modelName} ${selectedYear}`,
+          modelName: `${selectedBrand.name}  ${selectedVehicle.modelName} ${selectedYear}`,
         },
       },
     ])
@@ -135,7 +129,7 @@ const VehicleSelects: React.FC = () => {
   const handleShowDialog = () => setShowDeleteDialog(true)
   const handleCloseDialog = () => setShowDeleteDialog(false)
 
-  const handleRadioChange = (event) => {
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const currentVehicleId = Number(event.target.value)
     setCurrentVehicleId(currentVehicleId)
     apiClientWithAuth.post('/current_vehicles', {
@@ -143,7 +137,7 @@ const VehicleSelects: React.FC = () => {
     })
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     const filteredVehicles = myVehicles.filter(
       (myVehicle) => myVehicle.id !== id
     )
@@ -153,7 +147,7 @@ const VehicleSelects: React.FC = () => {
   }
 
   const [setting, setSetting] = useState({} as ISetting)
-  const handleOpenSetting = (vehicle) => {
+  const handleOpenSetting = (vehicle: Models.UserVehicle) => {
     setSetting({ show: true, vehicle })
   }
   const handleCloseSetting = () => {
@@ -185,7 +179,7 @@ const VehicleSelects: React.FC = () => {
                                 : 'textSecondary'
                             }
                           >
-                            {myVehicle.vehicle.name}
+                            {myVehicle.vehicle.modelName}
                           </Typography>
                         </Grid>
                       }

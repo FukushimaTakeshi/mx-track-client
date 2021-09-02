@@ -14,7 +14,17 @@ import React, { useEffect, useState } from 'react'
 import { apiClient } from '../../lib/api_client'
 import TrackList from './TrackList'
 
-const PrefectureList = ({ regionId, onClose, handleSelectTrack }) => {
+type Props = {
+  regionId: number | null
+  onClose: () => void
+  handleSelectTrack: (track: Models.OffRoadTrack) => void
+}
+
+const PrefectureList: React.FC<Props> = ({
+  regionId,
+  onClose,
+  handleSelectTrack,
+}) => {
   const [region, setRegion] = useState<Models.Region | null>(null)
   useEffect(() => {
     apiClient.get(`/regions/${regionId}`).then((res) => {
@@ -24,8 +34,10 @@ const PrefectureList = ({ regionId, onClose, handleSelectTrack }) => {
   }, [regionId])
 
   const [showModal, setShowModal] = useState(false)
-  const [clickedPrefecture, setClickedPrefecture] = useState({})
-  const handleClick = (prefecture) => {
+  const [clickedPrefecture, setClickedPrefecture] = useState(
+    {} as Models.Prefecture
+  )
+  const handleClick = (prefecture: Models.Prefecture) => {
     setShowModal(true)
     setClickedPrefecture(prefecture)
   }
@@ -43,7 +55,7 @@ const PrefectureList = ({ regionId, onClose, handleSelectTrack }) => {
 
   const classes = useStyles()
 
-  const handleClickTrack = (track) => {
+  const handleClickTrack = (track: Models.OffRoadTrack) => {
     handleSelectTrack(track)
     handleCloseModal()
     onClose()
@@ -82,7 +94,7 @@ const PrefectureList = ({ regionId, onClose, handleSelectTrack }) => {
         <TrackList
           prefecture={clickedPrefecture}
           onClose={handleCloseModal}
-          onClickTrack={(track) => handleClickTrack(track)}
+          onClickTrack={(track: Models.OffRoadTrack) => handleClickTrack(track)}
         />
       </Dialog>
     </React.Fragment>

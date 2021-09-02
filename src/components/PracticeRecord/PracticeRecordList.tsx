@@ -50,7 +50,7 @@ const PracticeRecordList: React.FC = () => {
     {} as Models.PracticeRecord
   )
   const [showPracticeRecord, setShowPracticeRecord] = useState(false)
-  const showDetail = (practiceRecord) => {
+  const showDetail = (practiceRecord: Models.PracticeRecord) => {
     setPracticeRecord(practiceRecord)
     setShowPracticeRecord(true)
   }
@@ -58,7 +58,7 @@ const PracticeRecordList: React.FC = () => {
     setShowPracticeRecord(false)
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     apiClientWithAuth.delete(`/practice_records/${id}`)
   }
 

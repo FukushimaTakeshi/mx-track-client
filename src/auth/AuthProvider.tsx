@@ -5,13 +5,7 @@ import { auth } from './auth'
 interface IAuthContext {
   logout: () => void
   verifyUser: () => Promise<void>
-  currentUser: IUser | null
-}
-
-interface IUser {
-  id: number
-  name: string
-  photoUrl: string
+  currentUser: Models.User | null
 }
 
 interface AuthProviderProps {

@@ -1,7 +1,11 @@
 import { CircularProgress } from '@material-ui/core'
 import React from 'react'
 
-const InnerLoading = ({ loading, children }) => {
+type Props = {
+  loading: boolean
+}
+
+const InnerLoading: React.FC<Props> = ({ loading, children }) => {
   return loading ? (
     <div
       style={{
@@ -14,7 +18,7 @@ const InnerLoading = ({ loading, children }) => {
       <CircularProgress color="inherit" />
     </div>
   ) : (
-    children
+    <>{children}</>
   )
 }
 

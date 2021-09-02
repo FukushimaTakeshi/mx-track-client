@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-interface Form<T = string> {
+export interface Form<T = string> {
   error: string
   setError(value: string): void
   value: T

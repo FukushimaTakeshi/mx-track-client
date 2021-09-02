@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-interface Task {
+export interface Task {
   error: string
   setError(value: string): void
   isExecuting: boolean
@@ -16,7 +16,7 @@ type Validate = () => boolean
 export const useAsyncExecutor = (run: Run, validate: Validate) => {
   const [isExecuting, setIsExecuting] = useState(false)
   const [error, setError] = useState('')
-  const execute = (event) => {
+  const execute = (event: any) => {
     // if (event && event.preventDefault) {
     //   event.preventDefault()
     // }

@@ -1,12 +1,17 @@
 import { Snackbar } from '@material-ui/core'
-import MuiAlert from '@material-ui/lab/Alert'
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
 import React from 'react'
+import { Task } from '../../hooks/useAsyncExecutor'
 
-const Alert = (props) => {
+const Alert: React.FC<AlertProps> = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />
 }
 
-const ErrorNotification = ({ task }) => {
+type Props = {
+  task: Task
+}
+
+const ErrorNotification: React.FC<Props> = ({ task }) => {
   const discardError = () => task.setError('')
 
   if (!task.error) {
