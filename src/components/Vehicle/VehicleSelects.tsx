@@ -22,16 +22,11 @@ import CheckIcon from '@material-ui/icons/Check'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
-import { apiClient, apiClientWithAuth } from '../../lib/api_client'
+import { useSelectVehicle } from '../../hooks/Vehicle/useSelectVehicle'
+import { apiClientWithAuth } from '../../lib/api_client'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
 import Setting from './Setting'
-
-interface IVehicle {
-  id: number
-  year: number
-  modelName: string
-}
 
 interface ISetting {
   show: boolean
@@ -55,13 +50,8 @@ const SelectedIcon = () => (
 )
 
 const VehicleSelects: React.FC = () => {
+  const { state, handle } = useSelectVehicle()
   const classes = useStyles()
-  const [brands, setBrands] = useState<Models.Brand[]>([])
-  const [years, setYears] = useState([])
-  const [vehicles, setVehicles] = useState<IVehicle[]>([])
-  const [selectedBrand, setSelectedBrand] = useState({} as Models.Brand)
-  const [selectedYear, setSelectedYear] = useState<null | number>(null)
-  const [selectedVehicle, setSelectedVehicle] = useState({} as IVehicle)
   const [myVehicles, setMyVehicles] = useState<Models.UserVehicle[]>([])
   const [currentVehicleId, setCurrentVehicleId] = useState(0)
 
@@ -74,55 +64,20 @@ const VehicleSelects: React.FC = () => {
     })
   }, [])
 
-  const handleFetchBrands = () => {
-    apiClient.get('/brands').then((response) => {
-      setBrands(response.data)
-    })
-  }
-
-  const handleChangeBrand = (e: any, brand: Models.Brand) => {
-    setYears([])
-    setVehicles([])
-    setSelectedBrand(brand)
-    setSelectedYear(null)
-    setSelectedVehicle({} as IVehicle)
-    apiClient.get(`/brands/${brand.id}`).then((response) => {
-      setYears(response.data.years)
-    })
-  }
-
-  const handleChangeYear = (e: any, year: number) => {
-    setSelectedYear(year)
-    setSelectedVehicle({} as IVehicle)
-    // setSelected({ brand: selected.brand, year: selectedYear })
-    apiClient
-      .get(`/vehicles/?year=${year}&brand_id=${selectedBrand.id}`)
-      .then((response) => {
-        setVehicles(response.data)
-      })
-  }
-
-  const handleChangeVehicle = (e: any, vehicle: IVehicle) => {
-    setSelectedVehicle(vehicle)
-  }
-
   const handleSubmit = async () => {
     const response = await apiClientWithAuth.post('/user_vehicles', {
-      vehicleId: selectedVehicle.id,
+      vehicleId: state.selectedVehicle.id,
     })
     setMyVehicles([
       ...myVehicles,
       {
         id: response.data.id,
         vehicle: {
-          modelName: `${selectedBrand.name}  ${selectedVehicle.modelName} ${selectedYear}`,
+          modelName: `${state.selectedBrand.name}  ${state.selectedVehicle.modelName} ${state.selectedYear}`,
         },
       },
     ])
-
-    setSelectedBrand({} as Models.Brand)
-    setSelectedYear(null)
-    setSelectedVehicle({} as IVehicle)
+    handle.resetState()
   }
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -249,55 +204,55 @@ const VehicleSelects: React.FC = () => {
             key={myVehicles.length}
             disablePortal
             disableClearable
-            onOpen={handleFetchBrands}
-            options={brands}
+            onOpen={handle.fetchBrands}
+            options={state.brands}
             getOptionLabel={(option) => option.name}
-            onChange={handleChangeBrand}
+            onChange={(e, brand) => handle.changeBrand(brand)}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="メーカー"
                 InputProps={{
                   ...params.InputProps,
-                  startAdornment: selectedBrand.id && <SelectedIcon />,
+                  startAdornment: state.selectedBrand.id && <SelectedIcon />,
                 }}
               />
             )}
           />
           <Autocomplete
-            key={selectedBrand.id}
+            key={state.selectedBrand.id}
             disablePortal
             disableClearable
-            options={years}
+            options={state.years}
             getOptionLabel={(option) => String(option)}
-            disabled={!years.length}
-            onChange={handleChangeYear}
+            disabled={!state.years.length}
+            onChange={(e, year) => handle.changeYear(year)}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="年式"
                 InputProps={{
                   ...params.InputProps,
-                  startAdornment: selectedYear && <SelectedIcon />,
+                  startAdornment: state.selectedYear && <SelectedIcon />,
                 }}
               />
             )}
           />
           <Autocomplete
-            key={`${selectedBrand.id}-${selectedYear}`}
+            key={`${state.selectedBrand.id}-${state.selectedYear}`}
             disablePortal
             disableClearable
-            options={vehicles}
+            options={state.vehicles}
             getOptionLabel={(option) => option.modelName}
-            disabled={!vehicles.length}
-            onChange={handleChangeVehicle}
+            disabled={!state.vehicles.length}
+            onChange={(e, vehicle) => handle.changeVehicle(vehicle)}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="車両"
                 InputProps={{
                   ...params.InputProps,
-                  startAdornment: selectedVehicle.id && <SelectedIcon />,
+                  startAdornment: state.selectedVehicle.id && <SelectedIcon />,
                 }}
               />
             )}
@@ -309,7 +264,7 @@ const VehicleSelects: React.FC = () => {
             color="primary"
             className={classes.submit}
             onClick={handleSubmit}
-            disabled={!selectedVehicle.id}
+            disabled={!state.selectedVehicle.id}
           >
             登録
           </Button>
