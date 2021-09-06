@@ -4,17 +4,17 @@ import Loading from '../components/Spinner/Loading'
 import { AuthContext } from './AuthProvider'
 
 const PrivateRoute: React.FC<RouteProps> = (props) => {
-  const { currentUser, verifyUser } = useContext(AuthContext)
+  const { currentUser, verifyLoginUser } = useContext(AuthContext)
 
   const [authChecked, setAuthChecked] = useState(false)
 
   useEffect(() => {
     const getUser = async () => {
-      await verifyUser()
+      await verifyLoginUser()
       setAuthChecked(true)
     }
     getUser()
-  }, [verifyUser])
+  }, [verifyLoginUser])
 
   return authChecked ? (
     currentUser ? (

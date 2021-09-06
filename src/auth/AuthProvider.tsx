@@ -4,17 +4,13 @@ import { auth } from './auth'
 
 interface IAuthContext {
   logout: () => void
-  verifyUser: () => Promise<void>
+  verifyLoginUser: () => Promise<void>
   currentUser: Models.User | null
-}
-
-interface AuthProviderProps {
-  children?: React.ReactNode
 }
 
 export const AuthContext = React.createContext({} as IAuthContext)
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
 
   const logout = () => {
@@ -23,8 +19,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('token')
   }
 
-  // TODO: エラー処理
-  const verifyUser = useCallback((): Promise<void> => {
+  const verifyLoginUser = useCallback((): Promise<void> => {
     return new Promise((resolve) => {
       auth.auth().onAuthStateChanged(async (user) => {
         if (user) {
@@ -38,6 +33,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             photoURL,
           })
           setCurrentUser(res.data)
+        } else {
+          setCurrentUser(null)
         }
         // FIXME: なんかへん
         resolve()
@@ -49,7 +46,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     <AuthContext.Provider
       value={{
         logout,
-        verifyUser,
+        verifyLoginUser,
         currentUser,
       }}
     >
