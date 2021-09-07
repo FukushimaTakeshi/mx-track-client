@@ -130,6 +130,9 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     color: theme.palette.text.primary,
   },
+  nestedList: {
+    paddingLeft: theme.spacing(4),
+  },
 }))
 
 export const Dashboard: React.FC = ({ children }) => {
@@ -308,6 +311,21 @@ export const Dashboard: React.FC = ({ children }) => {
                 <TimerIcon />
               </ListItemIcon>
               <ListItemText primary="定期メンテナンス" />
+            </ListItem>
+          </Link>
+        </List>
+        <Divider />
+        <List>
+          <ListItem button className={classes.link}>
+            <ListItemText primary="管理者用メニュー" />
+          </ListItem>
+          <Link
+            to="/regions"
+            className={classes.link}
+            onClick={handleDrawerClose}
+          >
+            <ListItem button className={classes.nestedList}>
+              <ListItemText primary="コース一覧" />
             </ListItem>
           </Link>
         </List>

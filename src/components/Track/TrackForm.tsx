@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { formToObject, responseToForm, useForm } from '../../hooks/useForm'
 import { apiClient } from '../../lib/api_client'
@@ -42,6 +42,7 @@ const useTrackForm = () => {
 }
 
 const TrackForm: React.FC = () => {
+  const history = useHistory()
   const { id } = useParams<{ id?: string }>()
   const form = useTrackForm()
   const classes = useStyles()
@@ -147,9 +148,7 @@ const TrackForm: React.FC = () => {
                 fullWidth
                 variant="contained"
                 color="default"
-                onClick={() => {
-                  //
-                }}
+                onClick={() => history.goBack()}
               >
                 戻る
               </Button>
