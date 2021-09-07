@@ -10,6 +10,7 @@ import MaintenanceList from './components/Maintenance/MaintenanceList'
 import PeriodicMaintenanceForm from './components/Maintenance/PeriodicMaintenanceForm'
 import MyPage from './components/MyPage'
 import Form from './components/PracticeRecord/Form'
+import TrackForm from './components/Track/TrackForm'
 import Edit from './components/User/Edit'
 import UserVehicleList from './components/Vehicle/UserVehicleList'
 import VehicleSelects from './components/Vehicle/VehicleSelects'
@@ -20,6 +21,8 @@ const App: React.FC = () => (
     <Router>
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route exact path="/tracks/new" component={TrackForm} />
+        <Route exact path="/tracks/:id" component={TrackForm} />
         <PrivateRoute exact path="/mypage" component={MyPage} />
         <PrivateRoute exact path="/user/edit" component={Edit} />
         <PrivateRoute exact path="/vehicles/edit" component={VehicleSelects} />
