@@ -56,24 +56,21 @@ const MaintenanceItemList: React.FC = () => {
     form.name.setValue(maintenanceMenu.name)
   }
 
-  const save = useAsyncExecutor(
-    () => {
-      const params = { name: form.name.value }
-      return apiClient
-        .put(`/maintenance_menus/${clickedId}`, params)
-        .then(() => {
-          const newMenus = maintenanceMenus.map((menu) => {
-            if (menu.id === clickedId) {
-              menu.name = form.name.value
-            }
-            return menu
-          })
-          setMaintenanceMenus(newMenus)
-          setClickedId(null)
-        })
-    },
-    () => true
-  )
+  const saveMenu = () => {
+    const params = { name: form.name.value }
+    return apiClient.put(`/maintenance_menus/${clickedId}`, params).then(() => {
+      const newMenus = maintenanceMenus.map((menu) => {
+        if (menu.id === clickedId) {
+          menu.name = form.name.value
+        }
+        return menu
+      })
+      setMaintenanceMenus(newMenus)
+      setClickedId(null)
+    })
+  }
+
+  const save = useAsyncExecutor(saveMenu, () => true)
 
   const handleDelete = (maintenanceMenuId: number) => {
     apiClient
@@ -119,6 +116,7 @@ const MaintenanceItemList: React.FC = () => {
                   <Grid container spacing={2}>
                     <Grid item xs={9}>
                       <TextField
+                        autoFocus
                         variant="outlined"
                         size="small"
                         value={form.name.value}

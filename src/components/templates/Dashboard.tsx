@@ -316,7 +316,7 @@ export const Dashboard: React.FC = ({ children }) => {
         </List>
         <Divider />
         <List>
-          <ListItem button className={classes.link}>
+          <ListItem className={classes.link}>
             <ListItemText primary="管理者用メニュー" />
           </ListItem>
           <Link
@@ -326,6 +326,15 @@ export const Dashboard: React.FC = ({ children }) => {
           >
             <ListItem button className={classes.nestedList}>
               <ListItemText primary="コース一覧" />
+            </ListItem>
+          </Link>
+          <Link
+            to="/maintenances"
+            className={classes.link}
+            onClick={handleDrawerClose}
+          >
+            <ListItem button className={classes.nestedList}>
+              <ListItemText primary="メンテナンス項目一覧" />
             </ListItem>
           </Link>
         </List>
