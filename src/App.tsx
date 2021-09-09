@@ -6,6 +6,7 @@ import Login from './auth/Login'
 import PrivateRoute from './auth/PrivateRoute'
 import MaintenanceForm from './components/Maintenance/MaintenanceForm'
 import MaintenanceHistory from './components/Maintenance/MaintenanceHistory'
+import MaintenanceItemForm from './components/Maintenance/MaintenanceItemForm'
 import MaintenanceItemList from './components/Maintenance/MaintenanceItemList'
 import MaintenanceList from './components/Maintenance/MaintenanceList'
 import PeriodicMaintenanceForm from './components/Maintenance/PeriodicMaintenanceForm'
@@ -27,6 +28,7 @@ const App: React.FC = () => (
         <Route exact path="/tracks/new" component={TrackForm} />
         <Route exact path="/tracks/:id" component={TrackForm} />
         <Route exact path="/maintenances" component={MaintenanceItemList} />
+        <Route exact path="/maintenances/new" component={MaintenanceItemForm} />
         <PrivateRoute exact path="/mypage" component={MyPage} />
         <PrivateRoute exact path="/user/edit" component={Edit} />
         <PrivateRoute exact path="/vehicles/edit" component={VehicleSelects} />

@@ -15,9 +15,16 @@ import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
+import { useForm } from '../../hooks/useForm'
 import { apiClient } from '../../lib/api_client'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
+
+const useMaintenanceMenuForm = () => {
+  const name = useForm()
+  return { name }
+}
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -27,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const MaintenanceItemList: React.FC = () => {
+  const form = useMaintenanceMenuForm()
   const classes = useStyles()
   const [maintenanceMenus, setMaintenanceMenus] = useState<
     Models.MaintenanceMenu[]
@@ -45,27 +53,27 @@ const MaintenanceItemList: React.FC = () => {
   const [clickedId, setClickedId] = useState<number | null>()
   const handleClickLabel = (maintenanceMenu: Models.MaintenanceMenu) => {
     setClickedId(maintenanceMenu.id)
-    setForm(maintenanceMenu.name)
+    form.name.setValue(maintenanceMenu.name)
   }
 
-  const [form, setForm] = useState('')
-  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setForm(event.target.value)
-  }
-
-  const handleSubmit = () => {
-    const params = { name: form }
-    apiClient.put(`/maintenance_menus/${clickedId}`, params).then(() => {
-      const newMenus = maintenanceMenus.map((menu) => {
-        if (menu.id === clickedId) {
-          menu.name = form
-        }
-        return menu
-      })
-      setMaintenanceMenus(newMenus)
-    })
-    setClickedId(null)
-  }
+  const save = useAsyncExecutor(
+    () => {
+      const params = { name: form.name.value }
+      return apiClient
+        .put(`/maintenance_menus/${clickedId}`, params)
+        .then(() => {
+          const newMenus = maintenanceMenus.map((menu) => {
+            if (menu.id === clickedId) {
+              menu.name = form.name.value
+            }
+            return menu
+          })
+          setMaintenanceMenus(newMenus)
+          setClickedId(null)
+        })
+    },
+    () => true
+  )
 
   const handleDelete = (maintenanceMenuId: number) => {
     apiClient
@@ -77,7 +85,7 @@ const MaintenanceItemList: React.FC = () => {
     <Dashboard>
       <>
         <Title>メンテナンス項目一覧</Title>
-        <Link to={'/periodic_maintenance/new'} className={classes.link}>
+        <Link to={'/maintenances/new'} className={classes.link}>
           <Button
             variant="outlined"
             color="secondary"
@@ -113,15 +121,16 @@ const MaintenanceItemList: React.FC = () => {
                       <TextField
                         variant="outlined"
                         size="small"
-                        value={form}
-                        onChange={handleChangeName}
+                        value={form.name.value}
+                        onChange={form.name.setValueFromEvent}
                       />
                     </Grid>
                     <Grid item xs={3}>
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleSubmit}
+                        onClick={save.execute}
+                        disabled={save.isExecuting}
                       >
                         更新
                       </Button>
