@@ -34,6 +34,7 @@ import clsx from 'clsx'
 import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../auth/AuthProvider'
+import Restricted from '../../auth/Restricted'
 
 const Copyright = () => {
   return (
@@ -314,30 +315,36 @@ export const Dashboard: React.FC = ({ children }) => {
             </ListItem>
           </Link>
         </List>
-        <Divider />
-        <List>
-          <ListItem className={classes.link}>
-            <ListItemText primary="管理者用メニュー" />
-          </ListItem>
-          <Link
-            to="/regions"
-            className={classes.link}
-            onClick={handleDrawerClose}
-          >
-            <ListItem button className={classes.nestedList}>
-              <ListItemText primary="コース一覧" />
+        <Restricted onlyAdministrator>
+          <Divider />
+          <List>
+            <ListItem className={classes.link}>
+              <ListItemText primary="管理者用メニュー" />
             </ListItem>
-          </Link>
-          <Link
-            to="/maintenances"
-            className={classes.link}
-            onClick={handleDrawerClose}
-          >
-            <ListItem button className={classes.nestedList}>
-              <ListItemText primary="メンテナンス項目一覧" />
-            </ListItem>
-          </Link>
-        </List>
+            <Restricted to={'edit-off-road-tracks'}>
+              <Link
+                to="/regions"
+                className={classes.link}
+                onClick={handleDrawerClose}
+              >
+                <ListItem button className={classes.nestedList}>
+                  <ListItemText primary="コース一覧" />
+                </ListItem>
+              </Link>
+            </Restricted>
+            <Restricted to={'edit-maintenance-menus'}>
+              <Link
+                to="/maintenances"
+                className={classes.link}
+                onClick={handleDrawerClose}
+              >
+                <ListItem button className={classes.nestedList}>
+                  <ListItemText primary="メンテナンス項目一覧" />
+                </ListItem>
+              </Link>
+            </Restricted>
+          </List>
+        </Restricted>
         <Divider />
         <List>
           {currentUser ? (

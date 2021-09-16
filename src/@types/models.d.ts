@@ -5,6 +5,11 @@ declare namespace Models {
     photoUrl: string
   }
 
+  type UserRole = {
+    roles: string[]
+    permissions: string[]
+  }
+
   type Vehicle = {
     modelName: string
   }

@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
+import Restricted from '../../auth/Restricted'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { formToObject, useForm } from '../../hooks/useForm'
 import { apiClient } from '../../lib/api_client'
@@ -51,56 +52,58 @@ const MaintenanceItemForm: React.FC = () => {
   )
 
   return (
-    <Dashboard>
-      <>
-        <Title>メンテナンス項目の登録</Title>
-        <HandleFetch loading={save.isExecuting}>
-          <SuccessNotification
-            open={success}
-            onClose={() => history.goBack()}
-            message="更新しました"
-          />
-          <ErrorNotification task={save} />
+    <Restricted to={'edit-maintenance-menus'}>
+      <Dashboard>
+        <>
+          <Title>メンテナンス項目の登録</Title>
+          <HandleFetch loading={save.isExecuting}>
+            <SuccessNotification
+              open={success}
+              onClose={() => history.goBack()}
+              message="更新しました"
+            />
+            <ErrorNotification task={save} />
 
-          <Container>
-            <div className={classes.form}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    name="name"
-                    variant="outlined"
-                    fullWidth
-                    label="メンテナンス項目名"
-                    value={form.name.value}
-                    onChange={form.name.setValueFromEvent}
-                    InputLabelProps={{ shrink: true }}
-                  />
+            <Container>
+              <div className={classes.form}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="name"
+                      variant="outlined"
+                      fullWidth
+                      label="メンテナンス項目名"
+                      value={form.name.value}
+                      onChange={form.name.setValueFromEvent}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                onClick={save.execute}
-                disabled={save.isExecuting}
-              >
-                登録
-              </Button>
-              <Button
-                fullWidth
-                variant="contained"
-                color="default"
-                onClick={() => history.goBack()}
-              >
-                戻る
-              </Button>
-            </div>
-          </Container>
-        </HandleFetch>
-      </>
-    </Dashboard>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={save.execute}
+                  disabled={save.isExecuting}
+                >
+                  登録
+                </Button>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="default"
+                  onClick={() => history.goBack()}
+                >
+                  戻る
+                </Button>
+              </div>
+            </Container>
+          </HandleFetch>
+        </>
+      </Dashboard>
+    </Restricted>
   )
 }
 

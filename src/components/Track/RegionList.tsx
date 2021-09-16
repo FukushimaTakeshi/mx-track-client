@@ -12,6 +12,7 @@ import AddIcon from '@material-ui/icons/Add'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
+import Restricted from '../../auth/Restricted'
 import { apiClient } from '../../lib/api_client'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
@@ -41,42 +42,44 @@ const RegionList: React.FC = () => {
   const handleCloseModal = () => setShowModal(false)
 
   return (
-    <Dashboard>
-      <>
-        <Title>全国のオフロードコース一覧</Title>
-        <Link to={'/tracks/new'} className={classes.link}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            fullWidth
-            startIcon={<AddIcon />}
-          >
-            <Typography variant="subtitle1">新規コースの追加</Typography>
-          </Button>
-        </Link>
-        <List>
-          {regions.map((region) => (
-            <React.Fragment key={region.id}>
-              <ListItem button onClick={() => handleClick(region)}>
-                <ListItemText primary={region.name} />
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
-        </List>
-        <Dialog
-          fullScreen
-          open={showModal && !!regionId}
-          onClose={handleCloseModal}
-        >
-          <PrefectureList
-            regionId={regionId}
+    <Restricted to={'edit-off-road-tracks'}>
+      <Dashboard>
+        <>
+          <Title>全国のオフロードコース一覧</Title>
+          <Link to={'/tracks/new'} className={classes.link}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              startIcon={<AddIcon />}
+            >
+              <Typography variant="subtitle1">新規コースの追加</Typography>
+            </Button>
+          </Link>
+          <List>
+            {regions.map((region) => (
+              <React.Fragment key={region.id}>
+                <ListItem button onClick={() => handleClick(region)}>
+                  <ListItemText primary={region.name} />
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            ))}
+          </List>
+          <Dialog
+            fullScreen
+            open={showModal && !!regionId}
             onClose={handleCloseModal}
-            handleSelectTrack={(track) => history.push(`/tracks/${track.id}`)}
-          />
-        </Dialog>
-      </>
-    </Dashboard>
+          >
+            <PrefectureList
+              regionId={regionId}
+              onClose={handleCloseModal}
+              handleSelectTrack={(track) => history.push(`/tracks/${track.id}`)}
+            />
+          </Dialog>
+        </>
+      </Dashboard>
+    </Restricted>
   )
 }
 

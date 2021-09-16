@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
+import Restricted from '../../auth/Restricted'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { formToObject, responseToForm, useForm } from '../../hooks/useForm'
 import { apiClient } from '../../lib/api_client'
@@ -78,85 +79,87 @@ const TrackForm: React.FC = () => {
   )
 
   return (
-    <Dashboard>
-      <>
-        <Title>オフロードコースの登録</Title>
-        <HandleFetch loading={save.isExecuting}>
-          <SuccessNotification
-            open={success}
-            onClose={() => {
-              // hoge
-            }}
-            message="更新しました"
-          />
-          <ErrorNotification task={save} />
+    <Restricted to={'edit-off-road-tracks'}>
+      <Dashboard>
+        <>
+          <Title>オフロードコースの登録</Title>
+          <HandleFetch loading={save.isExecuting}>
+            <SuccessNotification
+              open={success}
+              onClose={() => {
+                // hoge
+              }}
+              message="更新しました"
+            />
+            <ErrorNotification task={save} />
 
-          <Container>
-            <div className={classes.form}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="prefecture-label">都道府県</InputLabel>
-                    <Select
-                      name="prefecture"
-                      label="メンテナンス項目"
-                      labelId="prefecture-label"
-                      value={form.prefecture.value}
-                      onChange={form.prefecture.setValueFromEvent}
-                      renderValue={(value) => (value as Prefecture).name}
+            <Container>
+              <div className={classes.form}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
                     >
-                      {prefectures.map((value) => (
-                        <MenuItem
-                          key={value.id}
-                          // @ts-ignore [2]
-                          value={value}
-                        >
-                          {value.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
+                      <InputLabel id="prefecture-label">都道府県</InputLabel>
+                      <Select
+                        name="prefecture"
+                        label="メンテナンス項目"
+                        labelId="prefecture-label"
+                        value={form.prefecture.value}
+                        onChange={form.prefecture.setValueFromEvent}
+                        renderValue={(value) => (value as Prefecture).name}
+                      >
+                        {prefectures.map((value) => (
+                          <MenuItem
+                            key={value.id}
+                            // @ts-ignore [2]
+                            value={value}
+                          >
+                            {value.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
 
-                <Grid item xs={12}>
-                  <TextField
-                    name="name"
-                    variant="outlined"
-                    fullWidth
-                    label="コース名"
-                    value={form.name.value}
-                    onChange={form.name.setValueFromEvent}
-                    InputLabelProps={{ shrink: true }}
-                  />
+                  <Grid item xs={12}>
+                    <TextField
+                      name="name"
+                      variant="outlined"
+                      fullWidth
+                      label="コース名"
+                      value={form.name.value}
+                      onChange={form.name.setValueFromEvent}
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                onClick={save.execute}
-                disabled={save.isExecuting}
-              >
-                {id ? '更新' : '登録'}
-              </Button>
-              <Button
-                fullWidth
-                variant="contained"
-                color="default"
-                onClick={() => history.goBack()}
-              >
-                戻る
-              </Button>
-            </div>
-          </Container>
-        </HandleFetch>
-      </>
-    </Dashboard>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={save.execute}
+                  disabled={save.isExecuting}
+                >
+                  {id ? '更新' : '登録'}
+                </Button>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="default"
+                  onClick={() => history.goBack()}
+                >
+                  戻る
+                </Button>
+              </div>
+            </Container>
+          </HandleFetch>
+        </>
+      </Dashboard>
+    </Restricted>
   )
 }
 

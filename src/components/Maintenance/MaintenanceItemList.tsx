@@ -15,6 +15,7 @@ import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Restricted from '../../auth/Restricted'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { useForm } from '../../hooks/useForm'
 import { apiClient } from '../../lib/api_client'
@@ -79,69 +80,71 @@ const MaintenanceItemList: React.FC = () => {
   }
 
   return (
-    <Dashboard>
-      <>
-        <Title>メンテナンス項目一覧</Title>
-        <Link to={'/maintenances/new'} className={classes.link}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            fullWidth
-            startIcon={<AddIcon />}
-          >
-            <Typography variant="subtitle1">
-              新規メンテナンス項目の追加
-            </Typography>
-          </Button>
-        </Link>
-        <List>
-          {maintenanceMenus.map((maintenanceMenu) => (
-            <React.Fragment key={maintenanceMenu.id}>
-              <ListItem button>
-                {clickedId !== maintenanceMenu.id ? (
-                  <>
-                    <ListItemText
-                      primary={maintenanceMenu.name}
-                      onClick={() => handleClickLabel(maintenanceMenu)}
-                    />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        onClick={() => handleDelete(maintenanceMenu.id)}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </>
-                ) : (
-                  <Grid container spacing={2}>
-                    <Grid item xs={9}>
-                      <TextField
-                        autoFocus
-                        variant="outlined"
-                        size="small"
-                        value={form.name.value}
-                        onChange={form.name.setValueFromEvent}
+    <Restricted to={'edit-maintenance-menus'}>
+      <Dashboard>
+        <>
+          <Title>メンテナンス項目一覧</Title>
+          <Link to={'/maintenances/new'} className={classes.link}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              startIcon={<AddIcon />}
+            >
+              <Typography variant="subtitle1">
+                新規メンテナンス項目の追加
+              </Typography>
+            </Button>
+          </Link>
+          <List>
+            {maintenanceMenus.map((maintenanceMenu) => (
+              <React.Fragment key={maintenanceMenu.id}>
+                <ListItem button>
+                  {clickedId !== maintenanceMenu.id ? (
+                    <>
+                      <ListItemText
+                        primary={maintenanceMenu.name}
+                        onClick={() => handleClickLabel(maintenanceMenu)}
                       />
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          onClick={() => handleDelete(maintenanceMenu.id)}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </>
+                  ) : (
+                    <Grid container spacing={2}>
+                      <Grid item xs={9}>
+                        <TextField
+                          autoFocus
+                          variant="outlined"
+                          size="small"
+                          value={form.name.value}
+                          onChange={form.name.setValueFromEvent}
+                        />
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={save.execute}
+                          disabled={save.isExecuting}
+                        >
+                          更新
+                        </Button>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={3}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={save.execute}
-                        disabled={save.isExecuting}
-                      >
-                        更新
-                      </Button>
-                    </Grid>
-                  </Grid>
-                )}
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
-        </List>
-      </>
-    </Dashboard>
+                  )}
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            ))}
+          </List>
+        </>
+      </Dashboard>
+    </Restricted>
   )
 }
 

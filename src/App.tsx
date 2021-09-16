@@ -24,11 +24,19 @@ const App: React.FC = () => (
     <Router>
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/regions" component={RegionList} />
-        <Route exact path="/tracks/new" component={TrackForm} />
-        <Route exact path="/tracks/:id" component={TrackForm} />
-        <Route exact path="/maintenances" component={MaintenanceItemList} />
-        <Route exact path="/maintenances/new" component={MaintenanceItemForm} />
+        <PrivateRoute exact path="/regions" component={RegionList} />
+        <PrivateRoute exact path="/tracks/new" component={TrackForm} />
+        <PrivateRoute exact path="/tracks/:id" component={TrackForm} />
+        <PrivateRoute
+          exact
+          path="/maintenances"
+          component={MaintenanceItemList}
+        />
+        <PrivateRoute
+          exact
+          path="/maintenances/new"
+          component={MaintenanceItemForm}
+        />
         <PrivateRoute exact path="/mypage" component={MyPage} />
         <PrivateRoute exact path="/user/edit" component={Edit} />
         <PrivateRoute exact path="/vehicles/edit" component={VehicleSelects} />

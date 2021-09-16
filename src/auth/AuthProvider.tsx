@@ -1,17 +1,19 @@
 import React, { useCallback, useState } from 'react'
-import { apiClient } from '../lib/api_client'
+import { apiClient, apiClientWithAuth } from '../lib/api_client'
 import { auth } from './auth'
 
 interface IAuthContext {
   logout: () => void
   verifyLoginUser: () => Promise<void>
   currentUser: Models.User | null
+  userRole: Models.UserRole | null
 }
 
 export const AuthContext = React.createContext({} as IAuthContext)
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
+  const [userRole, setUserRole] = useState(null)
 
   const logout = () => {
     auth.auth().signOut()
@@ -33,6 +35,8 @@ export const AuthProvider: React.FC = ({ children }) => {
             photoURL,
           })
           setCurrentUser(res.data)
+          const roles = await apiClientWithAuth.get('/roles')
+          setUserRole(roles.data)
         } else {
           setCurrentUser(null)
         }
@@ -48,6 +52,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         logout,
         verifyLoginUser,
         currentUser,
+        userRole,
       }}
     >
       {children}
