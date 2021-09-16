@@ -1,24 +1,24 @@
 import {
+  AppBar,
+  Box,
   Button,
+  Container,
+  CssBaseline,
+  Divider,
   Grid,
+  IconButton,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
   Paper,
+  SwipeableDrawer,
+  Toolbar,
+  Typography,
 } from '@material-ui/core'
-import AppBar from '@material-ui/core/AppBar'
-import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import Divider from '@material-ui/core/Divider'
-import Drawer from '@material-ui/core/Drawer'
-import IconButton from '@material-ui/core/IconButton'
-import List from '@material-ui/core/List'
 import { makeStyles } from '@material-ui/core/styles'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import BuildIcon from '@material-ui/icons/Build'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
@@ -31,10 +31,11 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd'
 import TimelineIcon from '@material-ui/icons/Timeline'
 import TimerIcon from '@material-ui/icons/Timer'
 import clsx from 'clsx'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../auth/AuthProvider'
 import Restricted from '../../auth/Restricted'
+import { useClickInside } from '../../hooks/useClickInside'
 
 const Copyright = () => {
   return (
@@ -141,16 +142,16 @@ export const Dashboard: React.FC = ({ children }) => {
   const [open, setOpen] = useState(false)
   const handleDrawerOpen = () => setOpen(true)
   const handleDrawerClose = () => setOpen(false)
+  const clickRef = useRef<HTMLDivElement>(null)
+  useClickInside(clickRef, handleDrawerClose)
+  const iOS = navigator && /iPad|iPhone|iPod/.test(navigator.userAgent)
+
   const { currentUser, logout } = useContext(AuthContext)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
-  const handleAccountMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAccountMenu = (event: React.MouseEvent<HTMLButtonElement>) =>
     setAnchorEl(event.currentTarget)
-  }
-  const handleCloseAccountMenu = () => {
-    setAnchorEl(null)
-  }
+  const handleCloseAccountMenu = () => setAnchorEl(null)
 
   return (
     <div className={classes.root}>
@@ -241,12 +242,16 @@ export const Dashboard: React.FC = ({ children }) => {
           )}
         </Toolbar>
       </AppBar>
-      <Drawer
+      <SwipeableDrawer
         variant="permanent"
         classes={{
           paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
         }}
         open={open}
+        onClose={handleDrawerClose}
+        onOpen={handleDrawerOpen}
+        disableBackdropTransition={!iOS}
+        disableDiscovery={iOS}
       >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
@@ -372,10 +377,10 @@ export const Dashboard: React.FC = ({ children }) => {
             </Link>
           )}
         </List>
-      </Drawer>
+      </SwipeableDrawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
+        <Container maxWidth="lg" className={classes.container} ref={clickRef}>
           {React.Children.map(children, (child, index) => (
             <Grid key={index} container spacing={5}>
               <Grid item xs={12}>
