@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 import snakecaseKeys from 'snakecase-keys'
 
-axios.defaults.baseURL = 'http://localhost:3000/'
+axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT
 
 const axiosInstance = axios.create()
 const axiosInstanceWithToken = axios.create()
