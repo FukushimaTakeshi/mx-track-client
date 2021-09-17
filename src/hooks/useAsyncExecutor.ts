@@ -1,22 +1,20 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 export interface Task {
   error: string
   setError(value: string): void
   isExecuting: boolean
   setIsExecuting(value: boolean): void
+  execute(): void
 }
 
-type Run = (
-  task: Task,
-  event: React.ChangeEvent<HTMLInputElement>
-) => Promise<unknown>
+type Run = (task: Task) => Promise<unknown>
 type Validate = () => boolean
 
-export const useAsyncExecutor = (run: Run, validate: Validate) => {
+export const useAsyncExecutor = (run: Run, validate: Validate): Task => {
   const [isExecuting, setIsExecuting] = useState(false)
   const [error, setError] = useState('')
-  const execute = (event: any) => {
+  const execute = () => {
     // if (event && event.preventDefault) {
     //   event.preventDefault()
     // }
@@ -27,7 +25,7 @@ export const useAsyncExecutor = (run: Run, validate: Validate) => {
     }
 
     setIsExecuting(true)
-    run(task, event)
+    run(task)
       .catch((error) => {
         if (!error.response) {
           throw error

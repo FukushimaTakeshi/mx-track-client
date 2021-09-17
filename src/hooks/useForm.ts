@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react'
 
 export interface Form<T = string> {
@@ -33,9 +34,11 @@ export const useForm = <T = string>(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FormRecord = Record<string, Form<any>>
 
 export const responseToForm = <T extends FormRecord>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response: { data: any },
   form: T
 ): void => {

@@ -12,7 +12,7 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ClearIcon from '@material-ui/icons/Clear'
@@ -157,7 +157,7 @@ const Form: React.FC = () => {
     })
   }
 
-  const onChangeRegion = (e: any, value: Models.Region | null) => {
+  const onChangeRegion = (value: Models.Region | null) => {
     if (!value) return
     form.regionId.setValue(value.id)
   }
@@ -166,10 +166,8 @@ const Form: React.FC = () => {
   const handleCloseSelect = () => setShowModal(true)
   const handleCloseModal = () => setShowModal(false)
 
-  const handleChangeUserVehicle = (
-    e: any,
-    newUserVehicle: Models.UserVehicle | null
-  ) => form.userVehicle.setValue(newUserVehicle ?? ({} as Models.UserVehicle))
+  const handleChangeUserVehicle = (newUserVehicle: Models.UserVehicle | null) =>
+    form.userVehicle.setValue(newUserVehicle ?? ({} as Models.UserVehicle))
 
   const [timeFormat, setTimeFormat] = useState('time')
   const handleChangeTimeFormat = (
@@ -270,7 +268,7 @@ const Form: React.FC = () => {
                     options={tracksOptions}
                     getOptionLabel={(option) => option.name}
                     loading={optionsLoading}
-                    onChange={onChangeRegion}
+                    onChange={(e, value) => onChangeRegion(value)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -322,7 +320,9 @@ const Form: React.FC = () => {
                     getOptionLabel={(option) =>
                       option.vehicle ? option.vehicle.modelName : ''
                     }
-                    onChange={handleChangeUserVehicle}
+                    onChange={(e, newUserVehicle) =>
+                      handleChangeUserVehicle(newUserVehicle)
+                    }
                     renderInput={(params) => (
                       <TextField {...params} label="バイク" required />
                     )}

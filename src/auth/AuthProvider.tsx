@@ -18,6 +18,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const logout = () => {
     auth.auth().signOut()
     setCurrentUser(null)
+    setUserRole(null)
     localStorage.removeItem('token')
   }
 
