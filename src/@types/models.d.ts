@@ -19,6 +19,11 @@ declare namespace Models {
     name: string
   }
 
+  type Model = {
+    id: number
+    name: string
+  }
+
   type PracticeRecord = {
     id: number
     practiceDate: string

@@ -326,6 +326,17 @@ export const Dashboard: React.FC = ({ children }) => {
             <ListItem className={classes.link}>
               <ListItemText primary="管理者用メニュー" />
             </ListItem>
+            <Restricted to={'edit-vehicles'}>
+              <Link
+                to="/vehicles/new"
+                className={classes.link}
+                onClick={handleDrawerClose}
+              >
+                <ListItem button className={classes.nestedList}>
+                  <ListItemText primary="バイク登録" />
+                </ListItem>
+              </Link>
+            </Restricted>
             <Restricted to={'edit-off-road-tracks'}>
               <Link
                 to="/regions"

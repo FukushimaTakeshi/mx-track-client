@@ -16,6 +16,7 @@ import RegionList from './components/Track/RegionList'
 import TrackForm from './components/Track/TrackForm'
 import Edit from './components/User/Edit'
 import UserVehicleList from './components/Vehicle/UserVehicleList'
+import VehicleForm from './components/Vehicle/VehicleForm'
 import VehicleSelects from './components/Vehicle/VehicleSelects'
 import Home from './Home'
 
@@ -37,6 +38,7 @@ const App: React.FC = () => (
           path="/maintenances/new"
           component={MaintenanceItemForm}
         />
+        <PrivateRoute exact path="/vehicles/new" component={VehicleForm} />
         <PrivateRoute exact path="/mypage" component={MyPage} />
         <PrivateRoute exact path="/user/edit" component={Edit} />
         <PrivateRoute exact path="/vehicles/edit" component={VehicleSelects} />
