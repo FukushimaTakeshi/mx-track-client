@@ -204,6 +204,7 @@ const VehicleSelects: React.FC = () => {
             key={myVehicles.length}
             disablePortal
             disableClearable
+            blurOnSelect
             onOpen={handle.fetchBrands}
             options={state.brands}
             getOptionLabel={(option) => option.name}
@@ -223,6 +224,7 @@ const VehicleSelects: React.FC = () => {
             key={state.selectedBrand.id}
             disablePortal
             disableClearable
+            blurOnSelect
             options={state.years}
             getOptionLabel={(option) => String(option)}
             disabled={!state.years.length}
@@ -242,6 +244,7 @@ const VehicleSelects: React.FC = () => {
             key={`${state.selectedBrand.id}-${state.selectedYear}`}
             disablePortal
             disableClearable
+            blurOnSelect
             options={state.vehicles}
             getOptionLabel={(option) => option.modelName}
             disabled={!state.vehicles.length}

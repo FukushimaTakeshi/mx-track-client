@@ -263,6 +263,7 @@ const Form: React.FC = () => {
                 <Grid item xs={4}>
                   <Autocomplete
                     disablePortal
+                    blurOnSelect
                     onOpen={fetchRegions}
                     onClose={() => !optionsLoading && handleCloseSelect()}
                     options={tracksOptions}
@@ -315,6 +316,7 @@ const Form: React.FC = () => {
                   <Autocomplete
                     key={form.userVehicle.value.id}
                     disablePortal
+                    blurOnSelect
                     value={form.userVehicle.value}
                     options={userVehicles}
                     getOptionLabel={(option) =>
@@ -413,6 +415,7 @@ const Form: React.FC = () => {
                                 </Typography>
                               </InputAdornment>
                             ),
+                            readOnly: true,
                           }}
                         />
                       </Grid>
