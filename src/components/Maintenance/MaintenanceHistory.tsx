@@ -1,8 +1,8 @@
-import { Dialog, Paper, Typography } from '@material-ui/core'
-import { green } from '@material-ui/core/colors'
-import { makeStyles } from '@material-ui/core/styles'
-import BuildIcon from '@material-ui/icons/Build'
-import CheckIcon from '@material-ui/icons/Check'
+import { Dialog, Paper, Typography } from '@mui/material'
+import { green } from '@mui/material/colors'
+import makeStyles from '@mui/styles/makeStyles';
+import BuildIcon from '@mui/icons-material/Build'
+import CheckIcon from '@mui/icons-material/Check'
 import {
   Timeline,
   TimelineConnector,
@@ -11,7 +11,7 @@ import {
   TimelineItem,
   TimelineOppositeContent,
   TimelineSeparator,
-} from '@material-ui/lab'
+} from '@mui/lab'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { apiClientWithAuth } from '../../lib/api_client'

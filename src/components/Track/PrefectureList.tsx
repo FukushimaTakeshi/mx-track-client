@@ -7,9 +7,9 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import CloseIcon from '@material-ui/icons/Close'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
+import CloseIcon from '@mui/icons-material/Close'
 import React, { useEffect, useState } from 'react'
 import { apiClient } from '../../lib/api_client'
 import TrackList from './TrackList'
@@ -73,7 +73,7 @@ const PrefectureList: React.FC<Props> = ({
             color="inherit"
             onClick={onClose}
             aria-label="close"
-          >
+            size="large">
             <CloseIcon />
           </IconButton>
         </Toolbar>
@@ -98,7 +98,7 @@ const PrefectureList: React.FC<Props> = ({
         />
       </Dialog>
     </React.Fragment>
-  )
+  );
 }
 
 export default PrefectureList

@@ -10,11 +10,11 @@ import {
   Menu,
   MenuItem,
   Typography,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import AddIcon from '@material-ui/icons/Add'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import TimerIcon from '@material-ui/icons/Timer'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
+import AddIcon from '@mui/icons-material/Add'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import TimerIcon from '@mui/icons-material/Timer'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -107,7 +107,7 @@ const MaintenanceList: React.FC = () => {
                     aria-controls="menu"
                     aria-haspopup="true"
                     onClick={handleClickMoreVert}
-                  >
+                    size="large">
                     <MoreVertIcon />
                   </IconButton>
                   <Menu
@@ -148,7 +148,7 @@ const MaintenanceList: React.FC = () => {
         </List>
       </>
     </Dashboard>
-  )
+  );
 }
 
 export default MaintenanceList

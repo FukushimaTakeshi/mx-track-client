@@ -1,10 +1,5 @@
-import {
-  Button,
-  Container,
-  Grid,
-  makeStyles,
-  TextField,
-} from '@material-ui/core'
+import { Button, Container, Grid, TextField } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import Restricted from '../../auth/Restricted'
@@ -90,12 +85,7 @@ const MaintenanceItemForm: React.FC = () => {
                 >
                   登録
                 </Button>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  color="default"
-                  onClick={() => history.goBack()}
-                >
+                <Button fullWidth variant="contained" onClick={() => history.goBack()}>
                   戻る
                 </Button>
               </div>
@@ -104,7 +94,7 @@ const MaintenanceItemForm: React.FC = () => {
         </>
       </Dashboard>
     </Restricted>
-  )
+  );
 }
 
 export default MaintenanceItemForm

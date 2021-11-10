@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { SelectChangeEvent } from '@mui/material'
 import React, { useState } from 'react'
 
 export interface Form<T = string> {
@@ -7,9 +8,9 @@ export interface Form<T = string> {
   value: T
   setValue(value: T): void
   setValueFromEvent(
-    event: React.ChangeEvent<
-      HTMLInputElement | { name?: string; value: unknown }
-    >
+    event:
+      | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+      | SelectChangeEvent
   ): void
 }
 

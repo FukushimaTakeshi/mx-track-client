@@ -1,15 +1,16 @@
 import {
+  Autocomplete,
   Button,
   Container,
   FormControl,
   Grid,
   InputLabel,
-  makeStyles,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
-} from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import Restricted from '../../auth/Restricted'
@@ -68,14 +69,14 @@ const VehicleForm: React.FC = () => {
     apiClient.get('/brands').then((response) => setBrands(response.data))
   }, [])
 
-  const handleChangeBrand = (
-    event: React.ChangeEvent<
-      HTMLInputElement | { name?: string; value: unknown }
-    >
-  ) => {
+  const handleChangeBrand = (event: SelectChangeEvent) => {
     form.brand.setValueFromEvent(event)
     apiClient
-      .get(`/models/?brand_id=${(event.target.value as Models.Brand).id}`)
+      .get(
+        `/models/?brand_id=${
+          (event.target.value as unknown as Models.Brand).id
+        }`
+      )
       .then((response) => setModels(response.data))
   }
 
@@ -121,16 +122,11 @@ const VehicleForm: React.FC = () => {
                       <InputLabel required>メーカー</InputLabel>
                       <Select
                         label="メーカー"
-                        value={form.brand.value}
+                        value={form.brand.value.name}
                         onChange={handleChangeBrand}
-                        renderValue={(value) => (value as Models.Brand).name}
                       >
-                        {brands.map((brand) => (
-                          <MenuItem
-                            key={brand.id}
-                            // @ts-ignore [2]
-                            value={brand}
-                          >
+                        {brands.map((brand, i) => (
+                          <MenuItem key={i} value={brand.id}>
                             {brand.name}
                           </MenuItem>
                         ))}
@@ -193,7 +189,6 @@ const VehicleForm: React.FC = () => {
                 <Button
                   fullWidth
                   variant="contained"
-                  color="default"
                   onClick={() => history.goBack()}
                 >
                   戻る

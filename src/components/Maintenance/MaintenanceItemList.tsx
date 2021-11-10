@@ -7,12 +7,12 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
-  makeStyles,
   TextField,
   Typography,
-} from '@material-ui/core'
-import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete'
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Restricted from '../../auth/Restricted'
@@ -107,9 +107,7 @@ const MaintenanceItemList: React.FC = () => {
                         onClick={() => handleClickLabel(maintenanceMenu)}
                       />
                       <ListItemSecondaryAction>
-                        <IconButton
-                          onClick={() => handleDelete(maintenanceMenu.id)}
-                        >
+                        <IconButton onClick={() => handleDelete(maintenanceMenu.id)} size="large">
                           <DeleteIcon fontSize="small" />
                         </IconButton>
                       </ListItemSecondaryAction>
@@ -145,7 +143,7 @@ const MaintenanceItemList: React.FC = () => {
         </>
       </Dashboard>
     </Restricted>
-  )
+  );
 }
 
 export default MaintenanceItemList

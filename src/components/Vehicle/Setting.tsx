@@ -9,9 +9,9 @@ import {
   TextField,
   Toolbar,
   Typography,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import CloseIcon from '@material-ui/icons/Close'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
+import CloseIcon from '@mui/icons-material/Close'
 import React, { useEffect, useState } from 'react'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { useForm } from '../../hooks/useForm'
@@ -92,7 +92,7 @@ const Setting: React.FC<Props> = ({ id, onClose }) => {
             color="inherit"
             onClick={handleClose}
             aria-label="close"
-          >
+            size="large">
             <CloseIcon />
           </IconButton>
         </Toolbar>
@@ -176,7 +176,7 @@ const Setting: React.FC<Props> = ({ id, onClose }) => {
         </Container>
       </HandleFetch>
     </React.Fragment>
-  ) : null
+  ) : null;
 }
 
 export default Setting

@@ -6,9 +6,9 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import CloseIcon from '@material-ui/icons/Close'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
+import CloseIcon from '@mui/icons-material/Close'
 import React from 'react'
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +48,7 @@ const TrackList: React.FC<Props> = ({ prefecture, onClose, onClickTrack }) => {
             color="inherit"
             onClick={onClose}
             aria-label="close"
-          >
+            size="large">
             <CloseIcon />
           </IconButton>
         </Toolbar>
@@ -61,7 +61,7 @@ const TrackList: React.FC<Props> = ({ prefecture, onClose, onClickTrack }) => {
         ))}
       </List>
     </React.Fragment>
-  )
+  );
 }
 
 export default TrackList

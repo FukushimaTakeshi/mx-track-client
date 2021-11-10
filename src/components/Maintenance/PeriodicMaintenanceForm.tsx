@@ -9,8 +9,8 @@ import {
   Select,
   TextField,
   Typography,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
@@ -55,7 +55,7 @@ const PeriodicMaintenanceForm: React.FC = () => {
     () => {
       const params = {
         ...formToObject(form),
-        maintenanceMenuId: form.menu.value.id,
+        maintenanceMenuId: form.menu.value,
         userVehicleId: userVehicleId,
       }
       const response = id
@@ -112,18 +112,11 @@ const PeriodicMaintenanceForm: React.FC = () => {
                       name="menu"
                       label="メンテナンス項目"
                       labelId="menu-label"
-                      value={form.menu.value}
+                      value={form.menu.value.name}
                       onChange={form.menu.setValueFromEvent}
-                      renderValue={(value) =>
-                        (value as Models.MaintenanceMenu).name
-                      }
                     >
-                      {maintenanceMenus.map((value) => (
-                        <MenuItem
-                          key={value.id}
-                          // @ts-ignore [2]
-                          value={value}
-                        >
+                      {maintenanceMenus.map((value, i) => (
+                        <MenuItem key={i} value={value.id}>
                           {value.name}
                         </MenuItem>
                       ))}
@@ -196,7 +189,6 @@ const PeriodicMaintenanceForm: React.FC = () => {
               <Button
                 fullWidth
                 variant="contained"
-                color="default"
                 onClick={() => history.goBack()}
               >
                 戻る

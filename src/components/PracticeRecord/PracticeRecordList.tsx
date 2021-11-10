@@ -8,9 +8,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@material-ui/core'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
-import EditIcon from '@material-ui/icons/Edit'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
+import EditIcon from '@mui/icons-material/Edit'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import '../../@types/models.d.ts'

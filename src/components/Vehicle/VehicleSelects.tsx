@@ -15,12 +15,12 @@ import {
   RadioGroup,
   TextField,
   Typography,
-} from '@material-ui/core'
-import { green } from '@material-ui/core/colors'
-import { makeStyles } from '@material-ui/core/styles'
-import CheckIcon from '@material-ui/icons/Check'
-import DeleteIcon from '@material-ui/icons/Delete'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+} from '@mui/material'
+import { green } from '@mui/material/colors'
+import makeStyles from '@mui/styles/makeStyles';
+import CheckIcon from '@mui/icons-material/Check'
+import DeleteIcon from '@mui/icons-material/Delete'
+import Autocomplete from '@mui/material/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import { useSelectVehicle } from '../../hooks/Vehicle/useSelectVehicle'
 import { apiClientWithAuth } from '../../lib/api_client'
@@ -152,7 +152,7 @@ const VehicleSelects: React.FC = () => {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <IconButton onClick={handleShowDialog}>
+                      <IconButton onClick={handleShowDialog} size="large">
                         <DeleteIcon fontSize="small" />
                       </IconButton>
                     </Grid>
@@ -274,7 +274,7 @@ const VehicleSelects: React.FC = () => {
         </Container>
       </>
     </Dashboard>
-  )
+  );
 }
 
 export default VehicleSelects

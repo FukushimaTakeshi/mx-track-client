@@ -1,3 +1,14 @@
+import AccountCircle from '@mui/icons-material/AccountCircle'
+import BuildIcon from '@mui/icons-material/Build'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import CreateIcon from '@mui/icons-material/Create'
+import HistoryIcon from '@mui/icons-material/History'
+import MenuIcon from '@mui/icons-material/Menu'
+import PersonIcon from '@mui/icons-material/Person'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import TimelineIcon from '@mui/icons-material/Timeline'
+import TimerIcon from '@mui/icons-material/Timer'
+import TwoWheelerIcon from '@mui/icons-material/TwoWheeler'
 import {
   AppBar,
   Box,
@@ -17,19 +28,8 @@ import {
   SwipeableDrawer,
   Toolbar,
   Typography,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import AccountCircle from '@material-ui/icons/AccountCircle'
-import BuildIcon from '@material-ui/icons/Build'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import CreateIcon from '@material-ui/icons/Create'
-import HistoryIcon from '@material-ui/icons/History'
-import MenuIcon from '@material-ui/icons/Menu'
-import MotorcycleIcon from '@material-ui/icons/Motorcycle'
-import PersonIcon from '@material-ui/icons/Person'
-import PersonAddIcon from '@material-ui/icons/PersonAdd'
-import TimelineIcon from '@material-ui/icons/Timeline'
-import TimerIcon from '@material-ui/icons/Timer'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import clsx from 'clsx'
 import React, { useContext, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -170,6 +170,7 @@ export const Dashboard: React.FC = ({ children }) => {
               classes.menuButton,
               open && classes.menuButtonHidden
             )}
+            size="large"
           >
             <MenuIcon />
           </IconButton>
@@ -190,6 +191,7 @@ export const Dashboard: React.FC = ({ children }) => {
                 aria-haspopup="true"
                 onClick={handleAccountMenu}
                 color="inherit"
+                size="large"
               >
                 <AccountCircle fontSize="large" />
               </IconButton>
@@ -226,7 +228,7 @@ export const Dashboard: React.FC = ({ children }) => {
                 >
                   <MenuItem>
                     <ListItemIcon>
-                      <MotorcycleIcon fontSize="small" />
+                      <TwoWheelerIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText primary="マイバイク" />
                   </MenuItem>
@@ -254,7 +256,7 @@ export const Dashboard: React.FC = ({ children }) => {
         disableDiscovery={iOS}
       >
         <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawerClose} size="large">
             <ChevronLeftIcon />
           </IconButton>
         </div>

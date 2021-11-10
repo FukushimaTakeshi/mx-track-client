@@ -1,3 +1,5 @@
+import ClearIcon from '@mui/icons-material/Clear'
+import CreateIcon from '@mui/icons-material/Create'
 import {
   Avatar,
   Button,
@@ -13,11 +15,9 @@ import {
   RadioGroup,
   TextField,
   Typography,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import ClearIcon from '@material-ui/icons/Clear'
-import CreateIcon from '@material-ui/icons/Create'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+} from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { useHistory } from 'react-router-dom'

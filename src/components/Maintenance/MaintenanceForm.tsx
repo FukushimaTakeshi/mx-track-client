@@ -9,8 +9,8 @@ import {
   Select,
   TextField,
   Typography,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
@@ -62,7 +62,7 @@ const MaintenanceForm: React.FC = () => {
     () => {
       const params = {
         ...formToObject(form),
-        maintenanceMenuId: form.maintenanceMenu.value.id,
+        maintenanceMenuId: form.maintenanceMenu.value,
         userVehicleId: userVehicleId,
       }
       const response = id
@@ -149,18 +149,11 @@ const MaintenanceForm: React.FC = () => {
                       name="maintenanceMenu"
                       label="メンテナンス項目"
                       labelId="menu-label"
-                      value={form.maintenanceMenu.value}
+                      value={form.maintenanceMenu.value.name}
                       onChange={form.maintenanceMenu.setValueFromEvent}
-                      renderValue={(value) =>
-                        (value as Models.MaintenanceMenu).name
-                      }
                     >
-                      {maintenanceMenus.map((value) => (
-                        <MenuItem
-                          key={value.id}
-                          // @ts-ignore [2]
-                          value={value}
-                        >
+                      {maintenanceMenus.map((value, i) => (
+                        <MenuItem key={i} value={value.id}>
                           {value.name}
                         </MenuItem>
                       ))}
@@ -233,7 +226,6 @@ const MaintenanceForm: React.FC = () => {
               <Button
                 fullWidth
                 variant="contained"
-                color="default"
                 onClick={() => history.goBack()}
               >
                 戻る

@@ -4,11 +4,11 @@ import {
   FormControl,
   Grid,
   InputLabel,
-  makeStyles,
   MenuItem,
   Select,
   TextField,
-} from '@material-ui/core'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import Restricted from '../../auth/Restricted'
@@ -106,16 +106,11 @@ const TrackForm: React.FC = () => {
                         name="prefecture"
                         label="メンテナンス項目"
                         labelId="prefecture-label"
-                        value={form.prefecture.value}
+                        value={form.prefecture.value.name}
                         onChange={form.prefecture.setValueFromEvent}
-                        renderValue={(value) => (value as Prefecture).name}
                       >
-                        {prefectures.map((value) => (
-                          <MenuItem
-                            key={value.id}
-                            // @ts-ignore [2]
-                            value={value}
-                          >
+                        {prefectures.map((value, i) => (
+                          <MenuItem key={i} value={value.id}>
                             {value.name}
                           </MenuItem>
                         ))}
@@ -149,7 +144,6 @@ const TrackForm: React.FC = () => {
                 <Button
                   fullWidth
                   variant="contained"
-                  color="default"
                   onClick={() => history.goBack()}
                 >
                   戻る

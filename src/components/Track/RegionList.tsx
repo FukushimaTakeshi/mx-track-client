@@ -1,14 +1,6 @@
-import {
-  Button,
-  Dialog,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  makeStyles,
-  Typography,
-} from '@material-ui/core'
-import AddIcon from '@material-ui/icons/Add'
+import { Button, Dialog, Divider, List, ListItem, ListItemText, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import AddIcon from '@mui/icons-material/Add'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
