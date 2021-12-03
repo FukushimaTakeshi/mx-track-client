@@ -1,34 +1,35 @@
-import ClearIcon from '@mui/icons-material/Clear'
 import CreateIcon from '@mui/icons-material/Create'
 import {
   Avatar,
   Button,
-  CircularProgress,
   Container,
   CssBaseline,
   Dialog,
+  FormControl,
   FormControlLabel,
   Grid,
   InputAdornment,
+  InputLabel,
   NativeSelect,
   Radio,
   RadioGroup,
+  Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from '@mui/material'
-import Autocomplete from '@mui/material/Autocomplete'
 import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { useHistory } from 'react-router-dom'
 import { useAsyncExecutor } from '../../../hooks/useAsyncExecutor'
 import { formToObject, responseToForm, useForm } from '../../../hooks/useForm'
-import { apiClient, apiClientWithAuth } from '../../../lib/api_client'
+import { apiClientWithAuth } from '../../../lib/api_client'
 import ErrorNotification from '../../Notification/ErrorNotification'
 import SuccessNotification from '../../Notification/SuccessNotification'
 import HandleFetch from '../../Spinner/HandleFetch'
 import { Dashboard } from '../../templates/Dashboard'
-import PrefectureList from '../../Track/PrefectureList'
+import RegionList from './RegionList'
 import TimesDialog from './TimesDialog'
 
 const useStyles = makeStyles((theme) => ({
@@ -56,18 +57,16 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const usePracticeRecordForm = () => {
-  const regionId = useForm<number | null>()
   const practiceDate = useForm('')
-  const track = useForm({} as Models.OffRoadTrack)
+  const offRoadTrack = useForm({} as Models.OffRoadTrack)
   const userVehicle = useForm({} as Models.UserVehicle)
   const hours = useForm<number>()
   const minutes = useForm<number>()
   const memo = useForm('')
   const times = useForm<number>()
   return {
-    regionId,
     practiceDate,
-    track,
+    offRoadTrack,
     userVehicle,
     hours,
     minutes,
@@ -94,7 +93,7 @@ const Form: React.FC = () => {
         timeFormat === 'time'
           ? form.minutes.value
           : Number(form.minutes.value) * 6,
-      offRoadTrackId: form.track.value.id,
+      offRoadTrackId: form.offRoadTrack.value.id,
       userVehicleId: form.userVehicle.value.id,
     }
     const request = id
@@ -141,33 +140,18 @@ const Form: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, userVehicles])
 
-  const [tracksOptions, setTrackOptions] = useState<Models.Region[]>([])
-  const [optionsLoading, setOptionsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  const fetchRegions = () => {
-    form.regionId.setValue(null)
-    if (tracksOptions.length) {
-      return
-    }
-    setOptionsLoading(true)
-    apiClient.get('/regions/').then((res) => {
-      setTrackOptions(res.data)
-      setOptionsLoading(false)
-    })
+  const [showRegion, setShowRegion] = useState(false)
+  const handleSelectTrack = () => setShowRegion(true)
+  const handleCloseRegion = () => setShowRegion(false)
+
+  const handleChangeUserVehicle = (event: SelectChangeEvent<number>) => {
+    const selectedVehicle = userVehicles.find(
+      (userVehicle) => userVehicle.id === Number(event.target.value)
+    )
+    form.userVehicle.setValue(selectedVehicle ?? ({} as Models.UserVehicle))
   }
-
-  const onChangeRegion = (value: Models.Region | null) => {
-    if (!value) return
-    form.regionId.setValue(value.id)
-  }
-
-  const [showModal, setShowModal] = useState(false)
-  const handleCloseSelect = () => setShowModal(true)
-  const handleCloseModal = () => setShowModal(false)
-
-  const handleChangeUserVehicle = (newUserVehicle: Models.UserVehicle | null) =>
-    form.userVehicle.setValue(newUserVehicle ?? ({} as Models.UserVehicle))
 
   const [timeFormat, setTimeFormat] = useState('time')
   const handleChangeTimeFormat = (
@@ -226,14 +210,13 @@ const Form: React.FC = () => {
         <Container component="main" maxWidth="xs">
           <Dialog
             fullScreen
-            open={showModal && !!form.regionId.value}
-            onClose={handleCloseModal}
+            open={showRegion}
+            onClose={() => setShowRegion(false)}
           >
-            <PrefectureList
-              regionId={form.regionId.value}
-              onClose={handleCloseModal}
-              handleSelectTrack={form.track.setValue}
-            ></PrefectureList>
+            <RegionList
+              onClose={handleCloseRegion}
+              handleSelectTrack={form.offRoadTrack.setValue}
+            ></RegionList>
           </Dialog>
           <CssBaseline />
           <div className={classes.paper}>
@@ -249,8 +232,8 @@ const Form: React.FC = () => {
                   <TextField
                     id="date"
                     name="practiceDate"
+                    fullWidth
                     value={form.practiceDate.value}
-                    variant="outlined"
                     required
                     label="練習日付"
                     type="date"
@@ -260,75 +243,50 @@ const Form: React.FC = () => {
                     onChange={form.practiceDate.setValueFromEvent}
                   />
                 </Grid>
-                <Grid item xs={4}>
-                  <Autocomplete
-                    disablePortal
-                    blurOnSelect
-                    onOpen={fetchRegions}
-                    onClose={() => !optionsLoading && handleCloseSelect()}
-                    options={tracksOptions}
-                    getOptionLabel={(option) => option.name}
-                    loading={optionsLoading}
-                    onChange={(e, value) => onChangeRegion(value)}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="エリア"
-                        required
-                        InputProps={{
-                          ...params.InputProps,
-                          endAdornment: (
-                            <React.Fragment>
-                              {optionsLoading && (
-                                <CircularProgress color="inherit" size={20} />
-                              )}
-                              {params.InputProps.endAdornment}
-                            </React.Fragment>
-                          ),
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
-                {form.track.value && (
-                  <React.Fragment>
-                    <Grid item xs={7}>
+                <Grid item xs={12}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    onClick={handleSelectTrack}
+                  >
+                    コース選択
+                  </Button>
+                  {form.offRoadTrack.value.id && (
+                    <Grid item xs={12}>
                       <Typography variant="caption" color="textSecondary">
                         コース
                       </Typography>
                       <Typography variant="body1" gutterBottom>
-                        {form.track.value.name}
+                        {form.offRoadTrack.value.name}
                       </Typography>
                     </Grid>
-                    <Grid item xs={1}>
-                      <ClearIcon
-                        color="disabled"
-                        fontSize="small"
-                        onClick={() =>
-                          form.track.setValue({} as Models.OffRoadTrack)
-                        }
-                      />
-                    </Grid>
-                  </React.Fragment>
-                )}
+                  )}
+                </Grid>
 
                 <Grid item xs={12}>
-                  <Autocomplete
-                    key={form.userVehicle.value.id}
-                    disablePortal
-                    blurOnSelect
-                    value={form.userVehicle.value}
-                    options={userVehicles}
-                    getOptionLabel={(option) =>
-                      option.vehicle ? option.vehicle.modelName : ''
-                    }
-                    onChange={(e, newUserVehicle) =>
-                      handleChangeUserVehicle(newUserVehicle)
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} label="バイク" required />
-                    )}
-                  />
+                  <FormControl fullWidth>
+                    <InputLabel shrink required htmlFor="vehicle">
+                      バイク
+                    </InputLabel>
+                    <Select
+                      native
+                      variant="outlined"
+                      label="バイク"
+                      fullWidth
+                      required
+                      value={form.userVehicle.value.id}
+                      onChange={handleChangeUserVehicle}
+                      inputProps={{
+                        id: 'vehicle',
+                      }}
+                    >
+                      {userVehicles.map((userVehicle) => (
+                        <option key={userVehicle.id} value={userVehicle.id}>
+                          {userVehicle.vehicle.modelName}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
 
                 <Grid item xs={12}>

@@ -1,3 +1,5 @@
+import CheckIcon from '@mui/icons-material/Check'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Button,
   Container,
@@ -16,11 +18,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { green } from '@mui/material/colors'
-import makeStyles from '@mui/styles/makeStyles';
-import CheckIcon from '@mui/icons-material/Check'
-import DeleteIcon from '@mui/icons-material/Delete'
 import Autocomplete from '@mui/material/Autocomplete'
+import { green } from '@mui/material/colors'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useSelectVehicle } from '../../hooks/Vehicle/useSelectVehicle'
 import { apiClientWithAuth } from '../../lib/api_client'
@@ -213,6 +213,7 @@ const VehicleSelects: React.FC = () => {
               <TextField
                 {...params}
                 label="メーカー"
+                variant="standard"
                 InputProps={{
                   ...params.InputProps,
                   startAdornment: state.selectedBrand.id && <SelectedIcon />,
@@ -233,6 +234,7 @@ const VehicleSelects: React.FC = () => {
               <TextField
                 {...params}
                 label="年式"
+                variant="standard"
                 InputProps={{
                   ...params.InputProps,
                   startAdornment: state.selectedYear && <SelectedIcon />,
@@ -253,6 +255,7 @@ const VehicleSelects: React.FC = () => {
               <TextField
                 {...params}
                 label="車両"
+                variant="standard"
                 InputProps={{
                   ...params.InputProps,
                   startAdornment: state.selectedVehicle.id && <SelectedIcon />,
@@ -274,7 +277,7 @@ const VehicleSelects: React.FC = () => {
         </Container>
       </>
     </Dashboard>
-  );
+  )
 }
 
 export default VehicleSelects

@@ -1,5 +1,8 @@
+import CloseIcon from '@mui/icons-material/Close'
 import {
   AppBar,
+  Button,
+  Divider,
   IconButton,
   List,
   ListItem,
@@ -7,8 +10,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
-import CloseIcon from '@mui/icons-material/Close'
+import makeStyles from '@mui/styles/makeStyles'
 import React from 'react'
 
 const useStyles = makeStyles((theme) => ({
@@ -48,20 +50,31 @@ const TrackList: React.FC<Props> = ({ prefecture, onClose, onClickTrack }) => {
             color="inherit"
             onClick={onClose}
             aria-label="close"
-            size="large">
+            size="large"
+          >
             <CloseIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
       <List>
         {tracks.map((track) => (
-          <ListItem button key={track.id} onClick={() => handleClick(track)}>
-            <ListItemText primary={track.name} secondary="Titania" />
-          </ListItem>
+          <>
+            <ListItem button key={track.id} onClick={() => handleClick(track)}>
+              <ListItemText primary={track.name} />
+            </ListItem>
+            <Divider />
+          </>
         ))}
       </List>
+      <List>
+        <ListItem>
+          <Button variant="outlined" fullWidth onClick={onClose}>
+            戻る
+          </Button>
+        </ListItem>
+      </List>
     </React.Fragment>
-  );
+  )
 }
 
 export default TrackList

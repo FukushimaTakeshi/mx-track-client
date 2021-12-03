@@ -5,8 +5,8 @@ import {
   Grid,
   InputAdornment,
   InputLabel,
-  MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from '@mui/material'
@@ -107,6 +107,15 @@ const MaintenanceForm: React.FC = () => {
       })
   }
 
+  const handleChangeMaintenanceMenu = (event: SelectChangeEvent<number>) => {
+    const selectedMenu = maintenanceMenus.find(
+      (maintenanceMenu) => maintenanceMenu.id === Number(event.target.value)
+    )
+    form.maintenanceMenu.setValue(
+      selectedMenu ?? ({} as Models.MaintenanceMenu)
+    )
+  }
+
   return (
     <Dashboard>
       <>
@@ -128,6 +137,7 @@ const MaintenanceForm: React.FC = () => {
                     value={form.maintenanceOn.value}
                     variant="outlined"
                     required
+                    fullWidth
                     label="日付"
                     type="date"
                     InputLabelProps={{
@@ -142,20 +152,21 @@ const MaintenanceForm: React.FC = () => {
                     variant="outlined"
                     className={classes.formControl}
                   >
-                    <InputLabel required id="menu-label">
+                    <InputLabel required shrink id="menu-label">
                       メンテナンス項目
                     </InputLabel>
                     <Select
+                      native
                       name="maintenanceMenu"
                       label="メンテナンス項目"
                       labelId="menu-label"
-                      value={form.maintenanceMenu.value.name}
-                      onChange={form.maintenanceMenu.setValueFromEvent}
+                      value={form.maintenanceMenu.value.id}
+                      onChange={handleChangeMaintenanceMenu}
                     >
                       {maintenanceMenus.map((value, i) => (
-                        <MenuItem key={i} value={value.id}>
+                        <option key={i} value={value.id}>
                           {value.name}
-                        </MenuItem>
+                        </option>
                       ))}
                     </Select>
                   </FormControl>
