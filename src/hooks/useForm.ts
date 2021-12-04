@@ -2,7 +2,9 @@
 import { SelectChangeEvent } from '@mui/material'
 import React, { useState } from 'react'
 
-export interface Form<T = string> {
+type Model = { id: number }
+
+export interface Form<T = string, U extends Model = Model> {
   error: string
   setError(value: string): void
   value: T
@@ -12,6 +14,7 @@ export interface Form<T = string> {
       | React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
       | SelectChangeEvent
   ): void
+  setValueFromModels(event: SelectChangeEvent<number>, models: U[]): void
 }
 
 export const useForm = <T = string>(
@@ -31,6 +34,12 @@ export const useForm = <T = string>(
           ? (event.target.checked as unknown as T)
           : (event.target.value as unknown as T)
       setValue(newValue)
+    },
+    setValueFromModels(event, models) {
+      const selectedModel = models.find(
+        (model) => model.id === Number(event.target.value)
+      )
+      setValue(selectedModel as any)
     },
   }
 }

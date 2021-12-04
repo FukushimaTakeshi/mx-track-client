@@ -6,7 +6,6 @@ import {
   InputAdornment,
   InputLabel,
   Select,
-  SelectChangeEvent,
   TextField,
   Typography,
 } from '@mui/material'
@@ -107,15 +106,6 @@ const MaintenanceForm: React.FC = () => {
       })
   }
 
-  const handleChangeMaintenanceMenu = (event: SelectChangeEvent<number>) => {
-    const selectedMenu = maintenanceMenus.find(
-      (maintenanceMenu) => maintenanceMenu.id === Number(event.target.value)
-    )
-    form.maintenanceMenu.setValue(
-      selectedMenu ?? ({} as Models.MaintenanceMenu)
-    )
-  }
-
   return (
     <Dashboard>
       <>
@@ -161,7 +151,12 @@ const MaintenanceForm: React.FC = () => {
                       label="メンテナンス項目"
                       labelId="menu-label"
                       value={form.maintenanceMenu.value.id}
-                      onChange={handleChangeMaintenanceMenu}
+                      onChange={(e) =>
+                        form.maintenanceMenu.setValueFromModels(
+                          e,
+                          maintenanceMenus
+                        )
+                      }
                     >
                       {maintenanceMenus.map((value, i) => (
                         <option key={i} value={value.id}>

@@ -6,7 +6,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
   TextField,
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
@@ -79,13 +78,6 @@ const TrackForm: React.FC = () => {
     () => true
   )
 
-  const handleChangePrefecture = (event: SelectChangeEvent<number>) => {
-    const selectedPrefecture = prefectures.find(
-      (prefecture) => prefecture.id === Number(event.target.value)
-    )
-    form.prefecture.setValue(selectedPrefecture ?? ({} as Models.Prefecture))
-  }
-
   return (
     <Restricted to={'edit-off-road-tracks'}>
       <Dashboard>
@@ -114,7 +106,9 @@ const TrackForm: React.FC = () => {
                         name="prefecture"
                         labelId="prefecture-label"
                         value={form.prefecture.value.id}
-                        onChange={handleChangePrefecture}
+                        onChange={(e) =>
+                          form.prefecture.setValueFromModels(e, prefectures)
+                        }
                       >
                         {prefectures.map((value, i) => (
                           <MenuItem key={i} value={value.id}>

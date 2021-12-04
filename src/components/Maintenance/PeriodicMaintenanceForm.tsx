@@ -5,7 +5,6 @@ import {
   Grid,
   InputAdornment,
   InputLabel,
-  MenuItem,
   Select,
   TextField,
   Typography,
@@ -109,16 +108,19 @@ const PeriodicMaintenanceForm: React.FC = () => {
                   >
                     <InputLabel id="menu-label">メンテナンス項目</InputLabel>
                     <Select
+                      native
                       name="menu"
                       label="メンテナンス項目"
                       labelId="menu-label"
-                      value={form.menu.value.name}
-                      onChange={form.menu.setValueFromEvent}
+                      value={form.menu.value.id}
+                      onChange={(e) =>
+                        form.menu.setValueFromModels(e, maintenanceMenus)
+                      }
                     >
                       {maintenanceMenus.map((value, i) => (
-                        <MenuItem key={i} value={value.id}>
+                        <option key={i} value={value.id}>
                           {value.name}
-                        </MenuItem>
+                        </option>
                       ))}
                     </Select>
                   </FormControl>

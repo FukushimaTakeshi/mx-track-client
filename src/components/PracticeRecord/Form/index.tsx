@@ -14,7 +14,6 @@ import {
   Radio,
   RadioGroup,
   Select,
-  SelectChangeEvent,
   TextField,
   Typography,
 } from '@mui/material'
@@ -146,13 +145,6 @@ const Form: React.FC = () => {
   const handleSelectTrack = () => setShowRegion(true)
   const handleCloseRegion = () => setShowRegion(false)
 
-  const handleChangeUserVehicle = (event: SelectChangeEvent<number>) => {
-    const selectedVehicle = userVehicles.find(
-      (userVehicle) => userVehicle.id === Number(event.target.value)
-    )
-    form.userVehicle.setValue(selectedVehicle ?? ({} as Models.UserVehicle))
-  }
-
   const [timeFormat, setTimeFormat] = useState('time')
   const handleChangeTimeFormat = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -275,7 +267,9 @@ const Form: React.FC = () => {
                       fullWidth
                       required
                       value={form.userVehicle.value.id}
-                      onChange={handleChangeUserVehicle}
+                      onChange={(e) =>
+                        form.userVehicle.setValueFromModels(e, userVehicles)
+                      }
                       inputProps={{
                         id: 'vehicle',
                       }}

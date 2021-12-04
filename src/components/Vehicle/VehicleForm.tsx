@@ -100,7 +100,7 @@ const VehicleForm: React.FC = () => {
     <Restricted to={'edit-vehicles'}>
       <Dashboard>
         <>
-          <Title>オフロードコースの登録</Title>
+          <Title>バイクの登録</Title>
           <HandleFetch loading={save.isExecuting}>
             <SuccessNotification
               open={success}
