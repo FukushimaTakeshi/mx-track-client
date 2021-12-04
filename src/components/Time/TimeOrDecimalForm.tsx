@@ -46,16 +46,21 @@ const TimeOrDecimalForm: React.FC<Props> = ({
     minutes.setValue(Number(_minutes) * 6)
   }
 
-  useEffect(() => {
-    if (timeFormat === 'time') {
-      const _minutes = form.times.value * 60 - Math.floor(form.times.value) * 60
-      minutes.setValue(_minutes)
-    } else {
-      const _minute = Math.round(Number(minutes.value) / 6)
-      minutes.setValue(_minute)
-      form.times.setValue(parseFloat(`${hours.value}.${_minute}`))
-    }
-  }, [timeFormat])
+  useEffect(
+    () => {
+      if (timeFormat === 'time') {
+        const _minutes =
+          form.times.value * 60 - Math.floor(form.times.value) * 60
+        minutes.setValue(_minutes)
+      } else {
+        const _minute = Math.round(Number(minutes.value) / 6)
+        minutes.setValue(_minute)
+        form.times.setValue(parseFloat(`${hours.value}.${_minute}`))
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [timeFormat]
+  )
 
   return (
     <Grid item xs={12}>
