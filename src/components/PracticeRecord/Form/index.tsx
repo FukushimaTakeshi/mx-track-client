@@ -6,13 +6,8 @@ import {
   CssBaseline,
   Dialog,
   FormControl,
-  FormControlLabel,
   Grid,
-  InputAdornment,
   InputLabel,
-  NativeSelect,
-  Radio,
-  RadioGroup,
   Select,
   TextField,
   Typography,
@@ -28,8 +23,8 @@ import ErrorNotification from '../../Notification/ErrorNotification'
 import SuccessNotification from '../../Notification/SuccessNotification'
 import HandleFetch from '../../Spinner/HandleFetch'
 import { Dashboard } from '../../templates/Dashboard'
+import TimeOrDecimalForm from '../../Time/TimeOrDecimalForm'
 import RegionList from './RegionList'
-import TimesDialog from './TimesDialog'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -62,7 +57,6 @@ const usePracticeRecordForm = () => {
   const hours = useForm<number>()
   const minutes = useForm<number>()
   const memo = useForm('')
-  const times = useForm<number>()
   return {
     practiceDate,
     offRoadTrack,
@@ -70,7 +64,6 @@ const usePracticeRecordForm = () => {
     hours,
     minutes,
     memo,
-    times,
   }
 }
 
@@ -88,10 +81,6 @@ const Form: React.FC = () => {
     setSuccess(false)
     const params = {
       ...formToObject(form),
-      minutes:
-        timeFormat === 'time'
-          ? form.minutes.value
-          : Number(form.minutes.value) * 6,
       offRoadTrackId: form.offRoadTrack.value.id,
       userVehicleId: form.userVehicle.value.id,
     }
@@ -126,8 +115,6 @@ const Form: React.FC = () => {
       if (id) {
         apiClientWithAuth.get(`/practice_records/${id}`).then((response) => {
           responseToForm(response, form)
-          const { hours, minutes } = response.data
-          form.times.setValue(parseFloat(`${hours}.${Math.round(minutes / 6)}`))
           !response.data.userVehicle && fetchCurrentVehicles()
         })
       } else {
@@ -145,28 +132,6 @@ const Form: React.FC = () => {
   const handleSelectTrack = () => setShowRegion(true)
   const handleCloseRegion = () => setShowRegion(false)
 
-  const [timeFormat, setTimeFormat] = useState('time')
-  const handleChangeTimeFormat = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (event.target.value === 'time') {
-      form.minutes.setValue(Number(form.minutes.value) * 6)
-    } else {
-      const minute = Math.round(Number(form.minutes.value) / 6)
-      form.minutes.setValue(minute)
-      form.times.setValue(parseFloat(`${form.hours.value}.${minute}`))
-    }
-    setTimeFormat(event.target.value)
-  }
-
-  const [openTimesDialog, setOpenTimesDialog] = useState(false)
-  const handleClickTimes = () => setOpenTimesDialog(true)
-  const handleCloseTimesDialog = () => setOpenTimesDialog(false)
-  const handleSubmitTimes = () => {
-    handleCloseTimesDialog()
-    form.times.setValue(parseFloat(`${form.hours.value}.${form.minutes.value}`))
-  }
-
   const [operationTotalTime, setOperationTotalTime] = useState<{
     hours: number
     minutes: number
@@ -182,7 +147,7 @@ const Form: React.FC = () => {
     }
   }, [form.userVehicle.value.id])
 
-  const totalTime = () => {
+  const totalTime = (timeFormat: string) => {
     if (!operationTotalTime) return null
     const { hours, minutes } = operationTotalTime
     return timeFormat === 'time'
@@ -283,110 +248,20 @@ const Form: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12}>
-                  <Typography variant="caption" color="textSecondary">
-                    走行時間
-                  </Typography>
-
-                  <Grid item xs={12}>
-                    <RadioGroup
-                      row
-                      aria-label="time-format"
-                      name="timeFormat"
-                      value={timeFormat}
-                      onChange={handleChangeTimeFormat}
-                    >
-                      <FormControlLabel
-                        value="time"
-                        control={<Radio />}
-                        label={<Typography variant="caption">時刻</Typography>}
-                      />
-                      <FormControlLabel
-                        value="decimal"
-                        control={<Radio />}
-                        label={
-                          <Typography variant="caption">小数点</Typography>
-                        }
-                      />
-                    </RadioGroup>
-                  </Grid>
-                  <Grid container justifyContent="flex-end" spacing={2}>
-                    {timeFormat === 'time' ? (
-                      <>
-                        <Grid item>
-                          <FormControlLabel
-                            control={
-                              <NativeSelect
-                                name="hours"
-                                value={form.hours.value || 0}
-                                onChange={form.hours.setValueFromEvent}
-                              >
-                                {[...Array(24).keys()].map((value) => (
-                                  <option key={value} value={value}>
-                                    {value}
-                                  </option>
-                                ))}
-                              </NativeSelect>
-                            }
-                            label="時間"
-                          />
-                        </Grid>
-                        <Grid item>
-                          <FormControlLabel
-                            control={
-                              <NativeSelect
-                                name="minutes"
-                                value={form.minutes.value || 0}
-                                onChange={form.minutes.setValueFromEvent}
-                              >
-                                {[...Array(60).keys()].map((value) => (
-                                  <option key={value} value={value}>
-                                    {value}
-                                  </option>
-                                ))}
-                              </NativeSelect>
-                            }
-                            label="分"
-                          />
-                        </Grid>
-                      </>
-                    ) : (
-                      <Grid item xs={4}>
-                        <TextField
-                          name="time"
-                          value={form.times.value}
-                          onClick={handleClickTimes}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <Typography
-                                  variant="button"
-                                  color="textSecondary"
-                                >
-                                  時間
-                                </Typography>
-                              </InputAdornment>
-                            ),
-                            readOnly: true,
-                          }}
-                        />
+                <TimeOrDecimalForm
+                  title="走行時間"
+                  hours={form.hours}
+                  minutes={form.minutes}
+                  secondaryContent={(timeFormat) => (
+                    <Grid container justifyContent="flex-end" spacing={2}>
+                      <Grid item>
+                        <Typography variant="caption" color="textSecondary">
+                          現在の稼働時間は {totalTime(timeFormat)} です
+                        </Typography>
                       </Grid>
-                    )}
-                    <TimesDialog
-                      open={openTimesDialog}
-                      onClose={handleCloseTimesDialog}
-                      form={form}
-                      handleSubmit={handleSubmitTimes}
-                    />
-                  </Grid>
-                  <Grid container justifyContent="flex-end" spacing={2}>
-                    <Grid item>
-                      <Typography variant="caption" color="textSecondary">
-                        現在の稼働時間は {totalTime()} です
-                      </Typography>
                     </Grid>
-                  </Grid>
-                </Grid>
+                  )}
+                ></TimeOrDecimalForm>
                 <Grid item xs={12}>
                   <TextField
                     name="memo"

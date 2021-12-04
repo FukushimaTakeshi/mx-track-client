@@ -3,11 +3,9 @@ import {
   Container,
   FormControl,
   Grid,
-  InputAdornment,
   InputLabel,
   Select,
   TextField,
-  Typography,
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
@@ -19,6 +17,7 @@ import ErrorNotification from '../Notification/ErrorNotification'
 import SuccessNotification from '../Notification/SuccessNotification'
 import HandleFetch from '../Spinner/HandleFetch'
 import { Dashboard } from '../templates/Dashboard'
+import TimeOrDecimalForm from '../Time/TimeOrDecimalForm'
 import Title from '../Title'
 
 const useStyles = makeStyles((theme) => ({
@@ -61,7 +60,7 @@ const MaintenanceForm: React.FC = () => {
     () => {
       const params = {
         ...formToObject(form),
-        maintenanceMenuId: form.maintenanceMenu.value,
+        maintenanceMenuId: form.maintenanceMenu.value.id,
         userVehicleId: userVehicleId,
       }
       const response = id
@@ -167,41 +166,11 @@ const MaintenanceForm: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12}>
-                  <Typography variant="caption" color="textSecondary">
-                    メンテナンス時の稼働時間
-                  </Typography>
-                  <Grid container justifyContent="flex-end" spacing={2}>
-                    <Grid item xs={5}>
-                      <TextField
-                        name="operationHours"
-                        type="number"
-                        value={form.operationHours.value}
-                        onChange={form.operationHours.setValueFromEvent}
-                        variant="outlined"
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">時間</InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={4}>
-                      <TextField
-                        name="operationMinutes"
-                        type="number"
-                        value={form.operationMinutes.value}
-                        onChange={form.operationMinutes.setValueFromEvent}
-                        variant="outlined"
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">分</InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
+                <TimeOrDecimalForm
+                  title="メンテナンス時の稼働時間"
+                  hours={form.operationHours}
+                  minutes={form.operationMinutes}
+                />
 
                 <Grid item xs={12}>
                   <TextField

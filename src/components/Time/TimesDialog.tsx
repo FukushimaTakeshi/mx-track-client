@@ -10,9 +10,9 @@ import {
   NativeSelect,
   Typography,
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles'
 import React from 'react'
-import { Form } from '../../../hooks/useForm'
+import { useForm } from '../../hooks/useForm'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -21,23 +21,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const useTimeDialogForm = () => {
+  const hours = useForm(0)
+  const minutes = useForm(0)
+  return { hours, minutes }
+}
+
 type Props = {
   open: boolean
   onClose: () => void
-  form: {
-    hours: Form<number>
-    minutes: Form<number>
-  }
-  handleSubmit: () => void
+  onSubmit(hours: number, minutes: number): void
 }
 
-const TimesDialog: React.FC<Props> = ({
-  open,
-  onClose,
-  form,
-  handleSubmit,
-}) => {
+const TimesDialog: React.FC<Props> = ({ open, onClose, onSubmit }) => {
   const classes = useStyles()
+  const form = useTimeDialogForm()
+  const _handleSubmit = () => {
+    onSubmit(form.hours.value, form.minutes.value)
+  }
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogContent>
@@ -74,7 +75,7 @@ const TimesDialog: React.FC<Props> = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleSubmit} color="primary">
+        <Button onClick={_handleSubmit} color="primary">
           設定
         </Button>
       </DialogActions>
