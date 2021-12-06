@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material'
 import React, { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import SuccessNotification from '../Notification/SuccessNotification'
 
 type Props = {
@@ -27,7 +27,6 @@ const MaintenanceRecord: React.FC<Props> = ({
   onDelete,
   onClose,
 }) => {
-  const { userVehicleId } = useParams<{ userVehicleId?: string }>()
   const [deleted, setDeleted] = useState(false)
 
   const handleDelete = () => {
