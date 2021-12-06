@@ -5,10 +5,7 @@ import {
   Container,
   CssBaseline,
   Dialog,
-  FormControl,
   Grid,
-  InputLabel,
-  Select,
   TextField,
   Typography,
 } from '@mui/material'
@@ -24,6 +21,7 @@ import SuccessNotification from '../../Notification/SuccessNotification'
 import HandleFetch from '../../Spinner/HandleFetch'
 import { Dashboard } from '../../templates/Dashboard'
 import TimeOrDecimalForm from '../../Time/TimeOrDecimalForm'
+import UserVehicleSelect from '../../Vehicle/UserVehicleSelect'
 import RegionList from './RegionList'
 
 const useStyles = makeStyles((theme) => ({
@@ -90,41 +88,17 @@ const Form: React.FC = () => {
     return request.then(() => setSuccess(true))
   }, validator)
 
-  const [userVehicles, setUserVehicles] = useState<Models.UserVehicle[]>([])
-
   useEffect(() => {
-    apiClientWithAuth
-      .get('/user_vehicles/')
-      .then((response) => setUserVehicles(response.data))
-  }, [])
-
-  useEffect(() => {
-    const fetchCurrentVehicles = () => {
-      apiClientWithAuth.get('/current_vehicles').then((response) => {
-        const foundUserVehicle = userVehicles.find(
-          ({ id }) => id === response.data.id
-        )
-        form.userVehicle.setValue(
-          foundUserVehicle ?? ({} as Models.UserVehicle)
-        )
-      })
-    }
-
     const fetchPracticeRecord = () => {
-      if (!userVehicles.length) return
       if (id) {
         apiClientWithAuth.get(`/practice_records/${id}`).then((response) => {
           responseToForm(response, form)
-          !response.data.userVehicle && fetchCurrentVehicles()
         })
-      } else {
-        fetchCurrentVehicles()
       }
-      // TODO: エラー処理
     }
     fetchPracticeRecord()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, userVehicles])
+  }, [id])
 
   const [success, setSuccess] = useState(false)
 
@@ -220,33 +194,10 @@ const Form: React.FC = () => {
                   )}
                 </Grid>
 
-                <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <InputLabel shrink required htmlFor="vehicle">
-                      バイク
-                    </InputLabel>
-                    <Select
-                      native
-                      variant="outlined"
-                      label="バイク"
-                      fullWidth
-                      required
-                      value={form.userVehicle.value.id}
-                      onChange={(e) =>
-                        form.userVehicle.setValueFromModels(e, userVehicles)
-                      }
-                      inputProps={{
-                        id: 'vehicle',
-                      }}
-                    >
-                      {userVehicles.map((userVehicle) => (
-                        <option key={userVehicle.id} value={userVehicle.id}>
-                          {userVehicle.vehicle.modelName}
-                        </option>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
+                <UserVehicleSelect
+                  userVehicle={form.userVehicle}
+                  setCurrentVehicle={!id}
+                />
 
                 <TimeOrDecimalForm
                   title="走行時間"
@@ -261,7 +212,7 @@ const Form: React.FC = () => {
                       </Grid>
                     </Grid>
                   )}
-                ></TimeOrDecimalForm>
+                />
                 <Grid item xs={12}>
                   <TextField
                     name="memo"

@@ -298,7 +298,7 @@ export const Dashboard: React.FC = ({ children }) => {
             </ListItem>
           </Link>
           <Link
-            to="/vehicles/?to=practice-record"
+            to="/maintenance_records/new"
             className={classes.link}
             onClick={handleDrawerClose}
           >

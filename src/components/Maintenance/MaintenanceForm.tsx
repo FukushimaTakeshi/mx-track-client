@@ -19,6 +19,7 @@ import HandleFetch from '../Spinner/HandleFetch'
 import { Dashboard } from '../templates/Dashboard'
 import TimeOrDecimalForm from '../Time/TimeOrDecimalForm'
 import Title from '../Title'
+import UserVehicleSelect from '../Vehicle/UserVehicleSelect'
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -39,20 +40,19 @@ const useMaintenanceForm = () => {
   const operationHours = useForm(0)
   const operationMinutes = useForm(0)
   const memo = useForm()
+  const userVehicle = useForm({} as Models.UserVehicle)
   return {
     maintenanceOn,
     maintenanceMenu,
     operationHours,
     operationMinutes,
     memo,
+    userVehicle,
   }
 }
 
 const MaintenanceForm: React.FC = () => {
-  const { userVehicleId, id } = useParams<{
-    userVehicleId?: string
-    id?: string
-  }>()
+  const { id } = useParams<{ id?: string }>()
   const history = useHistory()
   const classes = useStyles()
   const form = useMaintenanceForm()
@@ -61,7 +61,7 @@ const MaintenanceForm: React.FC = () => {
       const params = {
         ...formToObject(form),
         maintenanceMenuId: form.maintenanceMenu.value.id,
-        userVehicleId: userVehicleId,
+        userVehicleId: form.userVehicle.value.id,
       }
       const response = id
         ? apiClientWithAuth.put(`/maintenance_records/${id}`, params)
@@ -83,9 +83,17 @@ const MaintenanceForm: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      apiClientWithAuth.get(`/maintenance_records/${id}`).then((response) => {
-        responseToForm(response, form)
-      })
+      const fetchMaintenanceRecords = async () => {
+        const maintenanceRecords = await apiClientWithAuth.get(
+          `/maintenance_records/${id}`
+        )
+        responseToForm(maintenanceRecords, form)
+        const userVehicle = await apiClientWithAuth.get(
+          `/user_vehicles/${maintenanceRecords.data.userVehicleId}`
+        )
+        form.userVehicle.setValue(userVehicle.data)
+      }
+      fetchMaintenanceRecords()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
@@ -93,10 +101,11 @@ const MaintenanceForm: React.FC = () => {
   const [success, setSuccess] = useState(false)
 
   const handleChangeMaintenanceOn = () => {
-    if (!form.maintenanceOn.value) return
+    if (!form.maintenanceOn.value || !form.userVehicle.value.id) return
+
     apiClientWithAuth
       .get(
-        `/operation_time/?user_vehicle_id=${userVehicleId}&date=${form.maintenanceOn.value}`
+        `/operation_time/?user_vehicle_id=${form.userVehicle.value.id}&date=${form.maintenanceOn.value}`
       )
       .then((response) => {
         const { hours, minutes } = response.data
@@ -165,6 +174,11 @@ const MaintenanceForm: React.FC = () => {
                     </Select>
                   </FormControl>
                 </Grid>
+
+                <UserVehicleSelect
+                  userVehicle={form.userVehicle}
+                  setCurrentVehicle={!id}
+                />
 
                 <TimeOrDecimalForm
                   title="メンテナンス時の稼働時間"
