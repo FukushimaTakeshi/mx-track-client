@@ -46,16 +46,25 @@ const TimeOrDecimalForm: React.FC<Props> = ({
     minutes.setValue(Number(_minutes) * 6)
   }
 
+  const convertDecimalTime = () => {
+    const _minute = Math.round(Number(minutes.value) / 6)
+    form.times.setValue(parseFloat(`${hours.value}.${_minute}`))
+  }
+
+  useEffect(
+    () => {
+      convertDecimalTime()
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [minutes.value]
+  )
+
   useEffect(
     () => {
       if (timeFormat === 'time') {
-        const _minutes =
+        minutes.setValue(
           form.times.value * 60 - Math.floor(form.times.value) * 60
-        minutes.setValue(_minutes)
-      } else {
-        const _minute = Math.round(Number(minutes.value) / 6)
-        minutes.setValue(_minute)
-        form.times.setValue(parseFloat(`${hours.value}.${_minute}`))
+        )
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
