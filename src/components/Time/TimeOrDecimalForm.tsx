@@ -16,6 +16,7 @@ type Props = {
   title: string
   hours: Form<number>
   minutes: Form<number>
+  showTotalHours?: boolean
   secondaryContent?(timeFormat: string): React.ReactNode
 }
 
@@ -28,6 +29,7 @@ const TimeOrDecimalForm: React.FC<Props> = ({
   title,
   hours,
   minutes,
+  showTotalHours,
   secondaryContent,
 }) => {
   const form = useTimesForm()
@@ -56,7 +58,7 @@ const TimeOrDecimalForm: React.FC<Props> = ({
       convertDecimalTime()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [minutes.value]
+    [hours.value, minutes.value]
   )
 
   useEffect(
@@ -101,22 +103,38 @@ const TimeOrDecimalForm: React.FC<Props> = ({
         {timeFormat === 'time' ? (
           <>
             <Grid item>
-              <FormControlLabel
-                control={
-                  <NativeSelect
-                    name="hours"
-                    value={hours.value || 0}
-                    onChange={hours.setValueFromEvent}
-                  >
-                    {[...Array(24).keys()].map((value) => (
-                      <option key={value} value={value}>
-                        {value}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                }
-                label="時間"
-              />
+              {showTotalHours ? (
+                <FormControlLabel
+                  control={
+                    <TextField
+                      name="hours"
+                      type="number"
+                      variant="standard"
+                      sx={{ width: '5ch' }}
+                      value={hours.value}
+                      onChange={hours.setValueFromEvent}
+                    />
+                  }
+                  label="時間"
+                />
+              ) : (
+                <FormControlLabel
+                  control={
+                    <NativeSelect
+                      name="hours"
+                      value={hours.value || 0}
+                      onChange={hours.setValueFromEvent}
+                    >
+                      {[...Array(24).keys()].map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                  }
+                  label="時間"
+                />
+              )}
             </Grid>
             <Grid item>
               <FormControlLabel
@@ -159,6 +177,9 @@ const TimeOrDecimalForm: React.FC<Props> = ({
         )}
         <TimesDialog
           open={openTimesDialog}
+          hours={hours.value}
+          minutes={minutes.value}
+          showTotalHours={showTotalHours}
           onClose={handleCloseTimesDialog}
           onSubmit={handleSubmitTimes}
         />

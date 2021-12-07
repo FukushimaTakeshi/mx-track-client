@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
 const useMaintenanceForm = () => {
   const maintenanceOn = useForm()
   const maintenanceMenu = useForm({} as Models.MaintenanceMenu)
-  const operationHours = useForm(0)
-  const operationMinutes = useForm(0)
+  const operationHours = useForm<number>()
+  const operationMinutes = useForm<number>()
   const memo = useForm()
   const userVehicle = useForm({} as Models.UserVehicle)
   return {
@@ -184,6 +184,7 @@ const MaintenanceForm: React.FC = () => {
                   title="メンテナンス時の稼働時間"
                   hours={form.operationHours}
                   minutes={form.operationMinutes}
+                  showTotalHours
                 />
 
                 <Grid item xs={12}>
