@@ -1,3 +1,4 @@
+import CloseIcon from '@mui/icons-material/Close'
 import {
   AppBar,
   Button,
@@ -10,8 +11,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
-import CloseIcon from '@mui/icons-material/Close'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { useForm } from '../../hooks/useForm'
@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const useVehicleSettingForm = () => {
-  const initialHours = useForm(0)
-  const initialMinutes = useForm(0)
+  const initialHours = useForm<number>()
+  const initialMinutes = useForm<number>()
   return { initialHours, initialMinutes }
 }
 
@@ -92,7 +92,8 @@ const Setting: React.FC<Props> = ({ id, onClose }) => {
             color="inherit"
             onClick={handleClose}
             aria-label="close"
-            size="large">
+            size="large"
+          >
             <CloseIcon />
           </IconButton>
         </Toolbar>
@@ -176,7 +177,7 @@ const Setting: React.FC<Props> = ({ id, onClose }) => {
         </Container>
       </HandleFetch>
     </React.Fragment>
-  ) : null;
+  ) : null
 }
 
 export default Setting
