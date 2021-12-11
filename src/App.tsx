@@ -18,6 +18,7 @@ import MaintenanceList from './components/Maintenance/MaintenanceList'
 import PeriodicMaintenanceForm from './components/Maintenance/PeriodicMaintenanceForm'
 import MyPage from './components/MyPage'
 import Form from './components/PracticeRecord/Form'
+import NotFound from './components/templates/NotFound'
 import RegionList from './components/Track/RegionList'
 import TrackForm from './components/Track/TrackForm'
 import Edit from './components/User/Edit'
@@ -95,6 +96,7 @@ const App: React.FC = () => (
               component={MaintenanceForm}
             />
             <Route exact path="/login" component={Login} />
+            <Route path="*" component={NotFound} />
           </Switch>
         </Router>
       </AuthProvider>
