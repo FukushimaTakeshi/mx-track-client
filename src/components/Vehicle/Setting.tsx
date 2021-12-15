@@ -47,7 +47,6 @@ const useVehicleSettingForm = () => {
   return { initialHours, initialMinutes }
 }
 
-// TODO: バイク登録時に初期時間の設定画面にリダイレクトする
 const Setting: React.FC<Props> = ({ id, onClose }) => {
   const classes = useStyles()
   const form = useVehicleSettingForm()

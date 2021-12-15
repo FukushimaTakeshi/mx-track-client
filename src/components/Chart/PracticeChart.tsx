@@ -1,10 +1,11 @@
 import { ApexOptions } from 'apexcharts'
-import { AxiosResponse } from 'axios'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Chart from 'react-apexcharts'
-import { Resource } from '../../lib/resource'
+import { apiClientWithAuth } from '../../lib/api_client'
+import HandleFetch from '../Spinner/HandleFetch'
+import Title from '../Title'
 
-export interface IPracticeRecords {
+interface IPracticeRecords {
   numberOfMonthly: Array<{
     yearMonth: string
     count: number
@@ -12,12 +13,20 @@ export interface IPracticeRecords {
   }>
 }
 
-type Props = {
-  resource: Resource<AxiosResponse<IPracticeRecords>>
-}
+const PracticeChart: React.FC = () => {
+  const [loading, setLoading] = useState(false)
+  const [practiceRecords, setPracticeRecords] = useState({} as IPracticeRecords)
+  useEffect(() => {
+    setLoading(true)
+    apiClientWithAuth
+      .get('/practice_records/?sort=+practice_date&field=number_of_monthly')
+      .then((res) => {
+        setPracticeRecords(res.data)
+        setLoading(false)
+      })
+    // TODO: エラー時
+  }, [])
 
-const PracticeChart: React.FC<Props> = ({ resource }) => {
-  const practiceRecords = resource.read().data
   const { numberOfMonthly } = practiceRecords
 
   const options: ApexOptions = {
@@ -76,13 +85,18 @@ const PracticeChart: React.FC<Props> = ({ resource }) => {
   ]
 
   return (
-    <Chart
-      options={options}
-      series={series}
-      type="line"
-      width={500}
-      height={320}
-    />
+    <>
+      <Title>my activity</Title>
+      <HandleFetch inner loading={loading}>
+        <Chart
+          options={options}
+          series={series}
+          type="line"
+          width={500}
+          height={320}
+        />
+      </HandleFetch>
+    </>
   )
 }
 
