@@ -1,3 +1,4 @@
+import EditIcon from '@mui/icons-material/Edit'
 import {
   Box,
   Dialog,
@@ -9,15 +10,14 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
-import EditIcon from '@mui/icons-material/Edit'
-import React, { useEffect, useState } from 'react'
+import makeStyles from '@mui/styles/makeStyles'
+import withStyles from '@mui/styles/withStyles'
+import { AxiosResponse } from 'axios'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import '../../@types/models.d.ts'
 import { apiClientWithAuth } from '../../lib/api_client'
-import HandleFetch from '../Spinner/HandleFetch'
-import Title from '../Title'
+import { Resource } from '../../lib/resource'
 import PracticeRecord from './PracticeRecord'
 
 const useStyles = makeStyles({
@@ -26,26 +26,14 @@ const useStyles = makeStyles({
 
 const StyledTableCell = withStyles({ root: { padding: '1.6em' } })(TableCell)
 
-const PracticeRecordList: React.FC = () => {
-  const classes = useStyles()
-  const [loading, setLoading] = useState(false)
-  const [practiceRecords, setPracticeRecords] = useState<
-    Models.PracticeRecord[]
-  >([])
-  useEffect(() => {
-    fetchPracticeRecords()
-  }, [])
+type Props = {
+  resource: Resource<AxiosResponse<Models.PracticeRecord[]>>
+  reloadResource: () => void
+}
 
-  const fetchPracticeRecords = () => {
-    setLoading(true)
-    apiClientWithAuth
-      .get('/practice_records/?sort=-practice_date')
-      .then((res) => {
-        setPracticeRecords(res.data)
-        setLoading(false)
-      })
-    // TODO: エラー時
-  }
+const PracticeRecordList: React.FC<Props> = ({ resource, reloadResource }) => {
+  const classes = useStyles()
+  const practiceRecords = resource.read().data
 
   const [practiceRecord, setPracticeRecord] = useState<Models.PracticeRecord>(
     {} as Models.PracticeRecord
@@ -74,63 +62,60 @@ const PracticeRecordList: React.FC = () => {
           {...practiceRecord}
           onDelete={() => handleDelete(practiceRecord.id)}
           onClose={() => {
-            fetchPracticeRecords()
             setShowPracticeRecord(false)
+            reloadResource()
           }}
         ></PracticeRecord>
       </Dialog>
-      <Title>activities</Title>
 
-      <HandleFetch inner loading={loading}>
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>日付</TableCell>
-                <TableCell align="right">コース</TableCell>
-                <TableCell align="right">バイク</TableCell>
-                <TableCell align="right">走行時間</TableCell>
-                <TableCell align="right">メモ</TableCell>
-                <TableCell align="right"></TableCell>
+      <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>日付</TableCell>
+              <TableCell align="right">コース</TableCell>
+              <TableCell align="right">バイク</TableCell>
+              <TableCell align="right">走行時間</TableCell>
+              <TableCell align="right">メモ</TableCell>
+              <TableCell align="right"></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {practiceRecords.map((row) => (
+              <TableRow key={row.id} onClick={() => showDetail(row)}>
+                <StyledTableCell component="th" scope="row">
+                  {row.practiceDate}
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  {row.offRoadTrack.name}
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  {row.userVehicle.vehicle.modelName}
+                </StyledTableCell>
+                <StyledTableCell align="right">{`${row.hours}時間${row.minutes}分`}</StyledTableCell>
+                <StyledTableCell align="right">
+                  <div style={{ width: 70 }}>
+                    <Box
+                      component="div"
+                      textOverflow="ellipsis"
+                      overflow="hidden"
+                      bgcolor="background.paper"
+                      whiteSpace="nowrap"
+                    >
+                      {row.memo}
+                    </Box>
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link key={row.id} to={`practice_records/${row.id}`}>
+                    <EditIcon color="disabled" fontSize="small" />
+                  </Link>
+                </StyledTableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {practiceRecords.map((row) => (
-                <TableRow key={row.id} onClick={() => showDetail(row)}>
-                  <StyledTableCell component="th" scope="row">
-                    {row.practiceDate}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.offRoadTrack.name}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.userVehicle.vehicle.modelName}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">{`${row.hours}時間${row.minutes}分`}</StyledTableCell>
-                  <StyledTableCell align="right">
-                    <div style={{ width: 70 }}>
-                      <Box
-                        component="div"
-                        textOverflow="ellipsis"
-                        overflow="hidden"
-                        bgcolor="background.paper"
-                        whiteSpace="nowrap"
-                      >
-                        {row.memo}
-                      </Box>
-                    </div>
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    <Link key={row.id} to={`practice_records/${row.id}`}>
-                      <EditIcon color="disabled" fontSize="small" />
-                    </Link>
-                  </StyledTableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </HandleFetch>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   )
 }

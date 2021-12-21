@@ -85,31 +85,3 @@ export class Resource<T, E = AxiosError> {
     }
   }
 }
-
-// export const wrapPromise<T> = (promise: Promise<T>) => {
-//   let status = 'pending'
-//   let result = null
-
-//   const suspender = promise.then(
-//     (r) => {
-//       status = 'fulfilled'
-//       result = r
-//     },
-//     (e) => {
-//       status = 'rejected'
-//       result = e
-//     }
-//   )
-
-//   const read = (): T => {
-//     if (status === 'pending') {
-//       throw suspender
-//     } else if (status === 'rejected') {
-//       throw result
-//     } else {
-//       return result
-//     }
-//   }
-
-//   return { read }
-// }
