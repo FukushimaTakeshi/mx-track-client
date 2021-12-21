@@ -1,11 +1,11 @@
 import React, { Suspense, useEffect, useState } from 'react'
-import { apiClientWithAuth } from '../lib/api_client'
-import { Resource } from '../lib/resource'
-import PracticeChart, { IPracticeRecords } from './Chart/PracticeChart'
-import PracticeRecordList from './PracticeRecord/PracticeRecordList'
-import InnerLoading from './Spinner/InnerLoading'
-import { Dashboard } from './templates/Dashboard'
-import Title from './Title'
+import { apiClientWithAuth } from '../../lib/api_client'
+import { Resource } from '../../lib/resource'
+import PracticeChart, { IPracticeRecords } from '../Chart/PracticeChart'
+import PracticeRecordList from '../PracticeRecord/PracticeRecordList'
+import InnerLoading from '../Spinner/InnerLoading'
+import { Dashboard } from '../templates/Dashboard'
+import Title from '../Title'
 
 const resources = {
   chart: () =>

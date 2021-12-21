@@ -1,6 +1,3 @@
-import { Dialog, Paper, Typography } from '@mui/material'
-import { green } from '@mui/material/colors'
-import makeStyles from '@mui/styles/makeStyles';
 import BuildIcon from '@mui/icons-material/Build'
 import CheckIcon from '@mui/icons-material/Check'
 import {
@@ -12,11 +9,14 @@ import {
   TimelineOppositeContent,
   TimelineSeparator,
 } from '@mui/lab'
+import { Dialog, Paper, Typography } from '@mui/material'
+import { green } from '@mui/material/colors'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { apiClientWithAuth } from '../../lib/api_client'
+import MaintenanceRecord from '../Maintenance/MaintenanceRecord'
 import { Dashboard } from '../templates/Dashboard'
-import MaintenanceRecord from './MaintenanceRecord'
 
 const useStyles = makeStyles(() => ({
   timeline: {

@@ -10,22 +10,22 @@ import './App.css'
 import { AuthProvider } from './auth/AuthProvider'
 import Login from './auth/Login'
 import PrivateRoute from './auth/PrivateRoute'
-import MaintenanceForm from './components/Maintenance/MaintenanceForm'
-import MaintenanceHistory from './components/Maintenance/MaintenanceHistory'
-import MaintenanceItemForm from './components/Maintenance/MaintenanceItemForm'
-import MaintenanceItemList from './components/Maintenance/MaintenanceItemList'
-import MaintenanceList from './components/Maintenance/MaintenanceList'
-import PeriodicMaintenanceForm from './components/Maintenance/PeriodicMaintenanceForm'
-import MyPage from './components/MyPage'
+import Home from './components/pages/Home'
+import MaintenanceForm from './components/pages/MaintenanceForm'
+import MaintenanceHistory from './components/pages/MaintenanceHistory'
+import MaintenanceItemForm from './components/pages/MaintenanceItemForm'
+import MaintenanceItemList from './components/pages/MaintenanceItemList'
+import MyPage from './components/pages/MyPage'
+import PeriodicMaintenanceForm from './components/pages/PeriodicMaintenanceForm'
+import PeriodicMaintenanceList from './components/pages/PeriodicMaintenanceList'
+import RegionList from './components/pages/RegionList'
+import TrackForm from './components/pages/TrackForm'
+import UserEdit from './components/pages/UserEdit'
+import UserVehicleList from './components/pages/UserVehicleList'
+import VehicleForm from './components/pages/VehicleForm'
+import VehicleSelects from './components/pages/VehicleSelects'
 import Form from './components/PracticeRecord/Form'
 import NotFound from './components/templates/NotFound'
-import RegionList from './components/Track/RegionList'
-import TrackForm from './components/Track/TrackForm'
-import Edit from './components/User/Edit'
-import UserVehicleList from './components/Vehicle/UserVehicleList'
-import VehicleForm from './components/Vehicle/VehicleForm'
-import VehicleSelects from './components/Vehicle/VehicleSelects'
-import Home from './Home'
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -56,7 +56,7 @@ const App: React.FC = () => (
             />
             <PrivateRoute exact path="/vehicles/new" component={VehicleForm} />
             <PrivateRoute exact path="/mypage" component={MyPage} />
-            <PrivateRoute exact path="/user/edit" component={Edit} />
+            <PrivateRoute exact path="/user/edit" component={UserEdit} />
             <PrivateRoute
               exact
               path="/vehicles/edit"
@@ -68,7 +68,7 @@ const App: React.FC = () => (
             <PrivateRoute
               exact
               path="/vehicles/:userVehicleId/maintenances"
-              component={MaintenanceList}
+              component={PeriodicMaintenanceList}
             />
             <PrivateRoute
               exact

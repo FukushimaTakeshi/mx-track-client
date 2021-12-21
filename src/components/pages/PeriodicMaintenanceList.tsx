@@ -1,3 +1,6 @@
+import AddIcon from '@mui/icons-material/Add'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import TimerIcon from '@mui/icons-material/Timer'
 import {
   Button,
   Divider,
@@ -11,17 +14,14 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
-import AddIcon from '@mui/icons-material/Add'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import TimerIcon from '@mui/icons-material/Timer'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import { apiClientWithAuth } from '../../lib/api_client'
+import OperationTime from '../Maintenance/OperationTime'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
-import OperationTime from './OperationTime'
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const MaintenanceList: React.FC = () => {
+// FIXME: 登録がバグってできない
+const PeriodicMaintenanceList: React.FC = () => {
   const classes = useStyles()
   const { userVehicleId } = useParams<{ userVehicleId?: string }>()
   const history = useHistory()
@@ -107,7 +108,8 @@ const MaintenanceList: React.FC = () => {
                     aria-controls="menu"
                     aria-haspopup="true"
                     onClick={handleClickMoreVert}
-                    size="large">
+                    size="large"
+                  >
                     <MoreVertIcon />
                   </IconButton>
                   <Menu
@@ -148,7 +150,7 @@ const MaintenanceList: React.FC = () => {
         </List>
       </>
     </Dashboard>
-  );
+  )
 }
 
-export default MaintenanceList
+export default PeriodicMaintenanceList

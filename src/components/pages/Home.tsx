@@ -1,7 +1,7 @@
 import { Grid, Paper } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles'
 import React from 'react'
-import { Dashboard } from './components/templates/Dashboard'
+import { Dashboard } from '../templates/Dashboard'
 
 const useStyles = makeStyles(() => ({
   paper: {

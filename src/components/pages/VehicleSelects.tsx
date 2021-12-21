@@ -26,7 +26,7 @@ import { useSelectVehicle } from '../../hooks/Vehicle/useSelectVehicle'
 import { apiClientWithAuth } from '../../lib/api_client'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
-import Setting from './Setting'
+import Setting from '../Vehicle/Setting'
 
 interface ISetting {
   show: boolean

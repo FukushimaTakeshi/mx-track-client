@@ -1,12 +1,5 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Grid,
-  TextField,
-} from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import { Avatar, Box, Button, Container, Grid, TextField } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useContext } from 'react'
 import { AuthContext } from '../../auth/AuthProvider'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
@@ -37,7 +30,7 @@ const useUserForm = (user: Models.User | null) => {
   return { name }
 }
 
-const Edit: React.FC = () => {
+const UserEdit: React.FC = () => {
   const classes = useStyles()
   const { currentUser } = useContext(AuthContext)
   const form = useUserForm(currentUser)
@@ -99,4 +92,4 @@ const Edit: React.FC = () => {
   )
 }
 
-export default Edit
+export default UserEdit

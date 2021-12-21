@@ -1,6 +1,14 @@
-import { Button, Dialog, Divider, List, ListItem, ListItemText, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import AddIcon from '@mui/icons-material/Add'
+import {
+  Button,
+  Dialog,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -8,7 +16,7 @@ import Restricted from '../../auth/Restricted'
 import { apiClient } from '../../lib/api_client'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
-import PrefectureList from './PrefectureList'
+import PrefectureList from '../Track/PrefectureList'
 
 const useStyles = makeStyles((theme) => ({
   link: {
