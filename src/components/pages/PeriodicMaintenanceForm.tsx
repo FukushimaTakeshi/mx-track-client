@@ -1,11 +1,4 @@
-import {
-  Button,
-  Container,
-  Grid,
-  InputAdornment,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Button, Container, Grid, TextField } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
@@ -17,6 +10,7 @@ import ErrorNotification from '../Notification/ErrorNotification'
 import SuccessNotification from '../Notification/SuccessNotification'
 import HandleFetch from '../Spinner/HandleFetch'
 import { Dashboard } from '../templates/Dashboard'
+import TimeOrDecimalForm from '../Time/TimeOrDecimalForm'
 import Title from '../Title'
 
 const useStyles = makeStyles((theme) => ({
@@ -106,41 +100,11 @@ const PeriodicMaintenanceForm: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12}>
-                  <Typography variant="caption" color="textSecondary">
-                    整備期間
-                  </Typography>
-                  <Grid container justifyContent="flex-end" spacing={2}>
-                    <Grid item xs={4}>
-                      <TextField
-                        name="cycleHours"
-                        type="number"
-                        value={form.cycleHours.value}
-                        onChange={form.cycleHours.setValueFromEvent}
-                        variant="outlined"
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">時間</InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={4}>
-                      <TextField
-                        name="cycleMinutes"
-                        type="number"
-                        value={form.cycleMinutes.value}
-                        onChange={form.cycleMinutes.setValueFromEvent}
-                        variant="outlined"
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">分</InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
+                <TimeOrDecimalForm
+                  title={'整備期間'}
+                  hours={form.cycleHours}
+                  minutes={form.cycleMinutes}
+                />
 
                 <Grid item xs={12}>
                   <TextField
