@@ -54,7 +54,7 @@ const PeriodicMaintenanceForm: React.FC = () => {
     () => {
       const params = {
         ...formToObject(form),
-        maintenanceMenuId: form.menu.value,
+        maintenanceMenuId: form.menu.value.id,
         userVehicleId: userVehicleId,
       }
       const response = id
