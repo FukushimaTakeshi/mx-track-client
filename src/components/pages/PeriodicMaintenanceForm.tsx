@@ -1,11 +1,8 @@
 import {
   Button,
   Container,
-  FormControl,
   Grid,
   InputAdornment,
-  InputLabel,
-  Select,
   TextField,
   Typography,
 } from '@mui/material'
@@ -15,6 +12,7 @@ import { useHistory, useParams } from 'react-router'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { formToObject, responseToForm, useForm } from '../../hooks/useForm'
 import { apiClient, apiClientWithAuth } from '../../lib/api_client'
+import MaintenanceMenuSelectBox from '../Maintenance/MaintenanceMenuSelectBox'
 import ErrorNotification from '../Notification/ErrorNotification'
 import SuccessNotification from '../Notification/SuccessNotification'
 import HandleFetch from '../Spinner/HandleFetch'
@@ -102,28 +100,10 @@ const PeriodicMaintenanceForm: React.FC = () => {
             <div className={classes.form}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="menu-label">メンテナンス項目</InputLabel>
-                    <Select
-                      native
-                      name="menu"
-                      label="メンテナンス項目"
-                      labelId="menu-label"
-                      value={form.menu.value.id}
-                      onChange={(e) =>
-                        form.menu.setValueFromModels(e, maintenanceMenus)
-                      }
-                    >
-                      {maintenanceMenus.map((value, i) => (
-                        <option key={i} value={value.id}>
-                          {value.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  <MaintenanceMenuSelectBox
+                    maintenanceMenuForm={form.menu}
+                    maintenanceMenus={maintenanceMenus}
+                  />
                 </Grid>
 
                 <Grid item xs={12}>

@@ -1,18 +1,11 @@
-import {
-  Button,
-  Container,
-  FormControl,
-  Grid,
-  InputLabel,
-  Select,
-  TextField,
-} from '@mui/material'
+import { Button, Container, Grid, TextField } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { formToObject, responseToForm, useForm } from '../../hooks/useForm'
 import { apiClient, apiClientWithAuth } from '../../lib/api_client'
+import MaintenanceMenuSelectBox from '../Maintenance/MaintenanceMenuSelectBox'
 import ErrorNotification from '../Notification/ErrorNotification'
 import SuccessNotification from '../Notification/SuccessNotification'
 import HandleFetch from '../Spinner/HandleFetch'
@@ -51,6 +44,7 @@ const useMaintenanceForm = () => {
   }
 }
 
+// TODO: メンテナンス項目を一度に複数登録できるようにする
 const MaintenanceForm: React.FC = () => {
   const { id } = useParams<{ id?: string }>()
   const history = useHistory()
@@ -146,33 +140,10 @@ const MaintenanceForm: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel required shrink id="menu-label">
-                      メンテナンス項目
-                    </InputLabel>
-                    <Select
-                      native
-                      name="maintenanceMenu"
-                      label="メンテナンス項目"
-                      labelId="menu-label"
-                      value={form.maintenanceMenu.value.id}
-                      onChange={(e) =>
-                        form.maintenanceMenu.setValueFromModels(
-                          e,
-                          maintenanceMenus
-                        )
-                      }
-                    >
-                      {maintenanceMenus.map((value, i) => (
-                        <option key={i} value={value.id}>
-                          {value.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  <MaintenanceMenuSelectBox
+                    maintenanceMenuForm={form.maintenanceMenu}
+                    maintenanceMenus={maintenanceMenus}
+                  />
                 </Grid>
 
                 <UserVehicleSelect
