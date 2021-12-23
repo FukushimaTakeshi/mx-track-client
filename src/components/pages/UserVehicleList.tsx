@@ -1,3 +1,5 @@
+import AddIcon from '@mui/icons-material/Add'
+import BuildIcon from '@mui/icons-material/Build'
 import {
   Button,
   Container,
@@ -8,12 +10,13 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
-import AddIcon from '@mui/icons-material/Add'
-import BuildIcon from '@mui/icons-material/Build'
-import React, { useEffect, useState } from 'react'
+import makeStyles from '@mui/styles/makeStyles'
+import { AxiosResponse } from 'axios'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { apiClientWithAuth } from '../../lib/api_client'
+import { Resource } from '../../lib/resource'
+import InnerLoading from '../Spinner/InnerLoading'
 import { Dashboard } from '../templates/Dashboard'
 import Title from '../Title'
 
@@ -28,15 +31,19 @@ const useQuery = () => {
   return new URLSearchParams(useLocation().search)
 }
 
+const resource = () =>
+  new Resource(() => apiClientWithAuth.get('/user_vehicles/'))
+
 const UserVehicleList: React.FC = () => {
   const classes = useStyles()
   const query = useQuery()
-  const [userVehicles, setUserVehicles] = useState<Models.UserVehicle[]>([])
+
+  const [userVehicleResource, setUserVehicleResource] = useState<Resource<
+    AxiosResponse<Models.UserVehicle[]>
+  > | null>(null)
 
   useEffect(() => {
-    apiClientWithAuth.get('/user_vehicles').then((response) => {
-      setUserVehicles(response.data)
-    })
+    setUserVehicleResource(resource())
   }, [])
 
   const url = () => {
@@ -50,41 +57,56 @@ const UserVehicleList: React.FC = () => {
     }
   }
 
+  type UserVehicleListProps = {
+    resource: Resource<AxiosResponse<Models.UserVehicle[]>> | null
+  }
+
+  const UserVehicleList: React.FC<UserVehicleListProps> = ({ resource }) => {
+    const userVehicles = resource?.read().data
+
+    return (
+      <List>
+        {userVehicles &&
+          (!userVehicles.length ? (
+            <Link className={classes.link} to="/vehicles/edit">
+              <Button
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                startIcon={<AddIcon />}
+              >
+                <Typography variant="subtitle1">バイクを登録</Typography>
+              </Button>
+            </Link>
+          ) : (
+            userVehicles.map((userVehicle) => (
+              <Link
+                className={classes.link}
+                key={userVehicle.id}
+                to={`/vehicles/${userVehicle.id}/${url()}`}
+              >
+                <ListItem button>
+                  <ListItemIcon>
+                    <BuildIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={userVehicle.vehicle.modelName} />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+              </Link>
+            ))
+          ))}
+      </List>
+    )
+  }
+
   return (
     <Dashboard>
       <>
         <Title>バイクを選択してください</Title>
         <Container component="main" maxWidth="xs">
-          <List>
-            {!userVehicles.length ? (
-              <Link className={classes.link} to="/vehicles/edit">
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  fullWidth
-                  startIcon={<AddIcon />}
-                >
-                  <Typography variant="subtitle1">バイクを登録</Typography>
-                </Button>
-              </Link>
-            ) : (
-              userVehicles.map((userVehicle) => (
-                <Link
-                  className={classes.link}
-                  key={userVehicle.id}
-                  to={`/vehicles/${userVehicle.id}/${url()}`}
-                >
-                  <ListItem button>
-                    <ListItemIcon>
-                      <BuildIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={userVehicle.vehicle.modelName} />
-                  </ListItem>
-                  <Divider variant="inset" component="li" />
-                </Link>
-              ))
-            )}
-          </List>
+          <Suspense fallback={<InnerLoading />}>
+            <UserVehicleList resource={userVehicleResource} />
+          </Suspense>
         </Container>
       </>
     </Dashboard>
