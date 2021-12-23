@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-// FIXME: 登録がバグってできない
 const PeriodicMaintenanceList: React.FC = () => {
   const classes = useStyles()
   const { userVehicleId } = useParams<{ userVehicleId?: string }>()

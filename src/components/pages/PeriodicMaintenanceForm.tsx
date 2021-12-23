@@ -64,7 +64,11 @@ const PeriodicMaintenanceForm: React.FC = () => {
   useEffect(() => {
     apiClient.get('/maintenance_menus').then((response) => {
       setMaintenanceMenus(response.data)
+      if (!form.menu.value.id) {
+        form.menu.setValue(response.data[0])
+      }
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
