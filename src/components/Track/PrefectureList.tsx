@@ -128,7 +128,7 @@ const PrefectureList: React.FC<Props> = ({
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Suspense fallback={<InnerLoading loading />}>
+      <Suspense fallback={<InnerLoading />}>
         <Prefectures resource={resource} />
       </Suspense>
     </>

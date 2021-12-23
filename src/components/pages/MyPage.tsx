@@ -42,11 +42,11 @@ const MyPage: React.FC = () => {
   return (
     <Dashboard>
       <Title>my activity</Title>
-      <Suspense fallback={<InnerLoading loading />}>
+      <Suspense fallback={<InnerLoading />}>
         <PracticeChart resource={chartResource} />
       </Suspense>
       <Title>activities</Title>
-      <Suspense fallback={<InnerLoading loading />}>
+      <Suspense fallback={<InnerLoading />}>
         <PracticeRecordList
           resource={listResource}
           reloadResource={reloadResource}

@@ -112,7 +112,7 @@ const RegionList: React.FC<Props> = ({ onClose, handleSelectTrack }) => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Suspense fallback={<InnerLoading loading />}>
+      <Suspense fallback={<InnerLoading />}>
         <Regions resource={resource} />
       </Suspense>
     </>

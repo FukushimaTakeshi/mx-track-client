@@ -2,10 +2,10 @@ import { CircularProgress } from '@mui/material'
 import React from 'react'
 
 type Props = {
-  loading: boolean
+  loading?: boolean
 }
 
-const InnerLoading: React.FC<Props> = ({ loading, children }) => {
+const InnerLoading: React.FC<Props> = ({ loading = true, children }) => {
   return loading ? (
     <div
       style={{
