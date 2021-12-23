@@ -27,13 +27,13 @@ const useStyles = makeStyles({
 const StyledTableCell = withStyles({ root: { padding: '1.6em' } })(TableCell)
 
 type Props = {
-  resource: Resource<AxiosResponse<Models.PracticeRecord[]>>
+  resource: Resource<AxiosResponse<Models.PracticeRecord[]>> | null
   reloadResource: () => void
 }
 
 const PracticeRecordList: React.FC<Props> = ({ resource, reloadResource }) => {
   const classes = useStyles()
-  const practiceRecords = resource.read().data
+  const practiceRecords = resource?.read().data
 
   const [practiceRecord, setPracticeRecord] = useState<Models.PracticeRecord>(
     {} as Models.PracticeRecord
@@ -81,38 +81,39 @@ const PracticeRecordList: React.FC<Props> = ({ resource, reloadResource }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {practiceRecords.map((row) => (
-              <TableRow key={row.id} onClick={() => showDetail(row)}>
-                <StyledTableCell component="th" scope="row">
-                  {row.practiceDate}
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  {row.offRoadTrack.name}
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  {row.userVehicle.vehicle.modelName}
-                </StyledTableCell>
-                <StyledTableCell align="right">{`${row.hours}時間${row.minutes}分`}</StyledTableCell>
-                <StyledTableCell align="right">
-                  <div style={{ width: 70 }}>
-                    <Box
-                      component="div"
-                      textOverflow="ellipsis"
-                      overflow="hidden"
-                      bgcolor="background.paper"
-                      whiteSpace="nowrap"
-                    >
-                      {row.memo}
-                    </Box>
-                  </div>
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <Link key={row.id} to={`practice_records/${row.id}`}>
-                    <EditIcon color="disabled" fontSize="small" />
-                  </Link>
-                </StyledTableCell>
-              </TableRow>
-            ))}
+            {practiceRecords &&
+              practiceRecords.map((row) => (
+                <TableRow key={row.id} onClick={() => showDetail(row)}>
+                  <StyledTableCell component="th" scope="row">
+                    {row.practiceDate}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.offRoadTrack.name}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.userVehicle.vehicle.modelName}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">{`${row.hours}時間${row.minutes}分`}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    <div style={{ width: 70 }}>
+                      <Box
+                        component="div"
+                        textOverflow="ellipsis"
+                        overflow="hidden"
+                        bgcolor="background.paper"
+                        whiteSpace="nowrap"
+                      >
+                        {row.memo}
+                      </Box>
+                    </div>
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    <Link key={row.id} to={`practice_records/${row.id}`}>
+                      <EditIcon color="disabled" fontSize="small" />
+                    </Link>
+                  </StyledTableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

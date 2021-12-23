@@ -13,12 +13,11 @@ export interface IPracticeRecords {
 }
 
 type Props = {
-  resource: Resource<AxiosResponse<IPracticeRecords>>
+  resource: Resource<AxiosResponse<IPracticeRecords>> | null
 }
 
 const PracticeChart: React.FC<Props> = ({ resource }) => {
-  const practiceRecords = resource.read().data
-  const { numberOfMonthly } = practiceRecords
+  const numberOfMonthly = resource?.read().data.numberOfMonthly
 
   const options: ApexOptions = {
     chart: {

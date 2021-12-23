@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios'
 import React, { Suspense, useEffect, useState } from 'react'
 import { apiClientWithAuth } from '../../lib/api_client'
 import { Resource } from '../../lib/resource'
@@ -22,19 +23,19 @@ const resources = {
     ),
 }
 
-const initialChartResource = resources.chart()
-const initialListResource = resources.list()
-
 const MyPage: React.FC = () => {
-  const [chartResource, setChartResource] = useState(initialChartResource)
-  const [listResource, setListResource] = useState(initialListResource)
+  const [chartResource, setChartResource] = useState<Resource<
+    AxiosResponse<IPracticeRecords>
+  > | null>(null)
+  const [listResource, setListResource] = useState<Resource<
+    AxiosResponse<Models.PracticeRecord[]>
+  > | null>(null)
   const reloadResource = () => {
     setChartResource(resources.chart())
     setListResource(resources.list())
   }
 
   useEffect(() => {
-    // FIXME: リロード時などの初期表示時に2回ずつリクエストされてしまう
     reloadResource()
   }, [])
 
