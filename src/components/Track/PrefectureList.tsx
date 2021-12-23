@@ -11,27 +11,51 @@ import {
   Typography,
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
-import React, { useEffect, useState } from 'react'
+import { AxiosResponse } from 'axios'
+import React, { Suspense, useEffect, useState } from 'react'
 import { apiClient } from '../../lib/api_client'
+import { Resource } from '../../lib/resource'
+import InnerLoading from '../Spinner/InnerLoading'
 import TrackList from './TrackList'
 
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    position: 'relative',
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+}))
+
 type Props = {
-  regionId: number | null
+  regionId: number
+  regionName: string
   onClose: () => void
   handleSelectTrack: (track: Models.OffRoadTrack) => void
 }
 
+type PrefecturesProps = {
+  resource: Resource<AxiosResponse<Models.Region>> | null
+}
+
+const findRegion = (regionId: number) =>
+  new Resource(() => apiClient.get<Models.Region>(`/regions/${regionId}`))
+
 const PrefectureList: React.FC<Props> = ({
   regionId,
+  regionName,
   onClose,
   handleSelectTrack,
 }) => {
-  const [region, setRegion] = useState<Models.Region | null>(null)
+  const classes = useStyles()
+
+  const [resource, setResource] = useState<Resource<
+    AxiosResponse<Models.Region>
+  > | null>(null)
+
   useEffect(() => {
-    apiClient.get(`/regions/${regionId}`).then((res) => {
-      setRegion(res.data)
-    })
-    // TODO: エラー処理
+    setResource(findRegion(regionId))
   }, [regionId])
 
   const [showModal, setShowModal] = useState(false)
@@ -44,30 +68,54 @@ const PrefectureList: React.FC<Props> = ({
   }
   const handleCloseModal = () => setShowModal(false)
 
-  const useStyles = makeStyles((theme) => ({
-    appBar: {
-      position: 'relative',
-    },
-    title: {
-      marginLeft: theme.spacing(2),
-      flex: 1,
-    },
-  }))
-
-  const classes = useStyles()
-
   const handleClickTrack = (track: Models.OffRoadTrack) => {
     handleSelectTrack(track)
     handleCloseModal()
     onClose()
   }
 
+  const Prefectures: React.FC<PrefecturesProps> = ({ resource }) => {
+    const region = resource?.read().data
+    return (
+      <>
+        <List>
+          {region &&
+            region.prefectures.map((prefecture) => (
+              <ListItem button key={prefecture.id}>
+                <ListItemText
+                  primary={prefecture.name}
+                  secondary={`登録コース: ${prefecture.offRoadTracks.length} 件`}
+                  onClick={() => handleClick(prefecture)}
+                />
+              </ListItem>
+            ))}
+        </List>
+        <List>
+          <ListItem>
+            <Button variant="outlined" fullWidth onClick={onClose}>
+              戻る
+            </Button>
+          </ListItem>
+        </List>
+        <Dialog fullScreen open={showModal} onClose={handleCloseModal}>
+          <TrackList
+            prefecture={clickedPrefecture}
+            onClose={handleCloseModal}
+            onClickTrack={(track: Models.OffRoadTrack) =>
+              handleClickTrack(track)
+            }
+          />
+        </Dialog>
+      </>
+    )
+  }
+
   return (
-    <React.Fragment>
+    <>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            {region && `${region.name}のモトクロスコース一覧`}
+            {`${regionName}のモトクロスコース一覧`}
           </Typography>
           <IconButton
             edge="start"
@@ -80,33 +128,10 @@ const PrefectureList: React.FC<Props> = ({
           </IconButton>
         </Toolbar>
       </AppBar>
-      <List>
-        {region &&
-          region.prefectures.map((prefecture) => (
-            <ListItem button key={prefecture.id}>
-              <ListItemText
-                primary={prefecture.name}
-                secondary={`登録コース: ${prefecture.offRoadTracks.length} 件`}
-                onClick={() => handleClick(prefecture)}
-              />
-            </ListItem>
-          ))}
-      </List>
-      <List>
-        <ListItem>
-          <Button variant="outlined" fullWidth onClick={onClose}>
-            戻る
-          </Button>
-        </ListItem>
-      </List>
-      <Dialog fullScreen open={showModal} onClose={handleCloseModal}>
-        <TrackList
-          prefecture={clickedPrefecture}
-          onClose={handleCloseModal}
-          onClickTrack={(track: Models.OffRoadTrack) => handleClickTrack(track)}
-        />
-      </Dialog>
-    </React.Fragment>
+      <Suspense fallback={<InnerLoading loading />}>
+        <Prefectures resource={resource} />
+      </Suspense>
+    </>
   )
 }
 

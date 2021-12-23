@@ -33,11 +33,11 @@ const RegionList: React.FC = () => {
     apiClient.get('/regions').then((response) => setRegions(response.data))
   }, [])
 
-  const [regionId, setRegionId] = useState<null | number>(null)
+  const [region, setRegion] = useState<Models.Region>({} as Models.Region)
   const [showModal, setShowModal] = useState(false)
   const handleClick = (region: Models.Region) => {
     setShowModal(true)
-    setRegionId(region.id)
+    setRegion(region)
   }
   const handleCloseModal = () => setShowModal(false)
 
@@ -68,11 +68,12 @@ const RegionList: React.FC = () => {
           </List>
           <Dialog
             fullScreen
-            open={showModal && !!regionId}
+            open={showModal && !!region.id}
             onClose={handleCloseModal}
           >
             <PrefectureList
-              regionId={regionId}
+              regionId={region.id}
+              regionName={region.name}
               onClose={handleCloseModal}
               handleSelectTrack={(track) => history.push(`/tracks/${track.id}`)}
             />
