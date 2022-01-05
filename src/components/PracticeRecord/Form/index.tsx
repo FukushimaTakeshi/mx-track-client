@@ -65,6 +65,20 @@ const usePracticeRecordForm = () => {
   }
 }
 
+const setRecentTrack = (track: Models.OffRoadTrack) => {
+  const recentTracks = localStorage.getItem('recent-tracks')
+  let newRecentTracks = []
+  if (recentTracks) {
+    const currentTracks: Models.OffRoadTrack[] = JSON.parse(recentTracks)
+    const tracks = currentTracks.filter(({ id }) => id !== track.id)
+    tracks.unshift(track)
+    newRecentTracks = tracks.length > 5 ? tracks.slice(0, 5) : tracks
+  } else {
+    newRecentTracks.push(track)
+  }
+  localStorage.setItem('recent-tracks', JSON.stringify(newRecentTracks))
+}
+
 const Form: React.FC = () => {
   const classes = useStyles()
   const form = usePracticeRecordForm()
@@ -85,7 +99,10 @@ const Form: React.FC = () => {
     const request = id
       ? apiClientWithAuth.put(`/practice_records/${id}`, params)
       : apiClientWithAuth.post(`/practice_records/`, params)
-    return request.then(() => setSuccess(true))
+    return request.then(() => {
+      setRecentTrack(form.offRoadTrack.value)
+      setSuccess(true)
+    })
   }, validator)
 
   useEffect(() => {

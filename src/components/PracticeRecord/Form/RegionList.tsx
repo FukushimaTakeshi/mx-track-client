@@ -18,6 +18,7 @@ import { apiClient } from '../../../lib/api_client'
 import { Resource } from '../../../lib/resource'
 import InnerLoading from '../../Spinner/InnerLoading'
 import PrefectureList from '../../Track/PrefectureList'
+import RecentTrackList from '../../Track/RecentTrackList'
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -112,6 +113,7 @@ const RegionList: React.FC<Props> = ({ onClose, handleSelectTrack }) => {
           </IconButton>
         </Toolbar>
       </AppBar>
+      <RecentTrackList onClickTrack={_handleSelectTrack} />
       <Suspense fallback={<InnerLoading />}>
         <Regions resource={resource} />
       </Suspense>
