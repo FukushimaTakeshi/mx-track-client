@@ -64,7 +64,7 @@ const PeriodicMaintenanceForm: React.FC = () => {
   useEffect(() => {
     apiClient.get('/maintenance_menus').then((response) => {
       setMaintenanceMenus(response.data)
-      if (!form.menu.value.id) {
+      if (!id) {
         form.menu.setValue(response.data[0])
       }
     })
