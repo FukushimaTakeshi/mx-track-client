@@ -274,18 +274,6 @@ export const Dashboard: React.FC = ({ children }) => {
             </ListItem>
           </Link>
           <Link
-            to="/vehicles/?to=maintenance-records"
-            className={classes.link}
-            onClick={handleDrawerClose}
-          >
-            <ListItem button>
-              <ListItemIcon>
-                <HistoryIcon />
-              </ListItemIcon>
-              <ListItemText primary="メンテナンス履歴" />
-            </ListItem>
-          </Link>
-          <Link
             to="/practice_records/new"
             className={classes.link}
             onClick={handleDrawerClose}
@@ -307,6 +295,18 @@ export const Dashboard: React.FC = ({ children }) => {
                 <BuildIcon />
               </ListItemIcon>
               <ListItemText primary="整備を記録する" />
+            </ListItem>
+          </Link>
+          <Link
+            to="/vehicles/?to=maintenance-records"
+            className={classes.link}
+            onClick={handleDrawerClose}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <HistoryIcon />
+              </ListItemIcon>
+              <ListItemText primary="整備履歴" />
             </ListItem>
           </Link>
           <Link
