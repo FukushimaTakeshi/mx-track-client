@@ -39,7 +39,7 @@ const OperationTime: React.FC<Props> = ({
     <>
       <Typography
         variant={isExceeding ? 'body1' : 'subtitle2'}
-        color={isExceeding ? 'secondary' : 'initial'}
+        color={isExceeding ? 'error' : 'initial'}
       >
         {`${totalOperationTime.totalOperationHours}:${zeroPadding(
           totalOperationTime.totalOperationMinutes
