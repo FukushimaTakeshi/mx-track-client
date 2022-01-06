@@ -7,7 +7,7 @@ import {
   Paper,
   Typography,
 } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles'
 import firebase from 'firebase/app'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
@@ -39,7 +39,7 @@ const Login: React.FC = () => {
             'success : ' + result.user.displayName + 'さんでログインしました'
           )
         }
-        history.push('/mypage')
+        history.push('/dashboard')
       })
       .catch((error) => {
         alert(error.message)

@@ -262,7 +262,7 @@ export const Dashboard: React.FC = ({ children }) => {
         </div>
         <List>
           <Link
-            to="/mypage"
+            to="/dashboard"
             className={classes.link}
             onClick={handleDrawerClose}
           >
@@ -270,7 +270,7 @@ export const Dashboard: React.FC = ({ children }) => {
               <ListItemIcon>
                 <TimelineIcon />
               </ListItemIcon>
-              <ListItemText primary="アクティビティ" />
+              <ListItemText primary="ダッシュボード" />
             </ListItem>
           </Link>
           <Link

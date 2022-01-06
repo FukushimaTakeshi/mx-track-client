@@ -5,7 +5,7 @@ import { Resource } from '../../lib/resource'
 import PracticeChart, { IPracticeRecords } from '../Chart/PracticeChart'
 import PracticeRecordList from '../PracticeRecord/PracticeRecordList'
 import InnerLoading from '../Spinner/InnerLoading'
-import { Dashboard } from '../templates/Dashboard'
+import { Dashboard as TemplateDashboard } from '../templates/Dashboard'
 import Title from '../Title'
 
 const resources = {
@@ -23,7 +23,7 @@ const resources = {
     ),
 }
 
-const MyPage: React.FC = () => {
+const Dashboard: React.FC = () => {
   const [chartResource, setChartResource] = useState<Resource<
     AxiosResponse<IPracticeRecords>
   > | null>(null)
@@ -40,20 +40,20 @@ const MyPage: React.FC = () => {
   }, [])
 
   return (
-    <Dashboard>
-      <Title>my activity</Title>
+    <TemplateDashboard>
+      <Title>My Activity</Title>
       <Suspense fallback={<InnerLoading />}>
         <PracticeChart resource={chartResource} />
       </Suspense>
-      <Title>activities</Title>
+      <Title>走行履歴一覧</Title>
       <Suspense fallback={<InnerLoading />}>
         <PracticeRecordList
           resource={listResource}
           reloadResource={reloadResource}
         />
       </Suspense>
-    </Dashboard>
+    </TemplateDashboard>
   )
 }
 
-export default MyPage
+export default Dashboard

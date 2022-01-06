@@ -10,12 +10,12 @@ import './App.css'
 import { AuthProvider } from './auth/AuthProvider'
 import Login from './auth/Login'
 import PrivateRoute from './auth/PrivateRoute'
+import Dashboard from './components/pages/Dashboard'
 import Home from './components/pages/Home'
 import MaintenanceForm from './components/pages/MaintenanceForm'
 import MaintenanceHistory from './components/pages/MaintenanceHistory'
 import MaintenanceItemForm from './components/pages/MaintenanceItemForm'
 import MaintenanceItemList from './components/pages/MaintenanceItemList'
-import MyPage from './components/pages/MyPage'
 import PeriodicMaintenanceForm from './components/pages/PeriodicMaintenanceForm'
 import PeriodicMaintenanceList from './components/pages/PeriodicMaintenanceList'
 import RegionList from './components/pages/RegionList'
@@ -55,7 +55,7 @@ const App: React.FC = () => (
               component={MaintenanceItemForm}
             />
             <PrivateRoute exact path="/vehicles/new" component={VehicleForm} />
-            <PrivateRoute exact path="/mypage" component={MyPage} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/user/edit" component={UserEdit} />
             <PrivateRoute
               exact

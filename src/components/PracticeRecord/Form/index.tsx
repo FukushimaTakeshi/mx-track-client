@@ -151,7 +151,7 @@ const Form: React.FC = () => {
       <HandleFetch loading={save.isExecuting}>
         <SuccessNotification
           open={success}
-          onClose={() => history.push('/mypage')}
+          onClose={() => history.push('/dashboard')}
           message="登録しました !"
         />
         <ErrorNotification task={save} />
