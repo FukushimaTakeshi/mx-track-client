@@ -10,6 +10,7 @@ import {
 } from '@mui/material'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { apiClientWithAuth } from '../../lib/api_client'
 import SuccessNotification from '../Notification/SuccessNotification'
 
 type Props = {
@@ -29,7 +30,8 @@ const MaintenanceRecord: React.FC<Props> = ({
 }) => {
   const [deleted, setDeleted] = useState(false)
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    await apiClientWithAuth.delete(`/maintenance_records/${id}`)
     onDelete()
     setDeleted(true)
   }
