@@ -36,6 +36,7 @@ import { Link } from 'react-router-dom'
 import { AuthContext } from '../../auth/AuthProvider'
 import Restricted from '../../auth/Restricted'
 import { useClickInside } from '../../hooks/useClickInside'
+import AdditionalSpeedDial from './AdditionalSpeedDial'
 
 const Copyright = () => {
   return (
@@ -391,6 +392,7 @@ export const Dashboard: React.FC = ({ children }) => {
           )}
         </List>
       </SwipeableDrawer>
+
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container} ref={clickRef}>
@@ -403,6 +405,7 @@ export const Dashboard: React.FC = ({ children }) => {
               </Grid>
             </Grid>
           ))}
+          <AdditionalSpeedDial />
           <Box pt={4}>
             <Copyright />
           </Box>
