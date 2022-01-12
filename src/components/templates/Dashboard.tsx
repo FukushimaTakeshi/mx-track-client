@@ -138,7 +138,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const Dashboard: React.FC = ({ children }) => {
+type Props = {
+  disableSpeedDial?: boolean
+}
+export const Dashboard: React.FC<Props> = ({ children, disableSpeedDial }) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const handleDrawerOpen = () => setOpen(true)
@@ -405,7 +408,7 @@ export const Dashboard: React.FC = ({ children }) => {
               </Grid>
             </Grid>
           ))}
-          <AdditionalSpeedDial />
+          {!disableSpeedDial && <AdditionalSpeedDial />}
           <Box pt={4}>
             <Copyright />
           </Box>
