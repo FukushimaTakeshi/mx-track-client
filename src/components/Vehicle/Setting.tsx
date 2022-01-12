@@ -120,8 +120,16 @@ const Setting: React.FC<Props> = ({ id, onClose }) => {
                 </span>
                 <br />
                 <span>
-                  新車の場合は0時間0分、中古車などは現在の稼働時間を設定してください。
+                  新車の場合は0時間0分のまま、中古車などは現在の稼働時間を設定してください。
                 </span>
+                <br />
+                <p>
+                  アワーメーターなどで管理していない場合はだいたいの時間を設定してください。
+                  <br />
+                  例: 1回の練習で1h、ひと月4回のペースで1年間練習していた場合
+                  <br />
+                  1h × 4回 × 12ヶ月 ＝ 登録時の稼働時間: 48h
+                </p>
               </Typography>
             </Grid>
 
@@ -144,6 +152,9 @@ const Setting: React.FC<Props> = ({ id, onClose }) => {
             disabled={save.isExecuting}
           >
             更新
+          </Button>
+          <Button variant="outlined" fullWidth onClick={handleClose}>
+            戻る
           </Button>
         </Container>
       </HandleFetch>

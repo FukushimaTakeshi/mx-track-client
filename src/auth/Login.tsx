@@ -11,6 +11,7 @@ import makeStyles from '@mui/styles/makeStyles'
 import firebase from 'firebase/app'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { apiClient } from '../lib/api_client'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,23 +28,33 @@ const Login: React.FC = () => {
   const classes = useStyles()
   const history = useHistory()
 
-  const handleSignInWithGoogle = () => {
+  const handleSignInWithGoogle = async () => {
     const provider = new firebase.auth.GoogleAuthProvider()
-    // TODO: いい感じにする
-    firebase
+    const userCredential = await firebase
       .auth()
       .signInWithPopup(provider)
-      .then((result) => {
-        if (result.user) {
-          alert(
-            'success : ' + result.user.displayName + 'さんでログインしました'
-          )
-        }
-        history.push('/dashboard')
-      })
       .catch((error) => {
-        alert(error.message)
+        throw error
       })
+
+    if (userCredential.user) {
+      alert(
+        'success : ' +
+          userCredential.user.displayName +
+          'さんでログインしました'
+      )
+      const token = await userCredential.user.getIdToken(true)
+      const userVehicle = await apiClient.get('/user_vehicles/', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (userVehicle.data.length) {
+        history.push('/dashboard')
+      } else {
+        // TODO: いい感じにする
+        alert('はじめにバイクを登録してください。')
+        history.push('/vehicles/edit')
+      }
+    }
   }
 
   return (

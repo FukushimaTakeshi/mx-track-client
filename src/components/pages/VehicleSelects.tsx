@@ -78,6 +78,10 @@ const VehicleSelects: React.FC = () => {
       },
     ])
     handle.resetState()
+    // TODO: いい感じにする
+    alert(
+      '登録しました。[稼働時間を設定]から現在時点の稼働時間を設定してください。'
+    )
   }
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
