@@ -95,7 +95,7 @@ const TimeOrDecimalForm: React.FC<Props> = ({
           <FormControlLabel
             value="decimal"
             control={<Radio />}
-            label={<Typography variant="caption">小数点</Typography>}
+            label={<Typography variant="caption">小数点 [1/10]</Typography>}
           />
         </RadioGroup>
       </Grid>

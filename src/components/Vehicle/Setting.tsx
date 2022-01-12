@@ -6,8 +6,6 @@ import {
   Divider,
   Grid,
   IconButton,
-  InputAdornment,
-  TextField,
   Toolbar,
   Typography,
 } from '@mui/material'
@@ -19,6 +17,7 @@ import { apiClientWithAuth } from '../../lib/api_client'
 import ErrorNotification from '../Notification/ErrorNotification'
 import SuccessNotification from '../Notification/SuccessNotification'
 import HandleFetch from '../Spinner/HandleFetch'
+import TimeOrDecimalForm from '../Time/TimeOrDecimalForm'
 
 type Props = {
   id: number
@@ -128,40 +127,11 @@ const Setting: React.FC<Props> = ({ id, onClose }) => {
 
             <Grid item xs={12}>
               <Divider />
-              <Typography variant="caption" color="textSecondary">
-                登録時の稼働時間
-              </Typography>
-              <Grid container justifyContent="flex-end" spacing={2}>
-                <Grid item xs={4}>
-                  <TextField
-                    name="initialHours"
-                    type="number"
-                    value={form.initialHours.value}
-                    onChange={form.initialHours.setValueFromEvent}
-                    variant="outlined"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">時間</InputAdornment>
-                      ),
-                    }}
-                    InputLabelProps={{ shrink: true }}
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField
-                    name="initialMinutes"
-                    type="number"
-                    value={form.initialMinutes.value}
-                    onChange={form.initialMinutes.setValueFromEvent}
-                    variant="outlined"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">分</InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-              </Grid>
+              <TimeOrDecimalForm
+                title="登録時の稼働時間"
+                hours={form.initialHours}
+                minutes={form.initialMinutes}
+              />
             </Grid>
           </Grid>
           <Button
