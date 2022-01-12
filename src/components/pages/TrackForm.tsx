@@ -144,7 +144,7 @@ const TrackForm: React.FC = () => {
                 </Button>
                 <Button
                   fullWidth
-                  variant="contained"
+                  variant="outlined"
                   onClick={() => history.goBack()}
                 >
                   戻る
