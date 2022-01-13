@@ -28,6 +28,7 @@ import VehicleForm from './components/pages/VehicleForm'
 import VehicleSelects from './components/pages/VehicleSelects'
 import Form from './components/PracticeRecord/Form'
 import NotFound from './components/templates/NotFound'
+import ScrollToTop from './lib/ScrollTop'
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -41,6 +42,7 @@ const App: React.FC = () => (
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <Router>
+          <ScrollToTop />
           <Switch>
             <Route exact path="/" component={Home} />
             <PrivateRoute exact path="/regions" component={RegionList} />
