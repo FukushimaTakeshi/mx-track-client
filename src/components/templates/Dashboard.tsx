@@ -32,7 +32,7 @@ import {
 import makeStyles from '@mui/styles/makeStyles'
 import clsx from 'clsx'
 import React, { useContext, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { AuthContext } from '../../auth/AuthProvider'
 import Restricted from '../../auth/Restricted'
 import { useClickInside } from '../../hooks/useClickInside'
@@ -143,6 +143,7 @@ type Props = {
 }
 export const Dashboard: React.FC<Props> = ({ children, disableSpeedDial }) => {
   const classes = useStyles()
+  const history = useHistory()
   const [open, setOpen] = useState(false)
   const handleDrawerOpen = () => setOpen(true)
   const handleDrawerClose = () => setOpen(false)
@@ -178,15 +179,18 @@ export const Dashboard: React.FC<Props> = ({ children, disableSpeedDial }) => {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography
             component="h1"
             variant="h6"
             color="inherit"
             noWrap
             className={classes.title}
+            onClick={() => history.push('/')}
           >
             MX Track
           </Typography>
+
           {currentUser && (
             <>
               <IconButton
@@ -410,6 +414,16 @@ export const Dashboard: React.FC<Props> = ({ children, disableSpeedDial }) => {
           ))}
           {!disableSpeedDial && <AdditionalSpeedDial />}
           <Box pt={4}>
+            <Typography variant="subtitle2" align="center" component="p">
+              <Link to="/term" className={classes.link}>
+                利用規約
+              </Link>
+            </Typography>
+            <Typography variant="subtitle2" align="center" component="p">
+              <Link to="/privacy" className={classes.link}>
+                プライバシーポリシー
+              </Link>
+            </Typography>
             <Copyright />
           </Box>
         </Container>
