@@ -139,6 +139,7 @@ const Setting: React.FC<Props> = ({ id, onClose }) => {
                 title="登録時の稼働時間"
                 hours={form.initialHours}
                 minutes={form.initialMinutes}
+                maximumHours={300}
               />
             </Grid>
           </Grid>

@@ -32,6 +32,7 @@ type Props = {
   open: boolean
   hours: number
   minutes: number
+  maximumHours: number
   showTotalHours?: boolean
   onClose: () => void
   onSubmit(hours: number, minutes: number): void
@@ -41,6 +42,7 @@ const TimesDialog: React.FC<Props> = ({
   open,
   hours,
   minutes,
+  maximumHours,
   showTotalHours,
   onClose,
   onSubmit,
@@ -80,7 +82,7 @@ const TimesDialog: React.FC<Props> = ({
                 onChange={form.hours.setValueFromEvent}
                 input={<Input id="hours-dialog" />}
               >
-                {[...Array(24).keys()].map((value) => (
+                {[...Array(maximumHours + 1).keys()].map((value) => (
                   <option key={`times-hour-${value}`} value={value}>
                     {value}
                   </option>

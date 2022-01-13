@@ -16,6 +16,7 @@ type Props = {
   title: string
   hours: Form<number>
   minutes: Form<number>
+  maximumHours?: number
   showTotalHours?: boolean
   secondaryContent?(timeFormat: string): React.ReactNode
 }
@@ -29,6 +30,7 @@ const TimeOrDecimalForm: React.FC<Props> = ({
   title,
   hours,
   minutes,
+  maximumHours = 10,
   showTotalHours,
   secondaryContent,
 }) => {
@@ -125,7 +127,7 @@ const TimeOrDecimalForm: React.FC<Props> = ({
                       value={hours.value || 0}
                       onChange={hours.setValueFromEvent}
                     >
-                      {[...Array(24).keys()].map((value) => (
+                      {[...Array(maximumHours + 1).keys()].map((value) => (
                         <option key={value} value={value}>
                           {value}
                         </option>
@@ -179,6 +181,7 @@ const TimeOrDecimalForm: React.FC<Props> = ({
           open={openTimesDialog}
           hours={hours.value}
           minutes={minutes.value}
+          maximumHours={maximumHours}
           showTotalHours={showTotalHours}
           onClose={handleCloseTimesDialog}
           onSubmit={handleSubmitTimes}
