@@ -63,7 +63,7 @@ const Privacy = (): JSX.Element =>
 ## 第９条（お問い合わせ窓口）
 本ポリシーに関するお問い合わせは，下記の窓口までお願いいたします。
 
-Eメールアドレス：
+[お問い合わせフォーム](https://forms.gle/BpT51ztLTfufLVov5)
 
 以上
 `)

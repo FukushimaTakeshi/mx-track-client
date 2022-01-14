@@ -3,6 +3,7 @@ import BuildIcon from '@mui/icons-material/Build'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import CreateIcon from '@mui/icons-material/Create'
 import HistoryIcon from '@mui/icons-material/History'
+import MailOutlineIcon from '@mui/icons-material/MailOutline'
 import MenuIcon from '@mui/icons-material/Menu'
 import PersonIcon from '@mui/icons-material/Person'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
@@ -398,6 +399,24 @@ export const Dashboard: React.FC<Props> = ({ children, disableSpeedDial }) => {
             </Link>
           )}
         </List>
+        <Divider />
+        <List>
+          <ListItem>
+            <a
+              href="https://forms.gle/BpT51ztLTfufLVov5"
+              target="_blank"
+              className={classes.link}
+              rel="noreferrer"
+            >
+              <ListItem button>
+                <ListItemIcon>
+                  <MailOutlineIcon />
+                </ListItemIcon>
+                <ListItemText primary="要望 / お問い合わせ" />
+              </ListItem>
+            </a>
+          </ListItem>
+        </List>
       </SwipeableDrawer>
 
       <main className={classes.content}>
@@ -414,6 +433,16 @@ export const Dashboard: React.FC<Props> = ({ children, disableSpeedDial }) => {
           ))}
           {!disableSpeedDial && <AdditionalSpeedDial />}
           <Box pt={4}>
+            <Typography variant="subtitle2" align="center" component="p">
+              <a
+                href="https://forms.gle/BpT51ztLTfufLVov5"
+                target="_blank"
+                className={classes.link}
+                rel="noreferrer"
+              >
+                お問い合わせ
+              </a>
+            </Typography>
             <Typography variant="subtitle2" align="center" component="p">
               <Link to="/term" className={classes.link}>
                 利用規約
