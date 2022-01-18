@@ -15,8 +15,9 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
   const [userRole, setUserRole] = useState(null)
 
-  const logout = () => {
-    auth.auth().signOut()
+  const logout = async () => {
+    window.location.href = '/'
+    await auth.auth().signOut()
     setCurrentUser(null)
     setUserRole(null)
     localStorage.removeItem('token')

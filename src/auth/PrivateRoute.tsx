@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Redirect, Route, RouteProps } from 'react-router-dom'
+import { Route, RouteProps, useHistory } from 'react-router-dom'
+import InformationNotification from '../components/Notification/InformationNotification'
 import Loading from '../components/Spinner/Loading'
 import { AuthContext } from './AuthProvider'
 
@@ -16,11 +17,22 @@ const PrivateRoute: React.FC<RouteProps> = (props) => {
     getUser()
   }, [verifyLoginUser])
 
+  const Notification = () => {
+    const history = useHistory()
+    return (
+      <InformationNotification
+        open={true}
+        onClose={() => history.push('/login')}
+        message={'ログインして下さい'}
+      />
+    )
+  }
+
   return authChecked ? (
     currentUser ? (
       <Route {...props} />
     ) : (
-      <Redirect to="/" />
+      <Notification />
     )
   ) : (
     <Loading loading={!authChecked} />
