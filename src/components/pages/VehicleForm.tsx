@@ -72,11 +72,7 @@ const VehicleForm: React.FC = () => {
   const handleChangeBrand = (event: SelectChangeEvent<number>) => {
     form.brand.setValueFromModels(event, brands)
     apiClient
-      .get(
-        `/models/?brand_id=${
-          (event.target.value as unknown as Models.Brand).id
-        }`
-      )
+      .get(`/models/?brand_id=${event.target.value}`)
       .then((response) => setModels(response.data))
   }
 
