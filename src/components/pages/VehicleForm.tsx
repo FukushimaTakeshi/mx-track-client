@@ -69,8 +69,8 @@ const VehicleForm: React.FC = () => {
     apiClient.get('/brands').then((response) => setBrands(response.data))
   }, [])
 
-  const handleChangeBrand = (event: SelectChangeEvent) => {
-    form.brand.setValueFromEvent(event)
+  const handleChangeBrand = (event: SelectChangeEvent<number>) => {
+    form.brand.setValueFromModels(event, brands)
     apiClient
       .get(
         `/models/?brand_id=${
@@ -123,9 +123,7 @@ const VehicleForm: React.FC = () => {
                       <Select
                         label="メーカー"
                         value={form.brand.value.id}
-                        onChange={(e) =>
-                          form.brand.setValueFromModels(e, brands)
-                        }
+                        onChange={handleChangeBrand}
                       >
                         {brands.map((brand, i) => (
                           <MenuItem key={i} value={brand.id}>
