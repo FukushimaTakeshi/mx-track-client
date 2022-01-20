@@ -122,8 +122,10 @@ const VehicleForm: React.FC = () => {
                       <InputLabel required>メーカー</InputLabel>
                       <Select
                         label="メーカー"
-                        value={form.brand.value.name}
-                        onChange={handleChangeBrand}
+                        value={form.brand.value.id}
+                        onChange={(e) =>
+                          form.brand.setValueFromModels(e, brands)
+                        }
                       >
                         {brands.map((brand, i) => (
                           <MenuItem key={i} value={brand.id}>
