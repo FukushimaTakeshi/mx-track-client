@@ -2,16 +2,16 @@ import {
   Box,
   CardActionArea,
   CardContent,
-  CardMedia,
   Container,
   Paper,
   Typography,
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
-import firebase from 'firebase/app'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
 import React from 'react'
-import { useHistory } from 'react-router-dom'
-import { apiClient } from '../lib/api_client'
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
+import { auth } from './auth'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -24,38 +24,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+// Configure FirebaseUI.
+const uiConfig = {
+  signInFlow: 'popup',
+  signInSuccessUrl: '/sign-up',
+  signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+}
+
 const Login: React.FC = () => {
   const classes = useStyles()
-  const history = useHistory()
-
-  const handleSignInWithGoogle = async () => {
-    const provider = new firebase.auth.GoogleAuthProvider()
-    const userCredential = await firebase
-      .auth()
-      .signInWithPopup(provider)
-      .catch((error) => {
-        throw error
-      })
-
-    if (userCredential.user) {
-      alert(
-        'success : ' +
-          userCredential.user.displayName +
-          'さんでログインしました'
-      )
-      const token = await userCredential.user.getIdToken(true)
-      const userVehicle = await apiClient.get('/user_vehicles/', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (userVehicle.data.length) {
-        history.push('/dashboard')
-      } else {
-        // TODO: いい感じにする
-        alert('はじめにバイクを登録してください。')
-        history.push('/vehicles/edit')
-      }
-    }
-  }
 
   return (
     <Box display={'flex'}>
@@ -71,11 +48,10 @@ const Login: React.FC = () => {
               <Typography variant="body2" component="p">
                 新規登録/ログイン どちらもこちらのボタンから可能です。
               </Typography>
-              <CardMedia
-                className={classes.media}
-                image={'../btn_google_signin.png'}
-                onClick={handleSignInWithGoogle}
-              ></CardMedia>
+              <StyledFirebaseAuth
+                uiConfig={uiConfig}
+                firebaseAuth={auth.auth()}
+              />
             </CardContent>
           </CardActionArea>
         </Paper>

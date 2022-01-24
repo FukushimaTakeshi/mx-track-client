@@ -10,6 +10,7 @@ import './App.css'
 import { AuthProvider } from './auth/AuthProvider'
 import Login from './auth/Login'
 import PrivateRoute from './auth/PrivateRoute'
+import SignUp from './auth/SignUp'
 import Privacy from './components/Informations/Privacy'
 import Term from './components/Informations/Term'
 import Dashboard from './components/pages/Dashboard'
@@ -100,6 +101,7 @@ const App: React.FC = () => (
               component={MaintenanceForm}
             />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/sign-up" component={SignUp} />
             <Route exact path="/term" component={Term} />
             <Route exact path="/privacy" component={Privacy} />
             <Route path="*" component={NotFound} />
