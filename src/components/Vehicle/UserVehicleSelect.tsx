@@ -1,5 +1,14 @@
-import { FormControl, Grid, InputLabel, Select } from '@mui/material'
+import {
+  Alert,
+  Backdrop,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  Select,
+} from '@mui/material'
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 import { Form } from '../../hooks/useForm'
 import { apiClientWithAuth } from '../../lib/api_client'
 
@@ -32,6 +41,32 @@ const UserVehicleSelect: React.FC<Props> = ({
     setCurrentVehicle && userVehicles.length && fetchCurrentVehicles()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userVehicles, setCurrentVehicle])
+
+  const HasNotVehicles: React.FC = () => {
+    const history = useHistory()
+    const handleClickAlert = () => history.push('/vehicles/edit')
+    return (
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open
+      >
+        <Alert
+          severity="info"
+          action={
+            <Button color="inherit" size="small" onClick={handleClickAlert}>
+              OK
+            </Button>
+          }
+        >
+          はじめにバイクを登録して下さい
+        </Alert>
+      </Backdrop>
+    )
+  }
+
+  if (!userVehicles.length) {
+    return <HasNotVehicles />
+  }
 
   return (
     <Grid item xs={12}>
