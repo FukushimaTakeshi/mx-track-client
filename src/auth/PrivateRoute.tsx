@@ -11,11 +11,15 @@ const PrivateRoute: React.FC<RouteProps> = (props) => {
 
   useEffect(() => {
     const getUser = async () => {
-      await verifyLoginUser()
-      setAuthChecked(true)
+      if (!currentUser) {
+        await verifyLoginUser()
+        setAuthChecked(true)
+      } else {
+        setAuthChecked(true)
+      }
     }
     getUser()
-  }, [verifyLoginUser])
+  }, [currentUser, verifyLoginUser])
 
   const Notification = () => {
     const history = useHistory()
