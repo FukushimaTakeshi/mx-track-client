@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react'
-import { useHistory } from 'react-router'
 import { apiClient, apiClientWithAuth } from '../lib/api_client'
 import { auth } from './auth'
 
@@ -13,7 +12,6 @@ interface IAuthContext {
 export const AuthContext = React.createContext({} as IAuthContext)
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const history = useHistory()
   const [currentUser, setCurrentUser] = useState(null)
   const [userRole, setUserRole] = useState(null)
 
@@ -39,7 +37,7 @@ export const AuthProvider: React.FC = ({ children }) => {
             setCurrentUser(null)
             setUserRole(null)
             alert('認証に失敗しました。もう一度ログインして下さい。')
-            history.push('/login')
+            window.location.href = '/login'
           }
         } else {
           setCurrentUser(null)
@@ -49,7 +47,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         resolve()
       })
     })
-  }, [currentUser, userRole, history])
+  }, [currentUser, userRole])
 
   return (
     <AuthContext.Provider
