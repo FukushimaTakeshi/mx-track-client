@@ -24,7 +24,7 @@ const useStyles = makeStyles({
   table: { minWidth: 750 },
 })
 
-const StyledTableCell = withStyles({ root: { padding: '1.6em' } })(TableCell)
+const StyledTableCell = withStyles({ root: { padding: '1.3em' } })(TableCell)
 
 type Props = {
   resource: Resource<AxiosResponse<Models.PracticeRecord[]>> | null
