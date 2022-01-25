@@ -17,16 +17,20 @@ type Props = {
   setCurrentVehicle: boolean
 }
 
+// TODO: Suspenseの実装
 const UserVehicleSelect: React.FC<Props> = ({
   userVehicle,
   setCurrentVehicle,
 }) => {
   const [userVehicles, setUserVehicles] = useState<Models.UserVehicle[]>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    apiClientWithAuth
-      .get('/user_vehicles/')
-      .then((response) => setUserVehicles(response.data))
+    setLoading(true)
+    apiClientWithAuth.get('/user_vehicles/').then((response) => {
+      setUserVehicles(response.data)
+      setLoading(false)
+    })
   }, [])
 
   useEffect(() => {
@@ -39,8 +43,7 @@ const UserVehicleSelect: React.FC<Props> = ({
       })
     }
     setCurrentVehicle && userVehicles.length && fetchCurrentVehicles()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userVehicles, setCurrentVehicle])
+  }, [userVehicle, userVehicles, setCurrentVehicle])
 
   const HasNotVehicles: React.FC = () => {
     const history = useHistory()
@@ -64,7 +67,7 @@ const UserVehicleSelect: React.FC<Props> = ({
     )
   }
 
-  if (!userVehicles.length) {
+  if (!loading && !userVehicles.length) {
     return <HasNotVehicles />
   }
 
