@@ -73,10 +73,10 @@ const PracticeRecordList: React.FC<Props> = ({ resource, reloadResource }) => {
           <TableHead>
             <TableRow>
               <TableCell>日付</TableCell>
-              <TableCell align="right">コース</TableCell>
-              <TableCell align="right">バイク</TableCell>
-              <TableCell align="right">走行時間</TableCell>
-              <TableCell align="right">メモ</TableCell>
+              <TableCell align="center">コース</TableCell>
+              <TableCell align="center">バイク</TableCell>
+              <TableCell align="center">走行時間</TableCell>
+              <TableCell align="center">メモ</TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
@@ -87,8 +87,18 @@ const PracticeRecordList: React.FC<Props> = ({ resource, reloadResource }) => {
                   <StyledTableCell component="th" scope="row">
                     {row.practiceDate}
                   </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.offRoadTrack.name}
+                  <StyledTableCell>
+                    <div style={{ width: 150 }}>
+                      <Box
+                        component="div"
+                        textOverflow="ellipsis"
+                        overflow="hidden"
+                        bgcolor="background.paper"
+                        whiteSpace="nowrap"
+                      >
+                        {row.offRoadTrack.name}
+                      </Box>
+                    </div>
                   </StyledTableCell>
                   <StyledTableCell align="right">
                     {row.userVehicle.vehicle.modelName}
