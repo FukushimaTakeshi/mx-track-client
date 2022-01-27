@@ -1,6 +1,7 @@
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import React, { useCallback, useState } from 'react'
 import { apiClient, apiClientWithAuth } from '../lib/api_client'
-import { auth } from './auth'
+import { firebaseApp } from './auth'
 
 interface IAuthContext {
   logout: () => void
@@ -15,9 +16,11 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
   const [userRole, setUserRole] = useState(null)
 
+  const auth = getAuth(firebaseApp)
+
   const logout = async () => {
     window.location.href = '/'
-    await auth.auth().signOut()
+    await auth.signOut()
     setCurrentUser(null)
     setUserRole(null)
     localStorage.removeItem('token')
@@ -25,7 +28,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const verifyLoginUser = useCallback((): Promise<void> => {
     return new Promise((resolve) => {
-      auth.auth().onAuthStateChanged(async (user) => {
+      onAuthStateChanged(auth, async (user) => {
         if (user && (!currentUser || !userRole)) {
           const token = localStorage.getItem('token')
           try {
@@ -47,7 +50,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         resolve()
       })
     })
-  }, [currentUser, userRole])
+  }, [auth, currentUser, userRole])
 
   return (
     <AuthContext.Provider

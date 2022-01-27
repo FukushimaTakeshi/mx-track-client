@@ -11,7 +11,7 @@ import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import React from 'react'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
-import { auth } from './auth'
+import { firebaseApp } from './auth'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -50,7 +50,7 @@ const Login: React.FC = () => {
               </Typography>
               <StyledFirebaseAuth
                 uiConfig={uiConfig}
-                firebaseAuth={auth.auth()}
+                firebaseAuth={firebaseApp.auth()}
               />
             </CardContent>
           </CardActionArea>
