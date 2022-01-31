@@ -7,7 +7,7 @@ import {
   Dialog,
   Grid,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
@@ -212,7 +212,7 @@ const Form: React.FC = () => {
                 </Grid>
 
                 <UserVehicleSelect
-                  userVehicle={form.userVehicle}
+                  userVehicleForm={form.userVehicle}
                   setCurrentVehicle={!id}
                 />
 

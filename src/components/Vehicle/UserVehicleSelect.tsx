@@ -13,13 +13,13 @@ import { Form } from '../../hooks/useForm'
 import { apiClientWithAuth } from '../../lib/api_client'
 
 type Props = {
-  userVehicle: Form<Models.UserVehicle>
+  userVehicleForm: Form<Models.UserVehicle>
   setCurrentVehicle: boolean
 }
 
 // TODO: Suspenseの実装
 const UserVehicleSelect: React.FC<Props> = ({
-  userVehicle,
+  userVehicleForm,
   setCurrentVehicle,
 }) => {
   const [userVehicles, setUserVehicles] = useState<Models.UserVehicle[]>([])
@@ -39,11 +39,12 @@ const UserVehicleSelect: React.FC<Props> = ({
         const foundUserVehicle = userVehicles.find(
           ({ id }) => id === response.data.id
         )
-        foundUserVehicle && userVehicle.setValue(foundUserVehicle)
+        foundUserVehicle && userVehicleForm.setValue(foundUserVehicle)
       })
     }
     setCurrentVehicle && userVehicles.length && fetchCurrentVehicles()
-  }, [userVehicle, userVehicles, setCurrentVehicle])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userVehicles, setCurrentVehicle])
 
   const HasNotVehicles: React.FC = () => {
     const history = useHistory()
@@ -83,14 +84,11 @@ const UserVehicleSelect: React.FC<Props> = ({
           label="バイク"
           fullWidth
           required
-          value={userVehicle.value.id}
-          onChange={(e) => userVehicle.setValueFromModels(e, userVehicles)}
-          inputProps={{
-            id: 'vehicle',
-          }}
+          value={userVehicleForm.value.id}
+          onChange={(e) => userVehicleForm.setValueFromModels(e, userVehicles)}
         >
-          {userVehicles.map((userVehicle) => (
-            <option key={userVehicle.id} value={userVehicle.id}>
+          {userVehicles.map((userVehicle, i) => (
+            <option key={i} value={userVehicle.id}>
               {userVehicle.vehicle.modelName}
             </option>
           ))}

@@ -151,7 +151,7 @@ const MaintenanceForm: React.FC = () => {
                 </Grid>
 
                 <UserVehicleSelect
-                  userVehicle={form.userVehicle}
+                  userVehicleForm={form.userVehicle}
                   setCurrentVehicle={!id}
                 />
 
