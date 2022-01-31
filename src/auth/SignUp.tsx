@@ -24,14 +24,21 @@ const SignUp: React.FC = () => {
       } else {
         idToken && localStorage.setItem('token', idToken)
         const { displayName, email, photoURL } = user
-        await apiClient.post('/users', {
-          token: idToken,
-          name: displayName,
-          email,
-          photoURL,
-        })
-        alert('OK! : ' + user.displayName + 'さんでログインしました')
-        history.push('/dashboard')
+        try {
+          await apiClient.post('/users', {
+            token: idToken,
+            name: displayName,
+            email,
+            photoURL,
+          })
+          alert('OK! : ' + user.displayName + 'さんでログインしました')
+          history.push('/dashboard')
+        } catch (error) {
+          alert(
+            '認証に失敗しました。しばらく時間をおいてから再度お試しください。'
+          )
+          history.push('/')
+        }
       }
     }
     getIdToken()
