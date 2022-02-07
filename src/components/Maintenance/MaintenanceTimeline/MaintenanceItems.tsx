@@ -43,13 +43,23 @@ const MaintenanceItem: React.FC<Props> = ({ resource, onClickDetail }) => {
     return null
   }
 
+  const dates = Array.from(
+    new Set(maintenanceRecords.map((record) => record.maintenanceOn))
+  )
+  const records = dates.map((date) => {
+    const records = maintenanceRecords.filter(
+      (record) => record.maintenanceOn === date
+    )
+    return { date: date, maintenanceRecords: records }
+  })
+
   return (
     <>
-      {maintenanceRecords.map((maintenanceRecord) => (
-        <TimelineItem key={maintenanceRecord.id}>
+      {records.map((maintenanceRecord) => (
+        <TimelineItem key={maintenanceRecord.date}>
           <TimelineOppositeContent className={classes.oppositeContent}>
             <Typography variant="caption" color="textSecondary">
-              {maintenanceRecord.maintenanceOn}
+              {maintenanceRecord.date}
             </Typography>
           </TimelineOppositeContent>
           <TimelineSeparator>
@@ -58,28 +68,36 @@ const MaintenanceItem: React.FC<Props> = ({ resource, onClickDetail }) => {
             </TimelineDot>
             <TimelineConnector />
           </TimelineSeparator>
-          <span
-            className={classes.timelineContent}
-            onClick={() =>
-              onClickDetail(maintenanceRecords, maintenanceRecord.id)
-            }
-          >
+
+          <span className={classes.timelineContent}>
             <TimelineContent>
-              <Typography variant="subtitle2" color="textSecondary">
-                {`${maintenanceRecord.operationHours}:${zeroPadding(
-                  maintenanceRecord.operationMinutes
-                )}`}
-              </Typography>
               <Paper elevation={2} className={classes.paper}>
-                <Typography variant="subtitle1">
-                  {maintenanceRecord.maintenanceMenu.name}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  style={{ whiteSpace: 'pre-line' }}
-                >
-                  {maintenanceRecord.memo}
-                </Typography>
+                {maintenanceRecord.maintenanceRecords.map((record, index) => (
+                  <React.Fragment key={index}>
+                    {index === 0 ? (
+                      <Typography variant="subtitle2" color="textSecondary">
+                        {`${record.operationHours}:${zeroPadding(
+                          record.operationMinutes
+                        )}`}
+                      </Typography>
+                    ) : null}
+
+                    <Typography
+                      variant="subtitle1"
+                      onClick={() =>
+                        onClickDetail(maintenanceRecords, record.id)
+                      }
+                    >
+                      {record.maintenanceMenu.name}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      style={{ whiteSpace: 'pre-line' }}
+                    >
+                      {record.memo}
+                    </Typography>
+                  </React.Fragment>
+                ))}
               </Paper>
             </TimelineContent>
           </span>

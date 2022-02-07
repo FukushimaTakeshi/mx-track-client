@@ -119,7 +119,11 @@ const MaintenanceForm: React.FC = () => {
         <HandleFetch loading={save.isExecuting}>
           <SuccessNotification
             open={success}
-            onClose={() => history.goBack()}
+            onClose={() =>
+              history.push(
+                `/vehicles/${form.userVehicle.value.id}/maintenances/history`
+              )
+            }
             message="更新しました"
           />
           <ErrorNotification task={save} />
