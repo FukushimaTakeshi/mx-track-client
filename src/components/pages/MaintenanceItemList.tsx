@@ -52,6 +52,7 @@ const MaintenanceItemList: React.FC = () => {
 
   useEffect(() => {
     fetchMaintenanceMenus()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [clickedId, setClickedId] = useState<number | null>()
