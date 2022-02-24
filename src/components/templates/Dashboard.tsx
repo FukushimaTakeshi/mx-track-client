@@ -361,7 +361,7 @@ export const Dashboard: React.FC<Props> = ({ children, disableSpeedDial }) => {
             </Restricted>
             <Restricted to={'edit-maintenance-menus'}>
               <Link
-                to="/maintenances"
+                to="/maintenance_categories"
                 className={classes.link}
                 onClick={handleDrawerClose}
               >

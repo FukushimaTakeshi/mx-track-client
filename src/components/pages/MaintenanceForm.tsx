@@ -68,14 +68,20 @@ const MaintenanceForm: React.FC = () => {
   const [maintenanceMenus, setMaintenanceMenus] = useState<
     Models.MaintenanceMenu[]
   >([])
+  const [maintenanceMenusWithCategories, setMaintenanceMenusWithCategories] =
+    useState<Models.MaintenanceMenuWithCategory[]>([])
 
   useEffect(() => {
-    apiClient.get('/maintenance_menus').then((response) => {
-      setMaintenanceMenus(response.data)
-      if (!id) {
-        form.maintenanceMenu.setValue(response.data[0])
-      }
-    })
+    apiClient
+      .get<Models.MaintenanceMenuWithCategory[]>('/maintenance_menus')
+      .then((response) => {
+        setMaintenanceMenusWithCategories(response.data)
+        const maintenanceMenus = response.data.flatMap((value) => value.menus)
+        setMaintenanceMenus(maintenanceMenus)
+        if (!id) {
+          form.maintenanceMenu.setValue(maintenanceMenus[0])
+        }
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -151,6 +157,9 @@ const MaintenanceForm: React.FC = () => {
                   <MaintenanceMenuSelectBox
                     maintenanceMenuForm={form.maintenanceMenu}
                     maintenanceMenus={maintenanceMenus}
+                    maintenanceMenusWithCategories={
+                      maintenanceMenusWithCategories
+                    }
                   />
                 </Grid>
 

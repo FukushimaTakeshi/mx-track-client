@@ -1,7 +1,7 @@
 import { Button, Container, Grid, TextField } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import React, { useState } from 'react'
-import { useHistory, useLocation } from 'react-router'
+import { useHistory } from 'react-router'
 import Restricted from '../../auth/Restricted'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { formToObject, useForm } from '../../hooks/useForm'
@@ -25,27 +25,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const useMaintenanceItemForm = () => {
+const useMaintenanceCategoryForm = () => {
   const name = useForm()
   return { name }
 }
 
-const MaintenanceItemForm: React.FC = () => {
+const MaintenanceCategoryForm: React.FC = () => {
   const history = useHistory()
-  const { search } = useLocation()
-  const query = new URLSearchParams(search)
-  const form = useMaintenanceItemForm()
+  const form = useMaintenanceCategoryForm()
   const classes = useStyles()
 
   const [success, setSuccess] = useState(false)
   const save = useAsyncExecutor(
     () => {
-      const params = {
-        ...formToObject(form),
-        maintenanceCategoryId: query.get('maintenance_category_id'),
-      }
+      const params = { ...formToObject(form) }
       return apiClient
-        .post('/maintenance_menus', params)
+        .post('/maintenance_categories', params)
         .then(() => setSuccess(true))
     },
     () => true
@@ -55,7 +50,7 @@ const MaintenanceItemForm: React.FC = () => {
     <Restricted to={'edit-maintenance-menus'}>
       <Dashboard>
         <>
-          <Title>メンテナンス項目の登録</Title>
+          <Title>メンテナンスカテゴリの登録</Title>
           <HandleFetch loading={save.isExecuting}>
             <SuccessNotification
               open={success}
@@ -72,7 +67,7 @@ const MaintenanceItemForm: React.FC = () => {
                       name="name"
                       variant="outlined"
                       fullWidth
-                      label="メンテナンス項目名"
+                      label="メンテナンスカテゴリ名"
                       value={form.name.value}
                       onChange={form.name.setValueFromEvent}
                       InputLabelProps={{ shrink: true }}
@@ -106,4 +101,4 @@ const MaintenanceItemForm: React.FC = () => {
   )
 }
 
-export default MaintenanceItemForm
+export default MaintenanceCategoryForm

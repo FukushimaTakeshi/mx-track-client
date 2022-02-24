@@ -8,6 +8,8 @@ import Privacy from './components/Informations/Privacy'
 import Term from './components/Informations/Term'
 import Dashboard from './components/pages/Dashboard'
 import Home from './components/pages/Home'
+import MaintenanceCategoryForm from './components/pages/MaintenanceCategoryForm'
+import MaintenanceCategoryList from './components/pages/MaintenanceCategoryList'
 import MaintenanceForm from './components/pages/MaintenanceForm'
 import MaintenanceHistory from './components/pages/MaintenanceHistory'
 import MaintenanceItemForm from './components/pages/MaintenanceItemForm'
@@ -32,6 +34,21 @@ const Router: React.FC = () => {
       <PrivateRoute exact path="/regions" component={RegionList} />
       <PrivateRoute exact path="/tracks/new" component={TrackForm} />
       <PrivateRoute exact path="/tracks/:id" component={TrackForm} />
+      <PrivateRoute
+        exact
+        path="/maintenance_categories"
+        component={MaintenanceCategoryList}
+      />
+      <PrivateRoute
+        exact
+        path="/maintenance_categories/new"
+        component={MaintenanceCategoryForm}
+      />
+      <PrivateRoute
+        exact
+        path="/maintenance_categories/:id"
+        component={MaintenanceItemList}
+      />
       <PrivateRoute
         exact
         path="/maintenances"
