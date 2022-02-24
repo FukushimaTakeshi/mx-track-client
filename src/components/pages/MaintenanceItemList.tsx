@@ -1,3 +1,5 @@
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Button,
   Divider,
@@ -9,11 +11,10 @@ import {
   ListItemText,
   TextField,
   Typography,
-} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import AddIcon from '@mui/icons-material/Add'
-import DeleteIcon from '@mui/icons-material/Delete'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import Restricted from '../../auth/Restricted'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
@@ -35,16 +36,18 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const MaintenanceItemList: React.FC = () => {
+  const { id } = useParams<{ id?: string }>()
   const form = useMaintenanceMenuForm()
   const classes = useStyles()
-  const [maintenanceMenus, setMaintenanceMenus] = useState<
-    Models.MaintenanceMenu[]
-  >([])
+  const [maintenanceCategoryWithMenus, setMaintenanceCategoryWithMenus] =
+    useState<Models.MaintenanceCategoryWithMenus>({
+      menus: [{} as Models.MaintenanceMenu],
+    } as Models.MaintenanceCategoryWithMenus)
 
   const fetchMaintenanceMenus = () => {
     apiClient
-      .get('/maintenance_menus')
-      .then((response) => setMaintenanceMenus(response.data))
+      .get<Models.MaintenanceCategoryWithMenus>(`/maintenance_categories/${id}`)
+      .then((response) => setMaintenanceCategoryWithMenus(response.data))
   }
 
   useEffect(() => {
@@ -60,13 +63,16 @@ const MaintenanceItemList: React.FC = () => {
   const saveMenu = () => {
     const params = { name: form.name.value }
     return apiClient.put(`/maintenance_menus/${clickedId}`, params).then(() => {
-      const newMenus = maintenanceMenus.map((menu) => {
+      const newMenus = maintenanceCategoryWithMenus.menus.map((menu) => {
         if (menu.id === clickedId) {
           menu.name = form.name.value
         }
         return menu
       })
-      setMaintenanceMenus(newMenus)
+      setMaintenanceCategoryWithMenus({
+        ...maintenanceCategoryWithMenus,
+        menus: newMenus,
+      })
       setClickedId(null)
     })
   }
@@ -84,7 +90,13 @@ const MaintenanceItemList: React.FC = () => {
       <Dashboard>
         <>
           <Title>メンテナンス項目一覧</Title>
-          <Link to={'/maintenances/new'} className={classes.link}>
+          <Link
+            to={{
+              pathname: '/maintenances/new',
+              search: `?maintenance_category_id=${id}`,
+            }}
+            className={classes.link}
+          >
             <Button
               variant="outlined"
               color="secondary"
@@ -97,7 +109,7 @@ const MaintenanceItemList: React.FC = () => {
             </Button>
           </Link>
           <List>
-            {maintenanceMenus.map((maintenanceMenu) => (
+            {maintenanceCategoryWithMenus.menus.map((maintenanceMenu) => (
               <React.Fragment key={maintenanceMenu.id}>
                 <ListItem button>
                   {clickedId !== maintenanceMenu.id ? (
@@ -107,7 +119,10 @@ const MaintenanceItemList: React.FC = () => {
                         onClick={() => handleClickLabel(maintenanceMenu)}
                       />
                       <ListItemSecondaryAction>
-                        <IconButton onClick={() => handleDelete(maintenanceMenu.id)} size="large">
+                        <IconButton
+                          onClick={() => handleDelete(maintenanceMenu.id)}
+                          size="large"
+                        >
                           <DeleteIcon fontSize="small" />
                         </IconButton>
                       </ListItemSecondaryAction>
@@ -143,7 +158,7 @@ const MaintenanceItemList: React.FC = () => {
         </>
       </Dashboard>
     </Restricted>
-  );
+  )
 }
 
 export default MaintenanceItemList

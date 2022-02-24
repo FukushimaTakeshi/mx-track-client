@@ -61,9 +61,28 @@ declare namespace Models {
     prefectures: Prefecture[]
   }
 
+  type MaintenanceCategory = {
+    id: number
+    name: string
+  }
+
+  type MaintenanceCategoryWithMenus = {
+    id: number
+    name: string
+    menus: MaintenanceMenu[]
+  }
+
   type MaintenanceMenu = {
     id: number
     name: string
+  }
+
+  type MaintenanceMenuWithCategory = {
+    categoryName: string
+    menus: Array<{
+      id: number
+      name: string
+    }>
   }
 
   type maintenanceRecord = {

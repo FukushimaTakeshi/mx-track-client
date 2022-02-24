@@ -5,11 +5,13 @@ import { Form } from '../../hooks/useForm'
 type Props = {
   maintenanceMenuForm: Form<Models.MaintenanceMenu>
   maintenanceMenus: Models.MaintenanceMenu[]
+  maintenanceMenusWithCategories: Models.MaintenanceMenuWithCategory[]
 }
 
 const MaintenanceMenuSelectBox: React.FC<Props> = ({
   maintenanceMenuForm,
   maintenanceMenus,
+  maintenanceMenusWithCategories,
 }) => {
   return (
     <FormControl variant="outlined" fullWidth>
@@ -26,10 +28,14 @@ const MaintenanceMenuSelectBox: React.FC<Props> = ({
           maintenanceMenuForm.setValueFromModels(e, maintenanceMenus)
         }
       >
-        {maintenanceMenus.map((value, i) => (
-          <option key={i} value={value.id}>
-            {value.name}
-          </option>
+        {maintenanceMenusWithCategories.map((value) => (
+          <optgroup key={value.categoryName} label={value.categoryName}>
+            {value.menus.map((menu) => (
+              <option key={menu.name} value={menu.id}>
+                {menu.name}
+              </option>
+            ))}
+          </optgroup>
         ))}
       </Select>
     </FormControl>
