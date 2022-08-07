@@ -88,7 +88,7 @@ const MaintenanceItem: React.FC<Props> = ({ resource, onClickDetail }) => {
                         onClickDetail(maintenanceRecords, record.id)
                       }
                     >
-                      {record.maintenanceMenu.name}
+                      {record.maintenanceMenus.map((menu) => menu.name)}
                     </Typography>
                     <Typography
                       variant="caption"

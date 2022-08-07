@@ -91,7 +91,7 @@ declare namespace Models {
     operationHours: number
     operationMinutes: number
     memo: string
-    maintenanceMenu: MaintenanceMenu
+    maintenanceMenus: MaintenanceMenu[]
     vehicle: Vehicle
   }
 
