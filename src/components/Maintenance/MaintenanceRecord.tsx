@@ -24,7 +24,7 @@ const MaintenanceRecord: React.FC<Props> = ({
   operationHours,
   operationMinutes,
   memo,
-  maintenanceMenu,
+  maintenanceMenus,
   onDelete,
   onClose,
 }) => {
@@ -49,7 +49,7 @@ const MaintenanceRecord: React.FC<Props> = ({
               メンテナンス項目
             </Typography>
             <Typography variant="body1" component="p">
-              {maintenanceMenu.name}
+              {maintenanceMenus.map((menu) => menu.name)}
             </Typography>
 
             <Typography variant="caption" color="textSecondary">

@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router'
 import { useAsyncExecutor } from '../../hooks/useAsyncExecutor'
 import { formToObject, responseToForm, useForm } from '../../hooks/useForm'
 import { apiClient, apiClientWithAuth } from '../../lib/api_client'
-import MaintenanceMenuSelectBox from '../Maintenance/MaintenanceMenuSelectBox'
+import MultipleMaintenanceMenuList from '../Maintenance/MultipleMaintenanceMenuList'
 import ErrorNotification from '../Notification/ErrorNotification'
 import SuccessNotification from '../Notification/SuccessNotification'
 import HandleFetch from '../Spinner/HandleFetch'
@@ -29,14 +29,14 @@ const useStyles = makeStyles((theme) => ({
 
 const useMaintenanceForm = () => {
   const maintenanceOn = useForm()
-  const maintenanceMenu = useForm({} as Models.MaintenanceMenu)
+  const maintenanceMenuIds = useForm<number[]>([])
   const operationHours = useForm<number>()
   const operationMinutes = useForm<number>()
   const memo = useForm()
   const userVehicle = useForm({} as Models.UserVehicle)
   return {
     maintenanceOn,
-    maintenanceMenu,
+    maintenanceMenuIds,
     operationHours,
     operationMinutes,
     memo,
@@ -54,7 +54,6 @@ const MaintenanceForm: React.FC = () => {
     () => {
       const params = {
         ...formToObject(form),
-        maintenanceMenuId: form.maintenanceMenu.value.id,
         userVehicleId: form.userVehicle.value.id,
       }
       const response = id
@@ -65,9 +64,6 @@ const MaintenanceForm: React.FC = () => {
     () => true
   )
 
-  const [maintenanceMenus, setMaintenanceMenus] = useState<
-    Models.MaintenanceMenu[]
-  >([])
   const [maintenanceMenusWithCategories, setMaintenanceMenusWithCategories] =
     useState<Models.MaintenanceMenuWithCategory[]>([])
 
@@ -76,22 +72,19 @@ const MaintenanceForm: React.FC = () => {
       .get<Models.MaintenanceMenuWithCategory[]>('/maintenance_menus')
       .then((response) => {
         setMaintenanceMenusWithCategories(response.data)
-        const maintenanceMenus = response.data.flatMap((value) => value.menus)
-        setMaintenanceMenus(maintenanceMenus)
-        if (!id) {
-          form.maintenanceMenu.setValue(maintenanceMenus[0])
-        }
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     if (id) {
       const fetchMaintenanceRecords = async () => {
-        const maintenanceRecords = await apiClientWithAuth.get(
-          `/maintenance_records/${id}`
-        )
+        const maintenanceRecords = await apiClientWithAuth.get<
+          Models.maintenanceRecord & { userVehicleId: number }
+        >(`/maintenance_records/${id}`)
         responseToForm(maintenanceRecords, form)
+        form.maintenanceMenuIds.setValue(
+          maintenanceRecords.data.maintenanceMenus.map((menu) => menu.id)
+        )
         const userVehicle = await apiClientWithAuth.get(
           `/user_vehicles/${maintenanceRecords.data.userVehicleId}`
         )
@@ -154,9 +147,8 @@ const MaintenanceForm: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <MaintenanceMenuSelectBox
-                    maintenanceMenuForm={form.maintenanceMenu}
-                    maintenanceMenus={maintenanceMenus}
+                  <MultipleMaintenanceMenuList
+                    maintenanceMenuIdsForm={form.maintenanceMenuIds}
                     maintenanceMenusWithCategories={
                       maintenanceMenusWithCategories
                     }
