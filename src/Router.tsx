@@ -8,6 +8,7 @@ import Privacy from './components/Informations/Privacy'
 import Term from './components/Informations/Term'
 import Dashboard from './components/pages/Dashboard'
 import Home from './components/pages/Home'
+import Maintenance from './components/pages/Maintenance'
 import MaintenanceCategoryForm from './components/pages/MaintenanceCategoryForm'
 import MaintenanceCategoryList from './components/pages/MaintenanceCategoryList'
 import MaintenanceForm from './components/pages/MaintenanceForm'
@@ -30,6 +31,9 @@ const Router: React.FC = () => {
   useTracking()
   return (
     <Switch>
+      {Boolean(process.env.REACT_APP_UNDER_MAINTENANCE) && (
+        <Route exact path="*" component={Maintenance} />
+      )}
       <Route exact path="/" component={Home} />
       <PrivateRoute exact path="/regions" component={RegionList} />
       <PrivateRoute exact path="/tracks/new" component={TrackForm} />
