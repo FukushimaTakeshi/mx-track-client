@@ -48,10 +48,11 @@ const MaintenanceRecord: React.FC<Props> = ({
             <Typography variant="caption" color="textSecondary">
               メンテナンス項目
             </Typography>
-            <Typography variant="body1" component="p">
-              {maintenanceMenus.map((menu) => menu.name)}
-            </Typography>
-
+            {maintenanceMenus.map((menu) => (
+              <Typography key={menu.name} variant="body1" component="p">
+                {menu.name}
+              </Typography>
+            ))}
             <Typography variant="caption" color="textSecondary">
               稼働時間
             </Typography>

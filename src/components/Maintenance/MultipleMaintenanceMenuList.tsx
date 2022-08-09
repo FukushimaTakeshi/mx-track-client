@@ -2,6 +2,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Button,
   Checkbox,
+  Container,
   Dialog,
   IconButton,
   List,
@@ -10,10 +11,20 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
-  Typography,
+  ListSubheader,
 } from '@mui/material/'
+import { makeStyles } from '@mui/styles'
 import React, { useState } from 'react'
 import { Form } from '../../hooks/useForm'
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: theme.spacing(2),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}))
 
 type Props = {
   maintenanceMenuIdsForm: Form<number[]>
@@ -24,6 +35,7 @@ const MultipleMaintenanceMenuList: React.FC<Props> = ({
   maintenanceMenuIdsForm,
   maintenanceMenusWithCategories,
 }) => {
+  const classes = useStyles()
   const [showDialog, setShowDialog] = useState(false)
 
   const handleToggle = (menuId: number) => () => {
@@ -60,54 +72,55 @@ const MultipleMaintenanceMenuList: React.FC<Props> = ({
       </Button>
 
       <Dialog fullScreen open={showDialog} onClose={() => setShowDialog(false)}>
-        <List
-          sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-        >
-          {maintenanceMenusWithCategories.map((value) => {
-            return (
-              <React.Fragment key={value.categoryName}>
-                <Typography variant="subtitle2" component="p">
-                  {value.categoryName}
-                </Typography>
-
-                {value.menus.map((menu) => {
-                  return (
-                    <ListItem key={menu.id} disablePadding>
-                      <ListItemButton
-                        role={undefined}
-                        onClick={handleToggle(menu.id)}
-                        dense
-                      >
-                        <ListItemIcon>
-                          <Checkbox
-                            edge="start"
-                            checked={
-                              maintenanceMenuIdsForm.value.indexOf(menu.id) !==
-                              -1
-                            }
-                            tabIndex={-1}
-                            disableRipple
-                          />
-                        </ListItemIcon>
-                        <ListItemText primary={menu.name} />
-                      </ListItemButton>
-                    </ListItem>
-                  )
-                })}
-              </React.Fragment>
-            )
-          })}
-        </List>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          // className={classes.submit}
-          onClick={() => setShowDialog(false)}
-        >
-          決定
-        </Button>
+        <Container component="main" maxWidth="xs" className={classes.container}>
+          <List
+            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+          >
+            {maintenanceMenusWithCategories.map((value) => (
+              <List disablePadding key={value.categoryName}>
+                <ListSubheader>{value.categoryName}</ListSubheader>
+                {value.menus.map((menu) => (
+                  <ListItem key={menu.id} disablePadding>
+                    <ListItemButton
+                      role={undefined}
+                      onClick={handleToggle(menu.id)}
+                      dense
+                    >
+                      <ListItemIcon>
+                        <Checkbox
+                          edge="start"
+                          checked={
+                            maintenanceMenuIdsForm.value.indexOf(menu.id) !== -1
+                          }
+                          tabIndex={-1}
+                          disableRipple
+                        />
+                      </ListItemIcon>
+                      <ListItemText primary={menu.name} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            ))}
+          </List>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={() => setShowDialog(false)}
+          >
+            決定
+          </Button>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={() => setShowDialog(false)}
+          >
+            戻る
+          </Button>
+        </Container>
       </Dialog>
       <List>
         {maintenanceMenuIdsForm.value.map((id) => (
