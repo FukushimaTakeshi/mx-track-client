@@ -22,7 +22,7 @@ const InformationNotification: React.FC<Props> = ({
   }
 
   return (
-    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+    <Snackbar open={open} autoHideDuration={7000} onClose={handleClose}>
       <Alert onClose={handleClose} severity="info">
         {message}
       </Alert>
