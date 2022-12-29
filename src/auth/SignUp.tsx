@@ -25,12 +25,16 @@ const SignUp: React.FC = () => {
         idToken && localStorage.setItem('token', idToken)
         const { displayName, email, photoURL } = user
         try {
-          await apiClient.post('/users', {
-            token: idToken,
-            name: displayName,
-            email,
-            photoURL,
-          })
+          await apiClient.post(
+            '/users',
+            {
+              token: idToken,
+              name: displayName,
+              email,
+              photoURL,
+            },
+            { headers: { 'Cache-Control': `max-age=${60 * 60 * 24 * 30}` } }
+          )
           alert('OK! : ' + user.displayName + 'さんでログインしました')
           history.push('/dashboard')
         } catch (error) {
