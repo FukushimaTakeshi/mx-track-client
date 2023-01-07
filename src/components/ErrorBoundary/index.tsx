@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import React, { ErrorInfo } from 'react'
 
 interface Props {
@@ -30,11 +31,23 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (this.state.hasError) {
       // You can render any custom fallback UI
       return (
-        <h3>
-          問題が発生しました。
-          <br />
-          リロードしてください。
-        </h3>
+        <>
+          <h3>
+            問題が発生しました。
+            <br />
+            リロードしてください。
+          </h3>
+          <Typography variant="subtitle2" align="center" component="p">
+            エラーが解消しない場合、中の人は気づいていない可能性が高いのでこちらから報告をお願いします！
+            <a
+              href="https://forms.gle/BpT51ztLTfufLVov5"
+              target="_blank"
+              rel="noreferrer"
+            >
+              お問い合わせ
+            </a>
+          </Typography>
+        </>
       )
     }
 

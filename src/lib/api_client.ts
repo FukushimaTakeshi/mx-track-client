@@ -1,6 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import camelcaseKeys from 'camelcase-keys'
+import { getAuth } from 'firebase/auth'
 import snakecaseKeys from 'snakecase-keys'
+import { firebaseApp } from '../auth/auth'
 
 axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT
 
@@ -25,14 +27,28 @@ const camelizeRequest = (response: AxiosResponse) => {
 }
 axiosInstance.interceptors.request.use(snakedRequest)
 
-axiosInstanceWithToken.interceptors.request.use((request) => {
-  const token = localStorage.getItem('token')
+axiosInstanceWithToken.interceptors.request.use(async (request) => {
+  const token = localStorage.getItem('auth-token')
   if (!token) {
     throw new axios.Cancel('token does not exist.')
   }
+  const tokenObject = JSON.parse(token)
+
+  let idToken
+  // TODO: トークンの再取得処理をいい感じのhookに書き換える
+  if (Date.now() > tokenObject.expiry) {
+    idToken = await getAuth(firebaseApp).currentUser?.getIdToken()
+    const token = JSON.stringify({
+      idToken,
+      expiry: Date.now() + 1000 * 60 * 60,
+    })
+    localStorage.setItem('auth-token', token)
+  } else {
+    idToken = tokenObject.idToken
+  }
   return {
     ...snakedRequest(request),
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${idToken}` },
   }
 })
 

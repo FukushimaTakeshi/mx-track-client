@@ -23,16 +23,20 @@ export const AuthProvider: React.FC = ({ children }) => {
     await auth.signOut()
     setCurrentUser(null)
     setUserRole(null)
-    localStorage.removeItem('token')
+    localStorage.removeItem('auth-token')
   }
 
   const verifyLoginUser = useCallback((): Promise<void> => {
     return new Promise((resolve) => {
       onAuthStateChanged(auth, async (user) => {
         if (user && (!currentUser || !userRole)) {
-          const token = localStorage.getItem('token')
+          const token = localStorage.getItem('auth-token')
+          const idToken = token ? JSON.parse(token).idToken : ''
+
           try {
-            const user = await apiClient.get('/users', { params: { token } })
+            const user = await apiClient.get('/users', {
+              params: { token: idToken },
+            })
             setCurrentUser(user.data)
             const roles = await apiClientWithAuth.get('/roles')
             setUserRole(roles.data)
